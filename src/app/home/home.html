@@ -1,0 +1,57 @@
+
+<nz-layout>
+  <nz-sider nzTheme="dark" nzCollapsible="" nzWidth="200px" nzBreakpoint="lg" [nzCollapsedWidth]="0">
+    <div class="logo" (click)="onHandleGoTo('','')">
+      <img style="width: 100%" src="/image/logo/logolienviet.png" alt="logo" />
+    </div>
+    <ul nz-menu nzTheme="dark" nzMode="inline">
+      <li nz-menu-item>
+        <nz-icon nzType="pie-chart" />
+        <span>Dashboard</span>
+      </li>
+      <li nz-menu-item>
+        <nz-icon nzType="desktop" />
+        <span>Màn hình khách</span>
+      </li>
+      <li nz-submenu nzTitle="Quản lý hệ thống" nzIcon="partition">
+        <ul>
+          <li nz-menu-item (click)="onHandleGoTo('quanlynhanvien','Quản lý hệ thống, Quản lý nhân viên')">Quản lý nhân viên</li>
+          <li nz-menu-item (click)="onHandleGoTo('quanlynhanvien','Quản lý hệ thống, Quản lý danh mục')">Quản lý danh mục</li>
+          <li nz-menu-item (click)="onHandleGoTo('quanlynhanvien','Quản lý hệ thống, Tra cứu')">Tra cứu</li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="Báo cáo" nzIcon="team">
+        <ul>
+          <li nz-menu-item>Báo cáo tuần</li>
+          <li nz-menu-item>Báo cáo tháng</li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="Công cụ" nzIcon="tool">
+        <ul>
+          <li nz-menu-item (click)="onHandleGoTo('demthungcarton','Công cụ, Đếm thùng carton')">Đếm thùng carton</li>
+          <li nz-menu-item>Tính năng 2</li>
+          <li nz-menu-item>Tính năng 3</li>
+        </ul>
+      </li>
+      <li nz-menu-item>
+        <nz-icon nzType="file" />
+        <span>Tài liệu tra cứu</span>
+      </li>
+    </ul>
+  </nz-sider>
+  <nz-layout>
+    <nz-header>
+      <p style="font-size: 20px;font-weight: 500;padding: 0 10px;">HỆ THỐNG LIÊN VIỆT - LOGISTICS</p>
+    </nz-header>
+    <nz-content>
+      <nz-breadcrumb>
+        <nz-breadcrumb-item *ngFor="let item of breacums">{{item}}</nz-breadcrumb-item>
+      </nz-breadcrumb>
+      <div class="inner-content" style="overflow: auto;height: calc(86vh);">
+        <router-outlet></router-outlet>
+      </div>
+    </nz-content>
+    <nz-footer style="padding: 0px;"> Bản quyền © Được phát triển & Thiết kế bởi IT - Liên Việt Logistics - v1.0.0 </nz-footer>
+  </nz-layout>
+</nz-layout>
+

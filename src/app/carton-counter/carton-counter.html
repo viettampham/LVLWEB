@@ -1,0 +1,35 @@
+<div class="layout">
+  <div>
+    <nz-upload [nzBeforeUpload]="beforeUpload">
+      <button nz-button>
+        <nz-icon nzType="upload" />
+        Upload only image
+      </button>
+    </nz-upload>
+
+    <div nz-flex nzJustify="center" nzAlign="center" class="counter" style="height: 60px;border-radius: 4px;margin-top: 20px; background-color: green; color: white; font-size: 30px; text-align: center;">
+      {{counter()}} CARTON
+    </div>
+
+    <div class="box-detail" nz-row [nzGutter]="16" nzGap="small" style="margin-top: 20px;">
+      <div nz-col nzXs="24" nzLg="12" class="box-before" style="">
+        <div class="preview" *ngIf="imagePreview()" style="background-color: rgb(229 229 229 / 45%);padding: 24px;">
+          <img style="width: 100%;height: auto;"
+            [src]="imagePreview()"
+            alt="Preview ảnh">
+        </div>
+        <nz-empty *ngIf="!imagePreview()" nzNotFoundImage="simple" />
+      </div>
+      <div nz-col nzXs="24" nzLg="12" class="box-after" >
+        <div class="" style="height: 100%;">
+          <div class="preview" *ngIf="imagePreview()" style="background-color: rgb(229 229 229 / 45%);padding: 24px;">
+            <img style="width: 100%;height: auto;"
+                 [src]="linkscr()"
+                 alt="Preview ảnh">
+          </div>
+          <nz-empty *ngIf="!imagePreview()" nzNotFoundImage="simple" />
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
