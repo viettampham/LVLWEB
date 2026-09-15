@@ -1,3 +1,4 @@
+@import "tailwindcss";
 @font-face {
   font-family: 'Quicksand';
   src: url('/fonts/Quicksand-Regular.ttf') format('truetype');
@@ -29,3 +30,4 @@
 body {
   font-family: 'Quicksand', sans-serif;
 }
+
