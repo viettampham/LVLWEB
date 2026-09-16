@@ -6,9 +6,11 @@ import { UserResponse } from '../../model/Responsemodel/UserResponse';
 import { Api } from '../services/api';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
+import { NzPaginationComponent } from 'ng-zorro-antd/pagination';
+import { start } from 'node:repl';
 
 @Component({
-  imports: [NzTableComponent, NzTableModule, NzDividerModule, CommonModule],
+  imports: [NzTableComponent, NzTableModule, NzDividerModule, CommonModule, NzPaginationComponent],
   selector: 'app-quanlynhanvien',
   styleUrl: './quanlynhanvien.scss',
   templateUrl: './quanlynhanvien.html',
@@ -19,9 +21,10 @@ export class Quanlynhanvien {
     private formBuilder: FormBuilder,
   ) {}
   SearchForm!: FormGroup;
-  readonly listOfData = signal<UserResponse[]>([]);
-  pageIndex = 1;
-  pageSize = 10;
+  listOfData = signal<UserResponse[]>([]);
+  pageIndex = signal(1);
+  pageSize = signal(10);
+  totalRecords = signal(0);
   ngOnInit(): void {
     this.SearchForm = this.formBuilder.group({
       fullName: [''],
@@ -38,8 +41,8 @@ export class Quanlynhanvien {
 
   SearchUser() {
     var request = {
-      pageIndex: this.pageIndex,
-      pageSize: this.pageSize,
+      pageIndex: this.pageIndex(),
+      pageSize: this.pageSize(),
       fullName: this.SearchForm.controls['fullName'].value,
       userName: this.SearchForm.controls['userName'].value,
       email: this.SearchForm.controls['email'].value,
@@ -50,7 +53,25 @@ export class Quanlynhanvien {
       phongBan: this.SearchForm.controls['phongBan'].value,
     };
     this.api.SearchUser(request).subscribe((res: any) => {
-      this.listOfData.set(res.data.data);
+      if (res.status === 'SUCCESS') {
+        this.listOfData.set(res.data.data);
+        this.pageIndex.set(res.data.pageIndex);
+        this.pageSize.set(res.data.pageSize);
+        this.totalRecords.set(res.data.totalRecords);
+      } else {
+      }
     });
   }
+
+  ChangePageIndex(pageIndex: number) {
+    this.pageIndex.set(pageIndex);
+    console.log(this.pageIndex());
+    this.SearchUser();
+  }
+
+  ChangePageSize(pageSize:number){
+    this.pageSize.set(pageSize);
+    console.log(this.pageSize());
+    this.SearchUser();
+  };
 }

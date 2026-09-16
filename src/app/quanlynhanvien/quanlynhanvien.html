@@ -1,55 +1,52 @@
 <div class="text-xl mb-5">DANH SÁCH NHÂN VIÊN</div>
-<nz-table #basicTable [nzData]="listOfData()" [nzScroll]="{ x: 'max-content' }">
+<nz-table #basicTable
+          [nzFrontPagination]="false"
+          [nzData]="listOfData()"
+          [nzScroll]="{ x: 'max-content' }"
+          [nzScroll]="{ y: '620px' }"
+>
   <thead>
   <tr>
     <th>STT</th>
-    <th>Họ Tên</th>
-    <th>UserName</th>
-    <th>Email</th>
-    <th>SĐT</th>
-    <th>Địa chỉ</th>
-    <th>Ngày sinh</th>
-    <th>Giới tính</th>
-    <th>Trạng thái</th>
-    <th>Lần đăng nhập cuối</th>
-    <th>Login false</th>
-    <th>Khóa cho đến</th>
-    <th>Cấp bậc quyền</th>
-    <th>Tạo lúc</th>
-    <th>Tạo bởi</th>
-    <th>Sửa lúc</th>
-    <th>Sửa bởi</th>
-    <th>Xóa lúc</th>
-    <th>Xóa bởi</th>
-    <th>Số CCCD</th>
-    <th>Phòng ban</th>
+    <th style="width: 200px;">Họ Tên</th>
+    <th style="width: 200px;">UserName</th>
+    <th style="width: 200px;">Email</th>
+    <th style="width: 200px;">SĐT</th>
+    <th style="width: 200px;">Địa chỉ</th>
+    <th style="width: 200px;">Ngày sinh</th>
+    <th style="width: 200px;">Giới tính</th>
+    <th style="width: 200px;">Trạng thái</th>
+    <th style="width: 200px;">Cấp bậc quyền</th>
+    <th style="width: 200px;">Số CCCD</th>
+    <th style="width: 200px;">Phòng ban</th>
   </tr>
   </thead>
   <tbody>
     @for (data of basicTable.data; track data; let i = $index) {
       <tr>
         <td>{{i+1}}</td>
-        <td>{{ data.userName }}</td>
         <td>{{ data.fullName }}</td>
+        <td>{{ data.userName }}</td>
         <td>{{ data.email }}</td>
         <td>{{ data.phoneNumber }}</td>
         <td>{{ data.address }}</td>
         <td>{{ data.dateOfBirth }}</td>
         <td>{{ data.gender }}</td>
         <td>{{ data.status }}</td>
-        <td>{{ data.lastLoginAt }}</td>
-        <td>{{ data.failedLoginAttempts }}</td>
-        <td>{{ data.lockedUntil }}</td>
         <td>{{ data.roleLevel }}</td>
-        <td>{{ data.createAt }}</td>
-        <td>{{ data.createBy }}</td>
-        <td>{{ data.editAt }}</td>
-        <td>{{ data.editBy }}</td>
-        <td>{{ data.deleteAt }}</td>
-        <td>{{ data.deleteBy }}</td>
         <td>{{ data.cccd }}</td>
         <td>{{ data.phongBan }}</td>
       </tr>
     }
   </tbody>
 </nz-table>
+<nz-pagination
+  [nzPageIndex]="pageIndex()"
+  [nzTotal]="totalRecords()"
+  [nzShowSizeChanger]="true"
+  [nzPageSize]="pageSize()"
+  [nzResponsive]="true"
+  [nzPageSizeOptions]="[10, 20, 30, 50]"
+  (nzPageIndexChange)="ChangePageIndex($event)"
+  (nzPageSizeChange)="ChangePageSize($event)"
+   />

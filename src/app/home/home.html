@@ -47,11 +47,16 @@
       <nz-breadcrumb>
         <nz-breadcrumb-item *ngFor="let item of breacums">{{item}}</nz-breadcrumb-item>
       </nz-breadcrumb>
-      <div class="inner-content" style="overflow: auto;height: calc(85vh);">
+      <div class="inner-content" style="overflow: auto;height: calc(89vh);">
         <router-outlet></router-outlet>
       </div>
     </nz-content>
-    <nz-footer style="padding: 0px;"> Bản quyền © Được phát triển & Thiết kế bởi IT - Liên Việt Logistics - v1.0.0 </nz-footer>
+    <nz-footer style="padding: 0;">
+      <div class="relative mx-5">
+        Bản quyền © Được phát triển & Thiết kế bởi IT - Liên Việt Logistics
+        <span class="absolute right-0">v1.0.0</span>
+      </div>
+    </nz-footer>
   </nz-layout>
 </nz-layout>
 
