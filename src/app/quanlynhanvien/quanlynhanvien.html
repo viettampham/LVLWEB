@@ -1,9 +1,14 @@
-<div class="text-xl mb-5">DANH SÁCH NHÂN VIÊN</div>
+<div class="text-md mb-5">DANH SÁCH NHÂN VIÊN</div>
+
+<div class="filter">
+
+</div>
+
 <nz-table #basicTable
           [nzFrontPagination]="false"
           [nzData]="listOfData()"
           [nzScroll]="{ x: 'max-content' }"
-          [nzScroll]="{ y: '620px' }"
+          [nzScroll]="{ y: '600px' }"
 >
   <thead>
   <tr>

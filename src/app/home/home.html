@@ -15,9 +15,14 @@
       </li>
       <li nz-submenu nzTitle="Quản lý hệ thống" nzIcon="partition">
         <ul>
-          <li nz-menu-item (click)="onHandleGoTo('quanlynhanvien','Quản lý hệ thống, Quản lý nhân viên')">Quản lý nhân viên</li>
+          <li nz-menu-item (click)="onHandleGoTo('/home/quanlynhanvien','Quản lý hệ thống, Quản lý nhân viên')">Quản lý nhân viên</li>
           <li nz-menu-item (click)="onHandleGoTo('quanlynhanvien','Quản lý hệ thống, Quản lý danh mục')">Quản lý danh mục</li>
           <li nz-menu-item (click)="onHandleGoTo('quanlynhanvien','Quản lý hệ thống, Tra cứu')">Tra cứu</li>
+        </ul>
+      </li>
+      <li nz-submenu nzTitle="Quản trị hệ thống" nzIcon="appstore">
+        <ul>
+          <li nz-menu-item (click)="onHandleGoTo('quanlynhanvien','Quản trị hệ thống, Cấu hình')">Cấu hình</li>
         </ul>
       </li>
       <li nz-submenu nzTitle="Báo cáo" nzIcon="team">
@@ -28,7 +33,7 @@
       </li>
       <li nz-submenu nzTitle="Công cụ" nzIcon="tool">
         <ul>
-          <li nz-menu-item (click)="onHandleGoTo('demthungcarton','Công cụ, Đếm thùng carton')">Đếm thùng carton</li>
+          <li nz-menu-item (click)="onHandleGoTo('/home/demthungcarton','Công cụ, Đếm thùng carton')">Đếm thùng carton</li>
           <li nz-menu-item>Tính năng 2</li>
           <li nz-menu-item>Tính năng 3</li>
         </ul>
@@ -47,7 +52,7 @@
       <nz-breadcrumb>
         <nz-breadcrumb-item *ngFor="let item of breacums">{{item}}</nz-breadcrumb-item>
       </nz-breadcrumb>
-      <div class="inner-content" style="overflow: auto;height: calc(89vh);">
+      <div class="inner-content" style="overflow: auto;height: calc(85vh);padding: 18px !important;">
         <router-outlet></router-outlet>
       </div>
     </nz-content>

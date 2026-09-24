@@ -8,7 +8,7 @@ import { NzFlexDirective } from 'ng-zorro-antd/flex';
 import { NzColDirective, NzRowDirective } from 'ng-zorro-antd/grid';
 import { NzEmptyComponent } from 'ng-zorro-antd/empty';
 import { HttpClient } from '@angular/common/http';
-import { sign } from 'node:crypto';
+import { environment } from '../enviroment/enviroment';
 @Component({
   imports: [
     NzUploadComponent,
@@ -52,7 +52,7 @@ export class CartonCounter {
     const formData = new FormData();
     formData.append('file', rawFile);
 
-    this.http.post<any>('http://localhost:5000/count', formData).subscribe({
+    this.http.post<any>(`${environment.domainTools}/count`, formData).subscribe({
       next: (res) => {
         console.log('Kết quả:', res);
         this.counter.set(res.count);
@@ -63,7 +63,7 @@ export class CartonCounter {
       error: (err) => {
         console.error(err);
         this.isRes.set(false);
-        this.linkscr.set("");
+        this.linkscr.set('');
         this.counter.set(0);
         this.#messageService.error('Lỗi gọi API');
       },

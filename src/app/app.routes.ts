@@ -6,7 +6,7 @@ import { CartonCounter } from './carton-counter/carton-counter';
 
 export const routes: Routes = [
   {
-    path: '',
+    path: 'home',
     component: Home,
     children: [
       {
@@ -20,7 +20,7 @@ export const routes: Routes = [
     ],
   },
   {
-    path: 'login',
+    path: '',
     component: Login,
   },
 ];

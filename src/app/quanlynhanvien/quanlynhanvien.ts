@@ -1,5 +1,5 @@
 import { Component, signal } from '@angular/core';
-import { NzTableComponent } from 'ng-zorro-antd/table';
+import { NzTableComponent, NzTableFilterFn, NzTableFilterList, NzTableSortFn, NzTableSortOrder } from 'ng-zorro-antd/table';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { UserResponse } from '../../model/Responsemodel/UserResponse';
@@ -8,6 +8,23 @@ import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NzPaginationComponent } from 'ng-zorro-antd/pagination';
 import { start } from 'node:repl';
+import { NzMessageService } from 'ng-zorro-antd/message';
+
+
+interface ItemData {
+  name: string;
+  age: number;
+  address: string;
+}
+interface ColumnItem {
+  name: string;
+  sortOrder: NzTableSortOrder | null;
+  sortFn: NzTableSortFn<ItemData> | null;
+  listOfFilter: NzTableFilterList;
+  filterFn: NzTableFilterFn<ItemData> | null;
+  filterMultiple: boolean;
+  sortDirections: NzTableSortOrder[];
+}
 
 @Component({
   imports: [NzTableComponent, NzTableModule, NzDividerModule, CommonModule, NzPaginationComponent],
@@ -19,6 +36,7 @@ export class Quanlynhanvien {
   constructor(
     private api: Api,
     private formBuilder: FormBuilder,
+    private message :NzMessageService
   ) {}
   SearchForm!: FormGroup;
   listOfData = signal<UserResponse[]>([]);
@@ -59,19 +77,18 @@ export class Quanlynhanvien {
         this.pageSize.set(res.data.pageSize);
         this.totalRecords.set(res.data.totalRecords);
       } else {
+        this.message.error(res.message);
       }
     });
   }
 
   ChangePageIndex(pageIndex: number) {
     this.pageIndex.set(pageIndex);
-    console.log(this.pageIndex());
     this.SearchUser();
   }
 
   ChangePageSize(pageSize:number){
     this.pageSize.set(pageSize);
-    console.log(this.pageSize());
     this.SearchUser();
   };
 }

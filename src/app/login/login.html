@@ -1,2 +1,53 @@
+<div class="layout absolute top-0 bottom-0 right-0 left-0 flex justify-center items-center" style="background-color: #f9fafb;">
+  <div class="innerlayout max-w-lg mx-auto my-auto">
+    <div class="logo m-5">
+      <img style="width: 100%" src="/image/logo/logolienviet.png" alt="logo" />
+    </div>
+    <div class="loginform p-8 m-5  rounded-xl border border-gray-200 mt-5"  style="background-color: white;">
+      <p class="text-center text-2xl font-bold text-blue-500">Sign in</p>
 
-login
+      <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
+        <nz-form-item nzLayout="vertical">
+          <nz-form-label [nzSpan]="4">Email</nz-form-label>
+          <nz-form-control nzErrorTip="Please input your username!">
+            <nz-input-wrapper>
+              <nz-icon nzInputPrefix nzType="user" />
+              <input type="text" nz-input formControlName="username" placeholder="abc@gmail.com" />
+            </nz-input-wrapper>
+          </nz-form-control>
+        </nz-form-item>
+
+        <nz-form-item nzLayout="vertical">
+          <nz-form-label [nzSpan]="4">Password</nz-form-label>
+          <nz-form-control nzErrorTip="Please input your Password!">
+            <nz-input-password>
+              <nz-icon nzInputPrefix nzType="eye" />
+              <input nz-input type="password" formControlName="password" placeholder="**********" />
+            </nz-input-password>
+          </nz-form-control>
+        </nz-form-item>
+        <div nz-row class="login-form-margin">
+          <div nz-col [nzSpan]="12">
+            <label nz-checkbox formControlName="remember">
+              <span>Remember me</span>
+            </label>
+          </div>
+          <div class="text-right" nz-col [nzSpan]="12">
+            <a class="login-form-forgot">Forgot password</a>
+          </div>
+        </div>
+        <div class="mt-5">
+          <button nz-button class="login-form-button login-form-margin w-full" nzType="primary">Log in</button>
+        </div>
+        <div>
+          <div class="text-center mt-2">Or</div>
+          <div class="text-center">
+            <a class="text-center">register now!</a>
+          </div>
+        </div>
+      </form>
+
+
+    </div>
+  </div>
+</div>
