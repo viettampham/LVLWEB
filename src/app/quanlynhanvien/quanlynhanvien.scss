@@ -1,0 +1,29 @@
+.mark-header{
+  width: 4px;
+  height: 100%;
+  background-color: #1199d7;
+}
+.ant-table-thead > tr > th, .ant-table-tbody > tr > td, .ant-table tfoot > tr > th, .ant-table tfoot > tr > td {
+  position: relative;
+  padding: 10px 10px;
+  overflow-wrap: break-word;
+}
+
+::ng-deep .ant-table-body {
+  scrollbar-width: thin;
+  scrollbar-color: #d1d3d2 #f1f1f1;
+}
+
+::ng-deep .ant-table-body::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::ng-deep .ant-table-body::-webkit-scrollbar-thumb {
+  background: #74fded;
+  border-radius: 9999px;
+}
+
+::ng-deep .ant-table-body::-webkit-scrollbar-track {
+  background: #f3f4f6;
+}

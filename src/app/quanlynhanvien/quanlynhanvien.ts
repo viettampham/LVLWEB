@@ -4,30 +4,34 @@ import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { UserResponse } from '../../model/Responsemodel/UserResponse';
 import { Api } from '../services/api';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NzPaginationComponent } from 'ng-zorro-antd/pagination';
-import { start } from 'node:repl';
 import { NzMessageService } from 'ng-zorro-antd/message';
-
-
-interface ItemData {
-  name: string;
-  age: number;
-  address: string;
-}
-interface ColumnItem {
-  name: string;
-  sortOrder: NzTableSortOrder | null;
-  sortFn: NzTableSortFn<ItemData> | null;
-  listOfFilter: NzTableFilterList;
-  filterFn: NzTableFilterFn<ItemData> | null;
-  filterMultiple: boolean;
-  sortDirections: NzTableSortOrder[];
-}
-
+import { NzInputDirective, NzInputWrapperComponent } from 'ng-zorro-antd/input';
+import { NzFormControlComponent, NzFormDirective, NzFormItemComponent } from 'ng-zorro-antd/form';
+import { NzIconDirective } from 'ng-zorro-antd/icon';
+import { NzButtonComponent } from 'ng-zorro-antd/button';
+import { NzPopconfirmDirective } from 'ng-zorro-antd/popconfirm';
+import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 @Component({
-  imports: [NzTableComponent, NzTableModule, NzDividerModule, CommonModule, NzPaginationComponent],
+  imports: [
+    NzTableComponent,
+    NzTableModule,
+    NzDividerModule,
+    CommonModule,
+    NzPaginationComponent,
+    NzInputDirective,
+    NzFormDirective,
+    NzFormItemComponent,
+    NzIconDirective,
+    NzFormControlComponent,
+    NzInputWrapperComponent,
+    ReactiveFormsModule,
+    NzButtonComponent,
+    NzPopconfirmDirective,
+    NzPopconfirmModule,
+  ],
   selector: 'app-quanlynhanvien',
   styleUrl: './quanlynhanvien.scss',
   templateUrl: './quanlynhanvien.html',
@@ -36,7 +40,7 @@ export class Quanlynhanvien {
   constructor(
     private api: Api,
     private formBuilder: FormBuilder,
-    private message :NzMessageService
+    private message: NzMessageService,
   ) {}
   SearchForm!: FormGroup;
   listOfData = signal<UserResponse[]>([]);
@@ -87,8 +91,22 @@ export class Quanlynhanvien {
     this.SearchUser();
   }
 
-  ChangePageSize(pageSize:number){
+  ChangePageSize(pageSize: number) {
     this.pageSize.set(pageSize);
     this.SearchUser();
-  };
+  }
+
+  confirmDelete(id: number) {
+    console.log(id);
+    this.api.DeleteUser(id).subscribe((res:any)=>{
+      if (res.status === 'SUCCESS') {
+        this.message.success(res.message);
+        this.SearchUser();
+      }else {
+        this.message.error(res.message);
+      }
+    })
+  }
+
+  cancelDelete() {}
 }

@@ -1,36 +1,81 @@
-<div class="text-md mb-5">DANH SÁCH NHÂN VIÊN</div>
+<div class="text-md mb-5 relative"><span class="mark-header absolute top-0 left-0"></span> <span class="ml-2">DANH SÁCH NHÂN VIÊN</span></div>
 
-<div class="filter">
-
+<div class="filter relative">
+  <span class="absolute" style="top: -12px;left: 24px;background-color: white;padding: 0 4px;">Bộ lọc dữ liệu<nz-icon nzType="filter" nzTheme="outline" /></span>
+  <div class="border border-blue-200 rounded-md p-5">
+    <form nz-form nzLayout="inline" [formGroup]="SearchForm" (ngSubmit)="SearchUser()">
+      <nz-form-item>
+        <nz-form-control>
+          <nz-input-wrapper>
+            <input formControlName="fullName" nz-input placeholder="Họ tên" />
+          </nz-input-wrapper>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <nz-input-wrapper>
+            <input formControlName="userName" nz-input placeholder="Tên đăng nhập" />
+          </nz-input-wrapper>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <nz-input-wrapper>
+            <input formControlName="email" nz-input placeholder="Email" />
+          </nz-input-wrapper>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <nz-input-wrapper>
+            <input formControlName="phoneNumber" nz-input placeholder="Số điện thoại" />
+          </nz-input-wrapper>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <nz-input-wrapper>
+            <input formControlName="address" nz-input placeholder="Địa chỉ" />
+          </nz-input-wrapper>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <button nz-button nzType="primary"><nz-icon nzType="search" nzTheme="outline" />Tìm kiếm</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
 </div>
 
 <nz-table #basicTable
           [nzFrontPagination]="false"
           [nzData]="listOfData()"
-          [nzScroll]="{ x: 'max-content' }"
-          [nzScroll]="{ y: '600px' }"
+          [nzScroll]="{ x: '2000px', y: '480px' }"
+          class="mt-5"
 >
   <thead>
   <tr>
-    <th>STT</th>
-    <th style="width: 200px;">Họ Tên</th>
-    <th style="width: 200px;">UserName</th>
-    <th style="width: 200px;">Email</th>
-    <th style="width: 200px;">SĐT</th>
-    <th style="width: 200px;">Địa chỉ</th>
-    <th style="width: 200px;">Ngày sinh</th>
-    <th style="width: 200px;">Giới tính</th>
-    <th style="width: 200px;">Trạng thái</th>
-    <th style="width: 200px;">Cấp bậc quyền</th>
-    <th style="width: 200px;">Số CCCD</th>
-    <th style="width: 200px;">Phòng ban</th>
+    <th style="background-color: rgb(223 223 223);" nzLeft="0px" nzWidth="50px">STT</th>
+    <th style="background-color: rgb(223 223 223);" nzLeft="50px" nzWidth="80px">Họ Tên</th>
+    <th nzWidth="80px">UserName</th>
+    <th nzWidth="100px">Email</th>
+    <th nzWidth="60px">SĐT</th>
+    <th nzWidth="150px">Địa chỉ</th>
+    <th nzWidth="60px">Ngày sinh</th>
+    <th nzWidth="50px">Giới tính</th>
+    <th nzWidth="50px">Trạng thái</th>
+    <th nzWidth="50px">Cấp bậc quyền</th>
+    <th nzWidth="50px">Số CCCD</th>
+    <th nzWidth="50px">Phòng ban</th>
+    <th style="background-color: rgb(223 223 223);" nzRight="0px" nzWidth="50px">Hành động</th>
   </tr>
   </thead>
-  <tbody>
+  <tbody class="">
     @for (data of basicTable.data; track data; let i = $index) {
       <tr>
-        <td>{{i+1}}</td>
-        <td>{{ data.fullName }}</td>
+        <td nzLeft="0px">{{ (pageIndex() - 1) * pageSize() + i + 1 }}</td>
+        <td nzLeft="50px">{{ data.fullName }}</td>
         <td>{{ data.userName }}</td>
         <td>{{ data.email }}</td>
         <td>{{ data.phoneNumber }}</td>
@@ -41,6 +86,19 @@
         <td>{{ data.roleLevel }}</td>
         <td>{{ data.cccd }}</td>
         <td>{{ data.phongBan }}</td>
+        <td nzRight="0px">
+          <div class="flex justify-evenly items-center">
+            <button nz-button nzType="primary" nzShape="circle">
+              <nz-icon nzType="edit" nzTheme="outline" />
+            </button>
+            <button nz-popconfirm
+                    nzPopconfirmTitle="Xác nhận xóa thông tin nhân viên?"
+                    (nzOnConfirm)="confirmDelete(data.id)"
+                    (nzOnCancel)="cancelDelete()" nz-button nzType="primary" nzDanger="" nzShape="circle">
+              <nz-icon nzType="delete" nzTheme="outline" />
+            </button>
+          </div>
+        </td>
       </tr>
     }
   </tbody>

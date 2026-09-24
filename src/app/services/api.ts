@@ -26,4 +26,8 @@ export class Api {
       request,
     );
   })
+
+  DeleteUser = (id: number) => {
+    return this.httpClient.delete<any>(`${environment.api_domain}/api/User/delete-user${id}`);
+  }
 }
