@@ -3,7 +3,8 @@ import { Login } from './login/login';
 import { Home } from './home/home';
 import { Quanlynhanvien } from './quanlynhanvien/quanlynhanvien';
 import { CartonCounter } from './carton-counter/carton-counter';
-
+import { Storage } from './storage/storage';
+import { Photo } from './photo/photo';
 export const routes: Routes = [
   {
     path: 'home',
@@ -16,6 +17,14 @@ export const routes: Routes = [
       {
         path: 'demthungcarton',
         component: CartonCounter,
+      },
+      {
+        path: 'luutruanh',
+        component: Storage,
+      },
+      {
+        path: 'takephotocont',
+        component: Photo,
       },
     ],
   },

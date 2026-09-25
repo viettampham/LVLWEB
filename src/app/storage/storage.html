@@ -1,0 +1,47 @@
+<div class="layout">
+    <div class="flex justify-between items-center">
+        <p class="text-lg">Lưu trữ ảnh cắt lớp thùng carton</p>
+        <button nz-button nzType="primary">Khai báo cont mới</button> 
+    </div>
+    <nz-table #basicTable
+          [nzFrontPagination]="false"
+          [nzData]="listOfData()"
+          [nzScroll]="{ x: 'auto', y: '480px' }"
+          class="mt-5"
+>
+  <thead>
+  <tr>
+    <th nzWidth="50px">STT</th>
+    <th nzWidth="80px">Số Cont</th>
+    <th nzWidth="100px">Số lượng ảnh</th>
+    <th nzWidth="50px">Hành động</th>
+  </tr>
+  </thead>
+  <tbody class="">
+    @for (data of basicTable.data; track data; let i = $index) {
+      <tr>
+        <td nzLeft="0px">{{ (pageIndex() - 1) * pageSize() + i + 1 }}</td>
+        <td nzLeft="50px">{{ data.soCont }}</td>
+        <td>{{ data.soLuongAnh }}</td>
+        <td nzRight="0px">
+          <div class="flex justify-evenly items-center">
+            <button nz-button nzType="primary" nzShape="circle">
+              <nz-icon nzType="edit" nzTheme="outline" />
+            </button>
+          </div>
+        </td>
+      </tr>
+    }
+  </tbody>
+</nz-table>
+<nz-pagination
+  [nzPageIndex]="pageIndex()"
+  [nzTotal]="totalRecords()"
+  [nzShowSizeChanger]="true"
+  [nzPageSize]="pageSize()"
+  [nzResponsive]="true"
+  [nzPageSizeOptions]="[10, 20, 30, 50]"
+  (nzPageIndexChange)="ChangePageIndex($event)"
+  (nzPageSizeChange)="ChangePageSize($event)"
+   />
+</div>
