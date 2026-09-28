@@ -1,47 +1,185 @@
 <div class="layout">
-    <div class="flex justify-between items-center">
-        <p class="text-lg">Lưu trữ ảnh cắt lớp thùng carton</p>
-        <button nz-button nzType="primary">Khai báo cont mới</button> 
-    </div>
-    <nz-table #basicTable
-          [nzFrontPagination]="false"
-          [nzData]="listOfData()"
-          [nzScroll]="{ x: 'auto', y: '480px' }"
-          class="mt-5"
->
-  <thead>
-  <tr>
-    <th nzWidth="50px">STT</th>
-    <th nzWidth="80px">Số Cont</th>
-    <th nzWidth="100px">Số lượng ảnh</th>
-    <th nzWidth="50px">Hành động</th>
-  </tr>
-  </thead>
-  <tbody class="">
-    @for (data of basicTable.data; track data; let i = $index) {
+  <div class="flex justify-between items-center">
+    <p class="text-sm md:text-lg">Ảnh cắt lớp thùng carton</p>
+    <button nz-button nzType="primary" (click)="showModal()">Thêm mới</button>
+  </div>
+  <nz-modal
+    nzWidth="820px"
+    [(nzVisible)]="isVisible"
+    nzTitle="Khai báo cont mới"
+    (nzOnCancel)="handleCancel()"
+   [nzFooter]="modalFooter"
+  >
+  <ng-template #modalFooter>
+    <button nz-button nzDanger (click)="handleCancel()">Hủy</button>
+    <button *ngIf="isVisibleButtonCamera()" nz-button nzType="primary" (click)="openCamera()">
+    <span nz-icon nzType="camera"></span>Chụp thêm ảnh
+    </button>
+  </ng-template>
+    <ng-container *nzModalContent>
+      <form style="display: grid !important;" class="grid grid-cols-2 md:grid-cols-5 gap-2" nz-form nzLayout="inline" [formGroup]="formAddCont" (ngSubmit)="submitForm()">
+        <nz-form-item class="">
+          <nz-form-control nzErrorTip="Nhập số booking!">
+            <nz-input-wrapper>
+              <nz-icon nzInputPrefix nzType="user" />
+              <input formControlName="soBooking" nz-input placeholder="Số Booking" />
+            </nz-input-wrapper>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Nhập số cont!">
+            <nz-input-wrapper>
+              <nz-icon nzInputPrefix nzType="user" />
+              <input formControlName="soCont" nz-input placeholder="Số Cont" />
+            </nz-input-wrapper>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control>
+            <nz-input-wrapper>
+              <nz-icon nzInputPrefix nzType="number" />
+              <input formControlName="soLuongAnh" nz-input placeholder="Số lượng ảnh" />
+            </nz-input-wrapper>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Người khai báo không được để trống!">
+            <nz-input-wrapper>
+              <nz-icon nzInputPrefix nzType="user" />
+              <input [readonly]="true" formControlName="nguoiKhaiBao" nz-input placeholder="Người khai báo" />
+            </nz-input-wrapper>
+          </nz-form-control>
+        </nz-form-item>
+        <nz-form-item>
+          <nz-form-control>
+            <button nz-button nzType="primary" [disabled]="!formAddCont.valid">Khai báo</button>
+          </nz-form-control>
+        </nz-form-item>
+      </form>
+
+      <nz-table #tableListImage [nzData]="dataListImage()" [nzScroll]="{ y: '250px' }" class="mt-5">
+      <thead>
+        <tr>
+          <th nzWidth="50px">STT</th>
+          <th nzWidth="200px">Path</th>
+          <th nzWidth="150px">Người chụp</th>
+          <th nzWidth="150px">Thời gian chụp</th>
+          <th nzRight="0" nzWidth="100px">Xem ảnh</th>
+        </tr>
+      </thead>
+      <tbody>
+        @for (data of tableListImage.data; track data; let i = $index) {
+          <tr>
+            <td>{{ (pageIndex() - 1) * pageSize() + i + 1 }}</td>
+            <td>{{ data.path }}</td>
+            <td>{{ data.nguoiChup }}</td>
+            <td>{{ ConvertDattimeDisplay(data.thoiGianChup) }}</td>
+            <td nzRight="0">
+              <div class="flex justify-evenly items-center">
+                <button nz-button nzType="primary" nzShape="circle" (click)="viewImage(data.id)">
+                  <nz-icon nzType="eye" nzTheme="outline" />
+                </button>
+              </div>
+            </td>
+          </tr>
+        }
+      </tbody>
+    </nz-table>
+
+    </ng-container>
+  </nz-modal>
+
+  <div class="filter">
+    <form nz-form nzLayout="inline" [formGroup]="filterForm" (ngSubmit)="SearchCont()">
+      <nz-form-item>
+        <nz-form-control>
+          <nz-input-wrapper>
+            <nz-icon nzType="book" nzTheme="outline" />
+            <input formControlName="soBooking" nz-input placeholder="Số Booking" />
+          </nz-input-wrapper>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <nz-input-wrapper>
+            <nz-icon nzType="truck" nzTheme="outline" />
+            <input formControlName="soCont" nz-input placeholder="Số Cont" />
+          </nz-input-wrapper>
+        </nz-form-control>
+      </nz-form-item>
+      <nz-form-item>
+        <nz-form-control>
+          <button nz-button nzType="primary"><nz-icon nzType="file-search" nzTheme="outline" />Tìm kiếm</button>
+        </nz-form-control>
+      </nz-form-item>
+    </form>
+  </div>
+
+  <nz-table
+    #basicTable
+    [nzFrontPagination]="false"
+    [nzData]="listOfData()"
+    [nzScroll]="{x: '450px', y: '350px' }"
+    class="mt-5"
+  >
+    <thead>
       <tr>
-        <td nzLeft="0px">{{ (pageIndex() - 1) * pageSize() + i + 1 }}</td>
-        <td nzLeft="50px">{{ data.soCont }}</td>
-        <td>{{ data.soLuongAnh }}</td>
-        <td nzRight="0px">
-          <div class="flex justify-evenly items-center">
-            <button nz-button nzType="primary" nzShape="circle">
-              <nz-icon nzType="edit" nzTheme="outline" />
-            </button>
-          </div>
-        </td>
+        <th nzWidth="50px">STT</th>
+        <th nzWidth="100px">Số Booking</th>
+        <th nzWidth="100px">Số Cont</th>
+        <th nzWidth="100px">Số lượng ảnh</th>
+        <th nzRight="0" nzWidth="100px">Hành động</th>
       </tr>
-    }
-  </tbody>
-</nz-table>
-<nz-pagination
-  [nzPageIndex]="pageIndex()"
-  [nzTotal]="totalRecords()"
-  [nzShowSizeChanger]="true"
-  [nzPageSize]="pageSize()"
-  [nzResponsive]="true"
-  [nzPageSizeOptions]="[10, 20, 30, 50]"
-  (nzPageIndexChange)="ChangePageIndex($event)"
-  (nzPageSizeChange)="ChangePageSize($event)"
-   />
+    </thead>
+    <tbody class="">
+      @for (data of basicTable.data; track data; let i = $index) {
+        <tr>
+          <td>{{ (pageIndex() - 1) * pageSize() + i + 1 }}</td>
+          <td>{{ data.soBooking }}</td>
+          <td>{{ data.soCont }}</td>
+          <td>{{ data.soLuongAnh }}</td>
+          <td nzRight="0">
+            <div class="flex justify-center items-center">
+              <button style="margin-right: 10px;" nz-button nzType="primary" nzShape="circle" (click)="ViewDsImage(data)">
+                <nz-icon nzType="folder-view" nzTheme="outline" />
+              </button>
+              <button nz-button nzType="primary" nzShape="circle" >
+                <nz-icon nzType="download" nzTheme="outline" (click)="downloadImage(data)" />
+              </button>
+            </div>
+          </td>
+        </tr>
+      }
+    </tbody>
+  </nz-table>
+  <nz-pagination
+    [nzPageIndex]="pageIndex()"
+    [nzTotal]="totalRecords()"
+    [nzShowSizeChanger]="true"
+    [nzPageSize]="pageSize()"
+    [nzResponsive]="true"
+    [nzPageSizeOptions]="[10, 20, 30, 50]"
+    (nzPageIndexChange)="ChangePageIndex($event)"
+    (nzPageSizeChange)="ChangePageSize($event)"
+  />
+</div>
+
+<div style="z-index: 2;" class="video-container absolute top-0 left-0 bottom-0 right-0 flex flex-col items-center justify-center bg-gray-50" *ngIf="isVisibleCam()">
+  <video
+    #video
+    autoplay
+    playsinline
+    width="600"
+    height="400">
+  </video>
+  
+  <div class="mt-5 flex justify-center items-center gap-5">
+    <button nzDanger="" nz-button nzType="default" (click)="closeCamera()"><nz-icon nzType="close-square" nzTheme="outline" />Đóng camera</button>
+    <button nz-button nzType="primary" (click)="captureImage()"><nz-icon nzType="camera" nzTheme="outline" />Chụp ảnh</button>
+  </div>
+</div>
+
+
+<div *ngIf="isLoading()" class="absolute top-0 left-0 bottom-0 right-0 bg-gray-50 opacity-50 flex items-center justify-center" >
+  <nz-spin nzSize="large"></nz-spin>
 </div>

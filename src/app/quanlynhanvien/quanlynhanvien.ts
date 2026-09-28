@@ -10,10 +10,12 @@ import { NzPaginationComponent } from 'ng-zorro-antd/pagination';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { NzInputDirective, NzInputWrapperComponent } from 'ng-zorro-antd/input';
 import { NzFormControlComponent, NzFormDirective, NzFormItemComponent } from 'ng-zorro-antd/form';
-import { NzIconDirective } from 'ng-zorro-antd/icon';
+import { NzIconDirective, NzIconService } from 'ng-zorro-antd/icon';
 import { NzButtonComponent } from 'ng-zorro-antd/button';
 import { NzPopconfirmDirective } from 'ng-zorro-antd/popconfirm';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
+import { BookOutline } from '@ant-design/icons-angular/icons';
+import { NzIconModule } from 'ng-zorro-antd/icon';
 @Component({
   imports: [
     NzTableComponent,
@@ -31,6 +33,7 @@ import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
     NzButtonComponent,
     NzPopconfirmDirective,
     NzPopconfirmModule,
+    NzIconModule,
   ],
   selector: 'app-quanlynhanvien',
   styleUrl: './quanlynhanvien.scss',
@@ -41,7 +44,10 @@ export class Quanlynhanvien {
     private api: Api,
     private formBuilder: FormBuilder,
     private message: NzMessageService,
-  ) {}
+    private iconService: NzIconService,
+  ) {
+    this.iconService.addIcon(BookOutline);
+  }
   SearchForm!: FormGroup;
   listOfData = signal<UserResponse[]>([]);
   pageIndex = signal(1);
