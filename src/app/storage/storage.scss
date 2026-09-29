@@ -5,3 +5,9 @@ video {
     background: black;
     border: 2px solid red;
 }
+
+:host ::ng-deep .ant-image-preview-img-wrapper {
+  display: flex !important;
+  justify-content: center !important;
+  align-items: center !important;
+}

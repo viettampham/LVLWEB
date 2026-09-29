@@ -5,13 +5,14 @@
   </div>
   <nz-modal
     nzWidth="820px"
+    nzCentered
     [(nzVisible)]="isVisible"
     nzTitle="Khai báo cont mới"
     (nzOnCancel)="handleCancel()"
    [nzFooter]="modalFooter"
   >
   <ng-template #modalFooter>
-    <button nz-button nzDanger (click)="handleCancel()">Hủy</button>
+    <button nz-button nzDanger="" (click)="handleCancel()">Hủy</button>
     <button *ngIf="isVisibleButtonCamera()" nz-button nzType="primary" (click)="openCamera()">
     <span nz-icon nzType="camera"></span>Chụp thêm ảnh
     </button>
@@ -172,13 +173,18 @@
     width="600"
     height="400">
   </video>
-  
+
   <div class="mt-5 flex justify-center items-center gap-5">
     <button nzDanger="" nz-button nzType="default" (click)="closeCamera()"><nz-icon nzType="close-square" nzTheme="outline" />Đóng camera</button>
     <button nz-button nzType="primary" (click)="captureImage()"><nz-icon nzType="camera" nzTheme="outline" />Chụp ảnh</button>
   </div>
 </div>
 
+<nz-modal nzCentered [(nzVisible)]="isShowImage" nzTitle="Xem ảnh" (nzOnCancel)="handleCancelModalImage()" [nzFooter]="null">
+  <ng-container *nzModalContent>
+    <img  style="height: auto;" [src]="imagePreview" alt="">
+  </ng-container>
+</nz-modal>
 
 <div *ngIf="isLoading()" class="absolute top-0 left-0 bottom-0 right-0 bg-gray-50 opacity-50 flex items-center justify-center" >
   <nz-spin nzSize="large"></nz-spin>

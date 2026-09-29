@@ -59,4 +59,8 @@ export class Api {
       `${environment.api_domain}/api/DeclareCont/add-image-to-cont`,request
     );
   }
+
+  ViewImage=(id: number)=>{
+    return this.httpClient.get<any>(`${environment.api_domain}/api/DeclareCont/view-image?id=${id}`);
+  }
 }
