@@ -53,18 +53,35 @@ export class Login {
 
   submitForm(): void {
     if (this.validateForm.valid) {
-      console.log('submit', this.validateForm.value);
-      this.api.Authentication(this.validateForm.value).subscribe((res: any) => {
-        if (res.status === 'ERROR') {
-          this.message.error(res.message);
-        } else if (res.status === 'WARNING') {
-          this.message.warning(res.message);
-        } else if (res.status === 'SUCCESS') {
-          this.message.success(res.message);
-          sessionStorage.setItem('token', res.data);
-          this.route.navigate(['/home']);
+      this.api.Authentication(this.validateForm.value).subscribe({
+        next: (res: any) => {
+          if (res.status === 'ERROR') {
+            this.message.error(res.message);
+          } else if (res.status === 'WARNING') {
+            this.message.warning(res.message);
+          } else if (res.status === 'SUCCESS') {
+            this.message.success(res.message);
+            sessionStorage.setItem('token', res.data);
+            this.route.navigate(['/home']);
+          }
+        },
+        error: (err) => {
+          console.error(err);
+
+          if (err.status === 0) {
+            this.message.error('Không kết nối được đến máy chủ');
+          } else if (err.status === 404) {
+            this.message.error('API không tồn tại (404)');
+          } else if (err.status === 500) {
+            this.message.error('Lỗi máy chủ (500)');
+          } else if (err.status === 401) {
+            this.message.error('Phiên đăng nhập không hợp lệ');
+          } else {
+            this.message.error(`Đã xảy ra lỗi (${err.status})`);
+          }
         }
       });
+
     } else {
       Object.values(this.validateForm.controls).forEach((control) => {
         if (control.invalid) {

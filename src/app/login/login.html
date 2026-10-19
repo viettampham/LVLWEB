@@ -17,11 +17,12 @@
           </nz-form-control>
         </nz-form-item>
 
-        <nz-form-item nzLayout="vertical">
+        <nz-form-item class="relative" nzLayout="vertical">
+          <nz-icon class="absolute right-0" style="top:50%" nzInputPrefix nzType="eye" />
           <nz-form-label [nzSpan]="4">Password</nz-form-label>
           <nz-form-control nzErrorTip="Please input your Password!">
             <nz-input-password>
-              <nz-icon nzInputPrefix nzType="eye" />
+              <nz-icon nzType="eye" nzTheme="outline" />
               <input nz-input type="password" formControlName="password" placeholder="**********" />
             </nz-input-password>
           </nz-form-control>

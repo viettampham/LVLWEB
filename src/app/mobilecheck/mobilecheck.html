@@ -1,0 +1,154 @@
+<div class="layout">
+    <nz-steps nzSize="small" [nzCurrent]="current()" [nzDirection]="isMobile ? 'vertical' : 'horizontal'">
+      <nz-step nzTitle="Chụp ảnh" />
+      <nz-step nzTitle="Gán người chịu trách nhiệm" />
+      <nz-step nzTitle="Done" />
+    </nz-steps>
+
+<div class="steps-content p-3">
+  @switch (current()) {
+    @case (0) {
+      <!-- Step 1: Chụp ảnh -->
+      <div>
+        <h3>Chụp ảnh</h3>
+        <p>Thực hiện chụp ảnh tại đây.</p>
+
+        <div style="width: 100%; height: 100%;">
+          <video
+            #video
+            autoplay
+            playsinline>
+        </video>
+        </div>
+
+        <div class="mt-5">
+            <button nz-button nzType="primary" (click)="captureImage()">
+                Chụp ảnh
+            </button>
+            <!-- <button nz-button nzDanger="" (click)="closeCamera()">
+                Tắt camera
+            </button> -->
+        </div>
+      </div>
+    }
+
+    @case (1) {
+      <div>
+        <div *ngIf="capturedImage" >
+            <!-- <span class="font-medium">Ảnh before</span> -->
+            <img class="w-full" [src]="capturedImage" alt="Captured Image" />
+        </div>
+        <div style="margin-top: 12px;">
+            <form  nz-form [formGroup]="formAssignee" (submit)="SubmitFormAssigee()">
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="24" nzRequired>
+                    Loaction
+                    </nz-form-label>
+                    <nz-form-control
+                        [nzSpan]="24"
+                        nzErrorTip="Vui lòng chọn location"
+                        >
+                        <nz-select formControlName="location">
+                          <nz-option *ngFor="let item of lstLocation()" [nzValue]="item" [nzLabel]="item" />
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item >
+                    <nz-form-label [nzSpan]="24" nzRequired>
+                    Tiêu chuẩn
+                    </nz-form-label>
+                    <nz-form-control
+                    [nzSpan]="24"
+                    nzErrorTip="Vui lòng chọn tiêu chuẩn"
+                    >
+                    <nz-select formControlName="operationstandard" nzShowSearch nzAllowClear >
+                        <nz-option *ngFor="let item of lstOperationStandard()" [nzValue]="item.id" [nzLabel]="item.operationStandard1" />
+                    </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="24" nzRequired>
+                    Hạng mục
+                    </nz-form-label>
+                    <nz-form-control
+                    [nzSpan]="24"
+                    nzErrorTip="Vui lòng chọn tiêu chuẩn"
+                    >
+                    <nz-select formControlName="detechissue" nzShowSearch nzAllowClear >
+                        <nz-option *ngFor="let item of lstDetechIssue()" [nzValue]="item.id" [nzLabel]="item.detechIssue1" />
+                    </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="24">
+                    Nội dung phát hiện
+                    </nz-form-label>
+                    <nz-form-control [nzSpan]="24">
+                    <textarea
+                        nz-input
+                        rows="4"
+                        formControlName="note"
+                        placeholder="Ghi chú"
+                    ></textarea>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="24" nzRequired>
+                    Người phụ trách
+                    </nz-form-label>
+                    <nz-form-control
+                    [nzSpan]="24"
+                    nzErrorTip="Vui lòng nhập người phụ trách"
+                    >
+                    <nz-select formControlName="assignee" nzShowSearch nzAllowClear >
+                            <nz-option *ngFor="let item of lstAssignee()" [nzValue]="item" [nzLabel]="item" />
+                        </nz-select>
+                    </nz-form-control>
+                </nz-form-item>
+                <nz-form-item>
+                    <nz-form-label [nzSpan]="24" nzRequired>
+                    Ngày hết hạn
+                    </nz-form-label>
+                    <nz-form-control [nzSpan]="24">
+                        <nz-date-picker style="width: 100%;" nzFormat="dd/MM/yyyy" formControlName="duedate" />
+                    </nz-form-control>
+                </nz-form-item>
+            </form>
+            <button nz-button nzType="primary" (click)="SubmitFormAssigee()">
+                Xác nhận
+            </button>
+        </div>
+      </div>
+    }
+
+    @case (2) {
+      <!-- Step 3: Hoàn tất -->
+      <div style="display: flex; flex-direction: column; justify-content: center; align-items: center; height: 180px;">
+        <nz-icon class="text-3xl" style="color: #419ae6;" nzType="check-circle" nzTheme="outline" />
+        <h3 class="text-xl text-blue-500 mt-5" style="margin-top: 12px;">Hoàn tất</h3>
+      </div>
+    }
+  }
+</div>
+    
+    
+    <div class="steps-action">
+      @if (current() > 0) {
+        <button nz-button nzType="default" (click)="pre()">
+          <span>Previous</span>
+        </button>
+      }
+      @if (current() < 2) {
+        <button style="display: none;" nz-button nzType="default" (click)="next()">
+          <span>Next</span>
+        </button>
+      }
+      @if (current() === 2) {
+        <button nz-button nzType="primary" (click)="done()">
+          <span>Done</span>
+        </button>
+      }
+    </div>
+</div>

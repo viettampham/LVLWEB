@@ -13,16 +13,19 @@
         <nz-icon nzType="desktop" />
         <span>Màn hình khách</span>
       </li>
-      <li nz-submenu nzTitle="Quản lý hệ thống" nzIcon="partition">
+      <li *ngIf="CurrentUser.RoleLevel == 1 || CurrentUser.RoleLevel == 2" nz-submenu nzTitle="Quản lý hệ thống" nzIcon="partition">
         <ul>
           <li nz-menu-item (click)="onHandleGoTo('/home/quanlynhanvien','Quản lý hệ thống, Quản lý nhân viên')">Quản lý nhân viên</li>
-          <li nz-menu-item (click)="onHandleGoTo('quanlynhanvien','Quản lý hệ thống, Quản lý danh mục')">Quản lý danh mục</li>
-          <li nz-menu-item (click)="onHandleGoTo('quanlynhanvien','Quản lý hệ thống, Tra cứu')">Tra cứu</li>
+          <li nz-menu-item (click)="onHandleGoTo('/home/quanlydanhmuc','Quản lý hệ thống, Quản lý danh mục')">Quản lý danh mục</li>
+          <li nz-menu-item (click)="onHandleGoTo('/home/quanlytintuc','Quản lý hệ thống, Quản lý tin tức')">Quản lý tin tức</li>
+          <li nz-menu-item (click)="onHandleGoTo('quanlynhanvien','Quản trị hệ thống, Cấu hình')">Cấu hình</li>
         </ul>
       </li>
-      <li nz-submenu nzTitle="Quản trị hệ thống" nzIcon="appstore">
+      <li nz-submenu nzTitle="Audit" nzIcon="audit">
         <ul>
-          <li nz-menu-item (click)="onHandleGoTo('quanlynhanvien','Quản trị hệ thống, Cấu hình')">Cấu hình</li>
+          <li nz-menu-item (click)="onHandleGoTo('/home/dailycheck','Audit, Daily Check')">Audit Check</li>
+          <li nz-menu-item (click)="onHandleGoTo('/home/mobilecheck','Audit, Mobile check')">Mobile Check</li>
+          <li nz-menu-item (click)="onHandleGoTo('/home/hisdaily','Audit, Lịch sử')">Lịch sử check daily</li>
         </ul>
       </li>
       <li nz-submenu nzTitle="Báo cáo" nzIcon="team">

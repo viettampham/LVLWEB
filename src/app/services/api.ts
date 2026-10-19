@@ -11,6 +11,9 @@ import { ContModal } from '../../model/Responsemodel/ContModal';
 import { ConImageResponse } from '../../model/Responsemodel/ConImageResponse';
 import { DeclareContRequest } from '../../model/RequestModel/DeclareContRequest';
 import { ConImageResponseWithIDCont } from '../../model/RequestModel/ConImageResponseWithIDCont';
+import { CreateAuditRequest } from '../../model/RequestModel/CreateAuditRequest';
+import { GetAuditRequest } from '../../model/RequestModel/GetAuditRequest';
+import { GetAuditDetail } from '../../model/RequestModel/GetAuditDetail';
 
 @Injectable({
   providedIn: 'root',
@@ -59,4 +62,63 @@ export class Api {
       `${environment.api_domain}/api/DeclareCont/add-image-to-cont`,request
     );
   }
+
+  CreateAudit=(request: CreateAuditRequest)=>{
+    return this.httpClient.post<any>(
+      `${environment.api_domain}/api/Audit/create-audit`,request
+    );
+  }
+
+  GetAudit=(request: any)=>{
+    return this.httpClient.post<any>(
+      `${environment.api_domain}/api/Audit/get-audit`,request
+    );
+  }
+
+  DeleteAudit=(id: number)=>{
+    return this.httpClient.delete<any>(`${environment.api_domain}/api/Audit/delete-audit/${id}`);
+  }
+
+  GetOperationStandard=()=>{
+    return this.httpClient.get<any>(`${environment.api_domain}/api/Audit/get-all-operationstandard`);
+  }
+
+  GetDetechIssue=(id: number)=>{
+    return this.httpClient.get<any>(`${environment.api_domain}/api/Audit/get-detechissue?id=${id}`);
+  }
+
+  GetAssignee=()=>{
+    return this.httpClient.get<any>(`${environment.api_domain}/api/Audit/get-assignee`);
+  }
+
+  CreateAuditDetail=(request: FormData)=>{
+    return this.httpClient.post<any>(
+      `${environment.api_domain}/api/Audit/create-audit-detail-daily`,request
+    );
+  }
+
+  GetAuditDetail=(request: any)=>{
+    return this.httpClient.post<any>(
+      `${environment.api_domain}/api/Audit/get-audit-detail`,request
+    );
+  }
+
+  GetLocation=()=>{
+    return this.httpClient.get<any>(`${environment.api_domain}/api/Audit/get-location`);
+  }
+
+  GetAuditDetailById=(id: number)=>{
+    return this.httpClient.get<any>(`${environment.api_domain}/api/Audit/get-auditdetail-by-id?id=${id}`);
+  }
+
+  AddImageAfterToAuditDetail=(request: FormData)=>{
+    return this.httpClient.post<any>(
+      `${environment.api_domain}/api/Audit/add-image-after`,request
+    );
+  }
+
+  GetRole=()=>{
+    return this.httpClient.get<any>(`${environment.api_domain}/api/User/get-role`);
+  }
+
 }

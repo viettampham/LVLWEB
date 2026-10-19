@@ -30,7 +30,19 @@ import { CommonModule } from '@angular/common';
 export class Home {
   protected readonly date = new Date();
   breacums: string[] = [];
+  CurrentUser: any = null;
   constructor(private router: Router) {}
+
+  ngOnInit(): void {
+    const token = sessionStorage.getItem('token');
+    if (token) {
+      const user = JSON.parse(atob(token.split('.')[1]));
+      this.CurrentUser = user;
+    } else {
+      this.router.navigate(['']);
+    }
+    console.log('CurrentUser', this.CurrentUser);
+  }
 
   onHandleGoTo(routerlink: string, breacum: string) {
     this.router.navigate([routerlink]);

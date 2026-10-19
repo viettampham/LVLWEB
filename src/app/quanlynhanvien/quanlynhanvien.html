@@ -1,8 +1,8 @@
-<div class="text-md mb-5 relative"><span class="mark-header absolute top-0 left-0"></span> <span class="ml-2">DANH SÁCH NHÂN VIÊN</span></div>
+<!-- <div class="text-md mb-5 relative"><span class="mark-header absolute top-0 left-0"></span> <span class="ml-2">DANH SÁCH NHÂN VIÊN</span></div> -->
 
 <div class="filter relative">
   <span class="absolute" style="top: -12px;left: 24px;background-color: white;padding: 0 4px;">Bộ lọc dữ liệu<nz-icon nzType="filter" nzTheme="outline" /></span>
-  <div class="border border-blue-200 rounded-md p-5">
+  <div class="border border-blue-200 rounded-md p-2">
     <form nz-form nzLayout="inline" [formGroup]="SearchForm" (ngSubmit)="SearchUser()">
       <nz-form-item>
         <nz-form-control>
@@ -88,7 +88,7 @@
         <td>{{ data.phongBan }}</td>
         <td nzRight="0px">
           <div class="flex justify-evenly items-center">
-            <button nz-button nzType="primary" nzShape="circle">
+            <button (click)="openModalConfigUser(data)" nz-button nzType="primary" nzShape="circle">
               <nz-icon nzType="edit" nzTheme="outline" />
             </button>
             <button nz-popconfirm
@@ -113,3 +113,146 @@
   (nzPageIndexChange)="ChangePageIndex($event)"
   (nzPageSizeChange)="ChangePageSize($event)"
    />
+
+
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzWidth="650px"
+  [nzMaskClosable]="true"
+  [nzStyle]="{ top: '20px' }"
+  (nzOnCancel)="handleCancel()"
+  [nzFooter]="modalFooter">
+
+  <ng-container *nzModalTitle>
+    <div class="modal-header-custom">
+      <span nz-icon nzType="user" nzTheme="outline"></span>
+      <span>Cập nhật dữ liệu người dùng</span>
+    </div>
+  </ng-container>
+
+  <ng-template #modalFooter>
+    <button nz-button nzDanger (click)="handleCancel()">
+      Hủy
+    </button>
+
+    <button nz-button nzType="primary" (click)="submitForm()">
+      <span nz-icon nzType="save"></span>
+      Xác nhận
+    </button>
+  </ng-template>
+
+  <ng-container *nzModalContent>
+    <div class="user-info-card">
+
+      <div class="avatar-section">
+        <div class="title">
+          Thông tin người dùng
+        </div>
+      </div>
+
+      <form nz-form [formGroup]="UpdateForm" nzLayout="vertical">
+
+        <div nz-row [nzGutter]="16">
+
+          <div nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label [nzRequired]="true">
+                Họ tên
+              </nz-form-label>
+              <nz-form-control nzErrorTip="Vui lòng nhập họ tên">
+                <input
+                  nz-input
+                  formControlName="fullName"
+                  placeholder="Nhập họ tên" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label [nzRequired]="true">
+                Tên đăng nhập
+              </nz-form-label>
+              <nz-form-control nzErrorTip="Vui lòng nhập tên đăng nhập">
+                <input
+                  nz-input
+                  formControlName="userName"
+                  placeholder="Nhập username" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label>Email</nz-form-label>
+              <nz-form-control nzErrorTip="Email không hợp lệ">
+                <input
+                  nz-input
+                  formControlName="email"
+                  placeholder="Nhập email" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label>Số điện thoại</nz-form-label>
+              <nz-form-control>
+                <input
+                  nz-input
+                  formControlName="phoneNumber"
+                  placeholder="Nhập số điện thoại" />
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label>Ngày sinh</nz-form-label>
+              <nz-form-control nzErrorTip="Ngày sinh không hợp lệ">
+                <nz-date-picker style="width: 100%;" nzFormat="dd/MM/yyyy" formControlName="dateOfBirth"/>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label>Giới tính</nz-form-label>
+              <nz-form-control>
+                <nz-select formControlName="gender">
+                  <nz-option nzValue="" nzLabel="--Chọn giới tính" />
+                  <nz-option nzValue="Nam" nzLabel="Nam" />
+                  <nz-option nzValue="Nữ" nzLabel="Nữ" />
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col nzSpan="24">
+            <nz-form-item>
+              <nz-form-label>Địa chỉ</nz-form-label>
+              <nz-form-control>
+                <textarea
+                  nz-input
+                  rows="3"
+                  formControlName="address"
+                  placeholder="Nhập địa chỉ">
+                </textarea>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+
+        <p>Phân quyền cho tài khoản</p>
+        <nz-radio-group style="display: flex;"  formControlName="roleLevel">
+          <label *ngFor="let item of lstRole"
+                nz-radio
+                [nzValue]="item.id">
+            {{ item.roleName }}
+          </label>
+        </nz-radio-group>
+      </form>
+
+    </div>
+  </ng-container>
+</nz-modal>

@@ -27,3 +27,67 @@
 ::ng-deep .ant-table-body::-webkit-scrollbar-track {
   background: #f3f4f6;
 }
+
+.modal-header-custom {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 18px;
+  font-weight: 600;
+  color: #1677ff;
+}
+
+.user-info-card {
+  background: #fafafa;
+  border-radius: 12px;
+  padding: 20px;
+}
+
+.avatar-section {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  margin-bottom: 24px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.avatar-section .title {
+  font-size: 16px;
+  font-weight: 600;
+  color: #262626;
+}
+
+label {
+  display: block;
+  margin-bottom: 6px;
+  font-weight: 500;
+  color: #595959;
+}
+
+.ant-input,
+.ant-input-affix-wrapper,
+textarea {
+  border-radius: 4px;
+}
+
+.ant-input:hover,
+.ant-input:focus,
+textarea:focus {
+  border-color: #1677ff;
+}
+
+::ng-deep .ant-modal-content {
+  border-radius: 16px;
+  overflow: hidden;
+}
+
+::ng-deep .ant-modal-footer {
+  padding: 16px 24px;
+  border-top: 1px solid #f0f0f0;
+}
+
+::ng-deep .ant-btn {
+  border-radius: 8px;
+  //min-width: 100px;
+}
