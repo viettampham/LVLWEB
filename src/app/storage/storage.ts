@@ -13,9 +13,9 @@ import { ReactiveFormsModule } from '@angular/forms';
 import { Router } from '@angular/router';
 import { Api } from '../services/api';
 import { NzMessageService } from 'ng-zorro-antd/message';
-import { BookOutline } from '@ant-design/icons-angular/icons';
 import { ConImageResponse } from '../../model/Responsemodel/ConImageResponse';
 import { NzSpinModule } from 'ng-zorro-antd/spin';
+import { NzImage, NzImageModule, NzImageService } from 'ng-zorro-antd/image';
 
 @Component({
   imports: [
@@ -28,8 +28,9 @@ import { NzSpinModule } from 'ng-zorro-antd/spin';
     NzInputModule,
     ReactiveFormsModule,
     NzSpinModule,
-    NgIf
-],
+    NgIf,
+    NzImageModule,
+  ],
   selector: 'app-storage',
   styleUrl: './storage.scss',
   templateUrl: './storage.html',
@@ -47,6 +48,9 @@ export class Storage {
   totalRecords = signal(0);
   readonly isVisible = signal(false);
   idCont = signal(0);
+
+  imagePreview: any = null;
+  isShowImage = signal(false);
   readonly isVisibleCam = signal(false);
   formAddCont: FormGroup;
   filterForm: FormGroup;
@@ -60,12 +64,12 @@ export class Storage {
   videoRef!: ElementRef<HTMLVideoElement>;
   stream!: MediaStream;
   CurrentUser: any = null;
-  
   constructor(
     private fb: FormBuilder,
     private router: Router,
     private api: Api,
-    private message: NzMessageService
+    private message: NzMessageService,
+    private nzImageService: NzImageService,
   ) {
     this.formAddCont = this.fb.group({
       soBooking: this.fb.control('', [Validators.required]),
@@ -89,13 +93,12 @@ export class Storage {
       });
 
       this.SearchCont();
-
     } else {
       this.router.navigate(['']);
     }
   }
 
-  SearchCont(){
+  SearchCont() {
     var request = {
       pageIndex: this.pageIndex(),
       pageSize: this.pageSize(),
@@ -107,8 +110,7 @@ export class Storage {
       if (res.status === 'SUCCESS') {
         this.listOfData.set(res.data.data);
         this.totalRecords.set(res.data.totalRecords);
-      }else
-      {
+      } else {
         this.message.error(res.message);
       }
     });
@@ -147,16 +149,16 @@ export class Storage {
       const stream = await navigator.mediaDevices.getUserMedia({
         video: {
           facingMode: {
-            ideal: 'environment'
+            ideal: 'environment',
           },
           width: {
-            ideal: 1920
+            ideal: 1920,
           },
           height: {
-            ideal: 1080
-          }
+            ideal: 1080,
+          },
         },
-        audio: false
+        audio: false,
       });
 
       const video = this.videoRef.nativeElement;
@@ -174,7 +176,7 @@ export class Storage {
     const video = this.videoRef.nativeElement;
     const stream = video.srcObject as MediaStream;
     if (stream) {
-      stream.getTracks().forEach(track => track.stop());
+      stream.getTracks().forEach((track) => track.stop());
     }
     video.pause();
     video.srcObject = null;
@@ -191,20 +193,13 @@ export class Storage {
     }
 
     try {
-
       // Lấy GPS
-      const position = await new Promise<GeolocationPosition>(
-        (resolve, reject) => {
-          navigator.geolocation.getCurrentPosition(
-            resolve,
-            reject,
-            {
-              enableHighAccuracy: true,
-              timeout: 10000
-            }
-          );
-        }
-      );
+      const position = await new Promise<GeolocationPosition>((resolve, reject) => {
+        navigator.geolocation.getCurrentPosition(resolve, reject, {
+          enableHighAccuracy: true,
+          timeout: 10000,
+        });
+      });
 
       const lat = position.coords.latitude;
       const lng = position.coords.longitude;
@@ -213,9 +208,8 @@ export class Storage {
       let locationText = 'Không xác định';
 
       try {
-
         const response = await fetch(
-          `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`
+          `https://nominatim.openstreetmap.org/reverse?format=jsonv2&lat=${lat}&lon=${lng}`,
         );
 
         const data = await response.json();
@@ -230,16 +224,9 @@ export class Storage {
           address.city_district ||
           '';
 
-        const city =
-          address.city ||
-          address.province ||
-          address.state ||
-          '';
+        const city = address.city || address.province || address.state || '';
 
-        locationText = [ward, city]
-          .filter(Boolean)
-          .join(', ');
-
+        locationText = [ward, city].filter(Boolean).join(', ');
       } catch (e) {
         console.error('Lỗi lấy địa chỉ:', e);
       }
@@ -255,13 +242,7 @@ export class Storage {
       }
 
       // Chụp ảnh
-      context.drawImage(
-        video,
-        0,
-        0,
-        canvas.width,
-        canvas.height
-      );
+      context.drawImage(video, 0, 0, canvas.width, canvas.height);
 
       const now = new Date();
 
@@ -269,93 +250,63 @@ export class Storage {
 
       // Nền mờ
       context.fillStyle = 'rgba(0,0,0,0.6)';
-      context.fillRect(
-        10,
-        canvas.height - 110,
-        700,
-        90
-      );
+      context.fillRect(10, canvas.height - 110, 700, 90);
 
       // Chữ
       context.fillStyle = '#ffffff';
       context.font = '24px Arial';
 
-      context.fillText(
-        timeText,
-        20,
-        canvas.height - 65
-      );
+      context.fillText(timeText, 20, canvas.height - 65);
 
-      context.fillText(
-        locationText,
-        20,
-        canvas.height - 25
-      );
+      context.fillText(locationText, 20, canvas.height - 25);
 
       // Preview
-      this.capturedImage = canvas.toDataURL(
-        'image/jpeg',
-        0.9
-      );
+      this.capturedImage = canvas.toDataURL('image/jpeg', 0.9);
 
       // Upload
-      canvas.toBlob((blob) => {
-
-        if (!blob) {
-          return;
-        }
-
-        const file = new File(
-          [blob],
-          `photo_${Date.now()}.jpg`,
-          {
-            type: 'image/jpeg'
+      canvas.toBlob(
+        (blob) => {
+          if (!blob) {
+            return;
           }
-        );
 
-        const req = new FormData();
+          const file = new File([blob], `photo_${Date.now()}.jpg`, {
+            type: 'image/jpeg',
+          });
 
-        req.append(
-          'idCont',
-          this.idCont().toString()
-        );
+          const req = new FormData();
 
-        req.append(
-          'nguoiChup',
-          this.CurrentUser.Fullname
-        );
+          req.append('idCont', this.idCont().toString());
 
-        req.append(
-          'image',
-          file
-        );
+          req.append('nguoiChup', this.CurrentUser.Fullname);
 
-        this.api
-          .AddImagetoCont(req)
-          .subscribe((res: any) => {
+          req.append('image', file);
 
+          this.api.AddImagetoCont(req).subscribe((res: any) => {
             if (res.status === 'SUCCESS') {
               this.message.success(res.message);
               this.closeCamera();
             } else {
               this.message.error(res.message);
             }
-
           });
-
-      }, 'image/jpeg', 0.9);
-
+        },
+        'image/jpeg',
+        0.9,
+      );
     } catch (error) {
       console.error(error);
-      this.message.warning(
-        'Không lấy được vị trí hiện tại. Vui lòng bật Location trên thiết bị.'
-      );
+      this.message.warning('Không lấy được vị trí hiện tại. Vui lòng bật Location trên thiết bị.');
     }
   }
 
   handleCancel(): void {
     this.isVisible.set(false);
     this.idCont.set(0);
+  }
+
+  handleCancelModalImage(): void {
+    this.isShowImage.set(false);
   }
 
   submitForm() {
@@ -398,41 +349,66 @@ export class Storage {
   }
 
   viewImage(id: number) {
+    this.api.ViewImage(id).subscribe((res: any) => {
+      if (res.status === 'SUCCESS') {
+        this.imagePreview = `data:image/jpeg;base64,${res.data}`;
+        this.isShowImage.set(true);
+      } else {
+        this.imagePreview = null;
+        this.isShowImage.set(false);
+        this.message.error(res.message);
+      }
+    });
   }
 
   downloadImage(data: ContModal) {
     console.log(data);
-    console.log('Download image for id:', data.id, 'soBooking:', data.soBooking, 'soCont:', data.soCont);
+    console.log(
+      'Download image for id:',
+      data.id,
+      'soBooking:',
+      data.soBooking,
+      'soCont:',
+      data.soCont,
+    );
     this.isLoading.set(true);
-    this.api.DownloadImage(data.id).subscribe((res: any) => {
-      if (res) {
-        const blob = new Blob([res], { type: 'application/zip' });
-        const url = window.URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${data.soBooking}_${data.soCont}_${data.id}.zip`;
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-        window.URL.revokeObjectURL(url);
-      } else {
+    this.api.DownloadImage(data.id).subscribe(
+      (res: any) => {
+        if (res) {
+          const blob = new Blob([res], { type: 'application/zip' });
+          const url = window.URL.createObjectURL(blob);
+          const a = document.createElement('a');
+          a.href = url;
+          a.download = `${data.soBooking}_${data.soCont}_${data.id}.zip`;
+          document.body.appendChild(a);
+          a.click();
+          document.body.removeChild(a);
+          window.URL.revokeObjectURL(url);
+        } else {
+          this.message.error('Download failed');
+        }
+        this.isLoading.set(false);
+      },
+      (error) => {
         this.message.error('Download failed');
-      }
-      this.isLoading.set(false);
-    }, (error) => {
-      this.message.error('Download failed');
-      this.isLoading.set(false);
-    });
+        this.isLoading.set(false);
+      },
+    );
   }
 
   ConvertDattimeDisplay(dateTimeString: string) {
     const date = new Date(dateTimeString);
     const result =
-      String(date.getDate()).padStart(2, '0') + '/' +
-      String(date.getMonth() + 1).padStart(2, '0') + '/' +
-      date.getFullYear() + ' ' +
-      String(date.getHours()).padStart(2, '0') + ':' +
-      String(date.getMinutes()).padStart(2, '0') + ':' +
+      String(date.getDate()).padStart(2, '0') +
+      '/' +
+      String(date.getMonth() + 1).padStart(2, '0') +
+      '/' +
+      date.getFullYear() +
+      ' ' +
+      String(date.getHours()).padStart(2, '0') +
+      ':' +
+      String(date.getMinutes()).padStart(2, '0') +
+      ':' +
       String(date.getSeconds()).padStart(2, '0');
 
     return result;
