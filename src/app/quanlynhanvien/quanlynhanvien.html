@@ -144,11 +144,11 @@
   <ng-container *nzModalContent>
     <div class="user-info-card">
 
-      <div class="avatar-section">
+      <!-- <div class="avatar-section">
         <div class="title">
           Thông tin người dùng
         </div>
-      </div>
+      </div> -->
 
       <form nz-form [formGroup]="UpdateForm" nzLayout="vertical">
 
@@ -251,6 +251,34 @@
             {{ item.roleName }}
           </label>
         </nz-radio-group>
+
+        <div nz-row [nzGutter]="16">
+          <div nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label>Phòng ban</nz-form-label>
+              <nz-form-control>
+                <nz-select formControlName="phongBan">
+                  <nz-option nzValue="" nzLabel="--Chọn giới tính" />
+                  <nz-option nzValue="Nam" nzLabel="Nam" />
+                  <nz-option nzValue="Nữ" nzLabel="Nữ" />
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+
+          <div nz-col nzSpan="12">
+            <nz-form-item>
+              <nz-form-label>Trạng thái</nz-form-label>
+              <nz-form-control>
+                <nz-select formControlName="trangThai">
+                  <nz-option nzValue="" nzLabel="--Chọn trạng thái cập nhật--" />
+                  <nz-option nzValue="Nam" nzLabel="Nam" />
+                </nz-select>
+              </nz-form-control>
+            </nz-form-item>
+          </div>
+        </div>
+
       </form>
 
     </div>

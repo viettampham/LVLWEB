@@ -175,7 +175,8 @@ export class Quanlynhanvien {
       dateOfBirth: data.dateOfBirth,
       gender: data.gender,
       cccd: data.cccd,
-      roleLevel: data.roleLevel
+      roleLevel: data.roleLevel,
+      phongBan: data.phongBan,
     });
     console.log(this.UpdateForm.value);
   }

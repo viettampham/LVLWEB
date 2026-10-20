@@ -52,13 +52,20 @@ export class CartonCounter {
     const formData = new FormData();
     formData.append('file', rawFile);
 
-    this.http.post<any>(`${environment.domainTools}/count`, formData).subscribe({
+    this.http.post<any>(
+      `${environment.api_domain}/api/DeclareCont/count`,
+      formData
+    ).subscribe({
       next: (res) => {
         console.log('Kết quả:', res);
+
         this.counter.set(res.count);
-        this.linkscr.set(res.image_url);
+
+        this.linkscr.set(
+          'data:image/jpeg;base64,' + res.imageBase64
+        );
+
         this.isRes.set(true);
-        console.log(this.counter);
       },
       error: (err) => {
         console.error(err);
@@ -68,6 +75,7 @@ export class CartonCounter {
         this.#messageService.error('Lỗi gọi API');
       },
     });
+
 
     return false;
   };

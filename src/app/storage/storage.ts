@@ -349,16 +349,16 @@ export class Storage {
   }
 
   viewImage(id: number) {
-    this.api.ViewImage(id).subscribe((res: any) => {
-      if (res.status === 'SUCCESS') {
-        this.imagePreview = `data:image/jpeg;base64,${res.data}`;
-        this.isShowImage.set(true);
-      } else {
-        this.imagePreview = null;
-        this.isShowImage.set(false);
-        this.message.error(res.message);
-      }
-    });
+    // this.api.ViewImage(id).subscribe((res: any) => {
+    //   if (res.status === 'SUCCESS') {
+    //     this.imagePreview = `data:image/jpeg;base64,${res.data}`;
+    //     this.isShowImage.set(true);
+    //   } else {
+    //     this.imagePreview = null;
+    //     this.isShowImage.set(false);
+    //     this.message.error(res.message);
+    //   }
+    // });
   }
 
   downloadImage(data: ContModal) {
