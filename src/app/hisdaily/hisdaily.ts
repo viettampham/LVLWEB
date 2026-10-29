@@ -5,7 +5,7 @@ import { AuditDetailResponse } from '../../model/Responsemodel/AuditDetailRespon
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzInputModule } from 'ng-zorro-antd/input';
-import { FormBuilder, FormGroup, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzButtonModule } from 'ng-zorro-antd/button';
@@ -15,10 +15,17 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { CommonModule } from '@angular/common';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzTagModule } from 'ng-zorro-antd/tag';
+import { NzTabsModule } from 'ng-zorro-antd/tabs';
+import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
+import { NzUploadComponent } from 'ng-zorro-antd/upload';
+import { FormsModule } from '@angular/forms';
+import { NzDropdownModule } from 'ng-zorro-antd/dropdown';
+
+
 
 @Component({
-  imports: [NzTableModule, NzButtonModule, CommonModule,NzTagModule,NzIconModule,
-    NzPaginationComponent, NzIconModule, NzFormModule, NzInputModule, ReactiveFormsModule, NzDatePickerModule, NzSelectModule, NzModalModule],
+  imports: [NzTableModule, NzButtonModule, CommonModule, NzTagModule, NzIconModule, NzCheckboxModule, FormsModule,
+    NzPaginationComponent, NzIconModule, NzFormModule, NzInputModule, ReactiveFormsModule, NzDatePickerModule, NzSelectModule, NzModalModule, NzTabsModule, NzUploadComponent, NzDropdownModule],
   selector: 'app-hisdaily',
   styleUrl: './hisdaily.scss',
   templateUrl: './hisdaily.html',
@@ -26,11 +33,16 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 export class Hisdaily {
   listOfData = signal<AuditDetailResponse[]>([]);
   pageIndex = signal(1);
+  pageIndex2 = signal(1);
   pageSize = signal(10);
+  pageSize2 = signal(10);
   totalRecords = signal(0);
   searchForm: FormGroup;
+  serchOwner: FormGroup;
+  FormPhanCong: FormGroup;
   CurrentUser: any = null;
   readonly isVisible = signal(false); 
+  readonly isVisiblePhanCong = signal(false); 
   selectedItem : any = null;
   iShowCard = signal(false);
   @ViewChild('video')
@@ -40,6 +52,8 @@ export class Hisdaily {
   capturedImageAfter = ''; 
   isShowCam = signal(true); 
   idAuditDetail = 0;
+  ActionPlan = '';
+  lstAssignee = signal<any[]>([]);
   
   constructor(private fb: FormBuilder, private router: Router, private api: Api, private message: NzMessageService){
     const today = new Date();
@@ -51,9 +65,26 @@ export class Hisdaily {
 
     this.searchForm = this.fb.group({
       assignee: [''],
-      status: [''],
-      //dateChose: [[firstDayOfMonth, today]]
+      status: ['Mới phát hiện'],
     });
+
+    this.serchOwner = this.fb.group({
+      owner: [''],
+      status: ['Chưa phân công'],
+    });
+
+    this.FormPhanCong = this.fb.group({
+      assignee: ['',Validators.required],
+      duedate: [today,Validators.required]
+    });
+
+  }
+
+  onStatusChange(checked: boolean) {
+    this.searchForm.patchValue({
+      status: checked ? "Đã hoàn thành" : "Phát hành"
+    })
+    this.SearchAuditDetail();
   }
 
   ngOnInit(): void {
@@ -63,7 +94,7 @@ export class Hisdaily {
       this.CurrentUser = user;
       this.searchForm.patchValue({
         assignee: this.CurrentUser.Fullname,
-        status: "Mới phát hiện"
+        status: "Phát hành"
       });
     } else {
       this.router.navigate(['']);
@@ -72,9 +103,25 @@ export class Hisdaily {
     this.SearchAuditDetail();
   }
 
+  GetAssignee(){
+    this.api.GetAssignee().subscribe(res=>{
+      if(res.status == "SUCCESS"){
+        this.lstAssignee.set(res.listData);
+      }else{
+        this.lstAssignee.set([]);
+        this.message.create(res.status.toLowerCase(), res.message);
+      }
+    })
+  }
+
   ChangePageIndex(pageIndex: number) {
     this.pageIndex.set(pageIndex);
     this.SearchAuditDetail();
+  }
+
+  ChangePageIndex2(pageIndex: number) {
+    this.pageIndex2.set(pageIndex);
+    this.GetAuditDetailOwner();
   }
 
   ChangePageSize(pageSize: number) {
@@ -82,15 +129,55 @@ export class Hisdaily {
     this.SearchAuditDetail();
   }
 
-  SearchAuditDetail(){
-    //const [from, to] = this.searchForm.value.dateChose || [];
+  ChangePageSize2(pageSize: number) {
+    this.pageSize2.set(pageSize);
+    this.SearchAuditDetail();
+  }
+
+  GetAuditDetailOwner(){
     var req = {
-      pageIndex : this.pageIndex,
-      pageSize: this.pageSize,
+      pageIndex : this.pageIndex2(),
+      pageSize: this.pageSize2(),
+      owner: this.CurrentUser.Fullname,
+      status: this.serchOwner.controls['status'].value,
+    }
+    this.api.GetAuditDetailOwner(req).subscribe(res=>{
+      if(res.status == "SUCCESS"){
+        this.listOfData.set(res.data.data);
+        this.totalRecords.set(res.data.totalRecords);
+      }else{
+        this.listOfData.set([]);
+        this.message.create(res.status.toLowerCase(), res.message);
+      }
+    })
+  }
+
+  beforeUpload = (file: any): boolean => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      this.capturedImageAfter = reader.result as string;
+      this.closeCamera();
+    };
+
+    reader.readAsDataURL(file);
+    return false;
+  };
+
+  onTabChange(index: number) {
+    if (index == 0) {
+      this.SearchAuditDetail();
+    }else if(index == 1){
+      this.GetAuditDetailOwner();
+    }
+  }
+
+  SearchAuditDetail(){
+    var req = {
+      pageIndex : this.pageIndex(),
+      pageSize: this.pageSize(),
       assignee: this.searchForm.controls['assignee'].value,
-      //fromDate: from? `${from.getFullYear()}-${String(from.getMonth() + 1).padStart(2, '0')}-${String(from.getDate()).padStart(2, '0')}`: null,
-      //toDate: to? `${to.getFullYear()}-${String(to.getMonth() + 1).padStart(2, '0')}-${String(to.getDate()).padStart(2, '0')}`: null,
-      status: this.searchForm.controls['status'].value,
+      status: this.searchForm.controls['status'].value 
     }
     this.api.GetAuditDetail(req).subscribe(res=>{
       if(res.status == "SUCCESS"){
@@ -105,6 +192,14 @@ export class Hisdaily {
 
   captureImage() {
     const video = this.videoRef.nativeElement;
+    if (!video || !video.srcObject) {
+      this.message.warning('Vui lòng mở camera trước');
+      return;
+    }
+    if(video == null || video == undefined){
+      this.message.create("warning","Vui lòng click mở camera");
+      return;
+    }
     const canvas = document.createElement('canvas');
     canvas.width = video.videoWidth;
     canvas.height = video.videoHeight;
@@ -133,6 +228,10 @@ export class Hisdaily {
   }
 
   ConvertDate(dateTimeString: string) {
+    if(dateTimeString == "" || dateTimeString == null){
+      return "Chờ phân công";
+    }
+
     const date = new Date(dateTimeString);
     const result =
       String(date.getDate()).padStart(2, '0') + '/' +
@@ -143,11 +242,25 @@ export class Hisdaily {
     return result;
   }
 
+  onOpenChange(open: boolean): void {
+    if(open == false){
+      this.SearchAuditDetail();
+    }
+  }
+
+  onStatusChangePhanCong(checked: boolean){
+    this.serchOwner.patchValue({
+        status: checked ? "Đã phân công" : "Chưa phân công"
+      });
+    this.GetAuditDetailOwner();
+  }
+
   DetailCheck(item: number){
     this.idAuditDetail = item;
     this.api.GetAuditDetailById(item).subscribe(res=>{
       if(res.status == "SUCCESS"){
         this.selectedItem = res.data;
+        this.ActionPlan = res.data.actionPlan;
         if(res.data.imageAfter){
           this.isShowCam.set(false);
           this.capturedImageAfter = res.data.imageAfter;
@@ -156,22 +269,32 @@ export class Hisdaily {
           this.capturedImageAfter = "";
         }
         this.iShowCard.set(true);
+
+        if(this.selectedItem.status != "Mới phát hiện"){
+          this.isVisible.set(true);
+        }else{
+          this.isVisiblePhanCong.set(true);
+          this.GetAssignee();
+          this.FormPhanCong.patchValue({
+            assignee: res.data.assignee,
+            duedate:res.data.dueDate
+          });
+        }
       }else{
         this.selectedItem = null;
         this.iShowCard.set(false);
         this.message.create(res.status.toLowerCase(), res.message);
       }
     });
-    this.isVisible.set(true)
   }
 
   handleCancel(){
     this.isVisible.set(false);
+    this.isVisiblePhanCong.set(false);
     this.iShowCard.set(false);
   }
 
    base64ToBlob(base64: string): Blob {
-    console.log(base64);
     const arr = base64.split(',');
     const mime = arr[0].match(/:(.*?);/)![1];
     const bstr = atob(arr[1]);
@@ -186,9 +309,13 @@ export class Hisdaily {
   }
 
   submitForm(){
-
     if(this.CurrentUser.Fullname != this.selectedItem.assignee){
       this.message.create('error', "Bạn không phải người chịu trách nhiệm");
+      return;
+    }
+
+    if(this.ActionPlan == null || this.ActionPlan == ""){
+      this.message.create('error', "Vui lòng nhập thông tin kế hoạch khắc phục");
       return;
     }
 
@@ -203,6 +330,7 @@ export class Hisdaily {
 
     formData.append('IdAuditDetail', this.idAuditDetail.toString());
     formData.append('ImageAfter', imageBlob);
+    formData.append('ActionPlan', this.ActionPlan);
 
     this.api.AddImageAfterToAuditDetail(formData).subscribe(res=>{
       if(res.status = "SUCCESS"){
@@ -213,6 +341,42 @@ export class Hisdaily {
         this.message.create(res.status.toLowerCase(), res.message);
       }
     });
+  }
+
+  handlePhanCong(){
+    if(!this.FormPhanCong.valid){
+      this.message.create("error", "Vui lòng nhập đầy đủ thông tin");
+      return;
+    }
+    var req = {
+      idAuditDetail: this.idAuditDetail,
+      asignee: this.FormPhanCong.controls["assignee"].value,
+      dueDate: this.FormPhanCong.controls["duedate"].value
+    }
+    this.api.PhanCong(req).subscribe({
+      next: (res) => {
+        if (res.status === 'SUCCESS') {
+          this.message.create(res.status.toLowerCase(), res.message);
+          this.handleCancel();
+          this.GetAuditDetailOwner();
+        } else {
+          this.message.create(res.status.toLowerCase(), res.message);
+        }
+      },
+      error: (err) => {
+        console.error(err);
+        if (err.status === 0) {
+          this.message.error('Không thể kết nối tới server');
+        } else if (err.status === 401) {
+          this.message.error('Phiên đăng nhập đã hết hạn');
+        } else if (err.status === 500) {
+          this.message.error('Lỗi hệ thống');
+        } else {
+          this.message.error(err?.error?.message || 'Gọi API thất bại');
+        }
+      }
+    });
+
   }
 
   async openCamera(): Promise<void> {
@@ -245,6 +409,7 @@ export class Hisdaily {
   }
 
   closeCamera(): void {
+    this.isShowCam.set(false);
     const video = this.videoRef?.nativeElement;
 
     // Dừng camera đang được component quản lý

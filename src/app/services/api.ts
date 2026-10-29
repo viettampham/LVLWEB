@@ -8,12 +8,10 @@ import { environment } from '../enviroment/enviroment';
 import { AuthenticationRequest } from '../../model/RequestModel/AuthenticationRequest';
 import { SearchContRequest } from '../../model/RequestModel/SearchContRequest';
 import { ContModal } from '../../model/Responsemodel/ContModal';
-import { ConImageResponse } from '../../model/Responsemodel/ConImageResponse';
 import { DeclareContRequest } from '../../model/RequestModel/DeclareContRequest';
 import { ConImageResponseWithIDCont } from '../../model/RequestModel/ConImageResponseWithIDCont';
 import { CreateAuditRequest } from '../../model/RequestModel/CreateAuditRequest';
-import { GetAuditRequest } from '../../model/RequestModel/GetAuditRequest';
-import { GetAuditDetail } from '../../model/RequestModel/GetAuditDetail';
+import { UpdateUserRequest } from '../../model/RequestModel/UpdateUserRequets';
 
 @Injectable({
   providedIn: 'root',
@@ -119,6 +117,24 @@ export class Api {
 
   GetRole=()=>{
     return this.httpClient.get<any>(`${environment.api_domain}/api/User/get-role`);
+  }
+
+  GetPhongBan=()=>{
+    return this.httpClient.get<any>(`${environment.api_domain}/api/User/get-phongban`);
+  }
+
+  UpdateUser=(req: UpdateUserRequest)=>{
+    return this.httpClient.post<any>(
+      `${environment.api_domain}/api/User/update-user`,req
+    );
+  }
+
+  GetAuditDetailOwner=(req: any)=>{
+    return this.httpClient.post<any>(`${environment.api_domain}/api/Audit/get-audit-owner`, req); 
+  }
+
+  PhanCong=(req: any)=>{
+    return this.httpClient.post<any>(`${environment.api_domain}/api/Audit/phancong`, req); 
   }
 
 }

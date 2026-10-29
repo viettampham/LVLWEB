@@ -1,4 +1,4 @@
-import { ChangeDetectorRef, Component, computed, ElementRef, signal, ViewChild } from '@angular/core';
+import { ChangeDetectorRef, Component, OnInit, ElementRef, signal, ViewChild, AfterViewInit,OnDestroy } from '@angular/core';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzStepsModule } from 'ng-zorro-antd/steps';
 import { NzSelectModule } from 'ng-zorro-antd/select';
@@ -13,8 +13,10 @@ import { NzInputModule } from 'ng-zorro-antd/input';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { OperationStandardResponse } from '../../model/Responsemodel/OperationStandardResponse';
 import { DetechIssueResponse } from '../../model/Responsemodel/DetechIssueResponse';
-import { validateHeaderValue } from 'node:http';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzUploadChangeParam, NzUploadComponent } from 'ng-zorro-antd/upload';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
+
 @Component({
   imports: [
     NzButtonModule,
@@ -25,14 +27,16 @@ import { NzIconModule } from 'ng-zorro-antd/icon';
     NzFormModule,
     ReactiveFormsModule,
     NzInputModule,
-    NzDatePickerModule, 
-    NzIconModule
+    NzDatePickerModule,
+    NzIconModule,
+    NzUploadComponent,
+    NzSwitchModule
 ],
   selector: 'app-mobilecheck',
   styleUrl: './mobilecheck.scss',
   templateUrl: './mobilecheck.html',
 })
-export class Mobilecheck {
+export class Mobilecheck implements OnInit, AfterViewInit, OnDestroy {
   isMobile = window.innerWidth < 576;
   @ViewChild('video')
   videoRef!: ElementRef<HTMLVideoElement>;
@@ -45,18 +49,20 @@ export class Mobilecheck {
   lstOperationStandard = signal<OperationStandardResponse[]>([]);
   lstDetechIssue = signal<DetechIssueResponse[]>([]);
   lstLocation = signal<string[]>([]);
-
+  private id = Math.random().toString(36).substring(2);
   constructor(private cdr: ChangeDetectorRef, 
     private router: Router, 
     private fb: FormBuilder,
     private api :Api,
     private message: NzMessageService
   ){
+    console.log('constructor', this.id);
     const today = new Date();
     this.formAssignee = this.fb.group({
       note: [''],
-      duedate: [today, [Validators.required]],
-      assignee: ['',[Validators.required]],
+      isPrivate: [false, Validators.required],
+      duedate: [today],
+      assignee: [''],
       operationstandard: ['',[Validators.required]],
       detechissue: ['',[Validators.required]],
       location: ['',[Validators.required]],
@@ -91,7 +97,7 @@ export class Mobilecheck {
     if (token) {
       const user = JSON.parse(atob(token.split('.')[1]));
       this.CurrentUser = user;
-      await this.openCamera();
+      console.log('oninit');
       await this.GetAssignee();
       await this.GetOperationStandard();
       await this.GetLocation();
@@ -103,6 +109,16 @@ export class Mobilecheck {
       console.log('Tiêu chuẩn được chọn:', value);
       this.funcGetDetechIssue(value);
     });
+  }
+
+  async ngAfterViewInit() {
+    console.log('viewinit');
+    await this.openCamera();
+  }
+
+  ngOnDestroy() {
+    console.trace('destroy', this.id);
+    // this.closeCamera();
   }
 
   GetOperationStandard(){
@@ -145,6 +161,30 @@ export class Mobilecheck {
      this.resetForm();
   }
 
+  UploadImage(info: NzUploadChangeParam): void {
+    if (info.file.status !== 'uploading') {
+      console.log(info.file, info.fileList);
+    }
+    if (info.file.status === 'done') {
+      this.message.success(`${info.file.name} file uploaded successfully`);
+    } else if (info.file.status === 'error') {
+      this.message.error(`${info.file.name} file upload failed.`);
+    }
+  }
+
+  beforeUpload = (file: any): boolean => {
+    const reader = new FileReader();
+
+    reader.onload = () => {
+      this.capturedImage = reader.result as string;
+      this.closeCamera();
+      this.next();
+    };
+
+    reader.readAsDataURL(file);
+    return false;
+  };
+
   captureImage() {
     const video = this.videoRef.nativeElement;
     const canvas = document.createElement('canvas');
@@ -181,35 +221,56 @@ export class Mobilecheck {
 
       await video.play();
 
-      console.log(
-        'Camera settings:',
-        stream.getVideoTracks()[0].getSettings()
-      );
+      // console.log(
+      //   'Camera settings:',
+      //   stream.getVideoTracks()[0].getSettings()
+      // );
     } catch (e) {
       console.error('Không thể mở camera:', e);
     }
   }
-
+  
   closeCamera(): void {
-    const video = this.videoRef?.nativeElement;
+    try {
+      const video = this.videoRef?.nativeElement as HTMLVideoElement;
 
-    // Dừng camera đang được component quản lý
-    this.cameraStream?.getTracks().forEach(track => {
-      track.stop();
-    });
+      // Dừng stream trên video trước
+      if (video?.srcObject) {
+        const stream = video.srcObject as MediaStream;
 
-    this.cameraStream = null;
+        stream.getTracks().forEach(track => {
+          console.log('Stopping:', track.kind, track.readyState);
+          track.stop();
+          console.log('Stopped:', track.kind, track.readyState);
+        });
 
-    if (video) {
-      video.pause();
-      video.srcObject = null;
+        video.pause();
+        video.srcObject = null;
+        video.removeAttribute('src');
+        video.load();
+      }
+
+      // Dừng stream đang lưu trong biến
+      if (this.cameraStream) {
+        this.cameraStream.getTracks().forEach(track => {
+          if (track.readyState !== 'ended') {
+            track.stop();
+          }
+        });
+      }
+
+      this.cameraStream = null;
+    } catch (err) {
+      console.error('Lỗi khi đóng camera:', err);
     }
   }
 
-  SubmitFormAssigee(){
+  SubmitFormAssigee(status: string){
     if (this.formAssignee.valid) {
       var formData = new FormData();
       formData.append('IdAudit', '0');
+      formData.append('IsPrivate', this.formAssignee.controls['isPrivate'].value);
+
       formData.append('IdOps', this.formAssignee.controls['operationstandard'].value);
       formData.append('IdDetachIssue', this.formAssignee.controls['detechissue'].value);
       formData.append('Assignee', this.formAssignee.controls['assignee'].value);
@@ -222,6 +283,8 @@ export class Mobilecheck {
       formData.append('Evalue', "NG");
       formData.append('Location', this.formAssignee.controls['location'].value);
       formData.append('Note', this.formAssignee.controls['note'].value);
+      formData.append('Status', status);
+      formData.append('Owner', this.CurrentUser.Fullname);
       const imageBlob = this.base64ToBlob(this.capturedImage);
 
       formData.append('ImageBefore', imageBlob);

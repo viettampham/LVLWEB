@@ -23,9 +23,9 @@
       </li>
       <li nz-submenu nzTitle="Audit" nzIcon="audit">
         <ul>
-          <li nz-menu-item (click)="onHandleGoTo('/home/dailycheck','Audit, Daily Check')">Audit Check</li>
+          <!-- <li nz-menu-item (click)="onHandleGoTo('/home/dailycheck','Audit, Daily Check')">Audit Check</li> -->
           <li nz-menu-item (click)="onHandleGoTo('/home/mobilecheck','Audit, Mobile check')">Mobile Check</li>
-          <li nz-menu-item (click)="onHandleGoTo('/home/hisdaily','Audit, Lịch sử')">Lịch sử check daily</li>
+          <li nz-menu-item (click)="onHandleGoTo('/home/hisdaily','Audit, Danh sách vấn đề')">Danh sách vấn đề</li>
         </ul>
       </li>
       <li nz-submenu nzTitle="Báo cáo" nzIcon="team">
@@ -48,8 +48,42 @@
     </ul>
   </nz-sider>
   <nz-layout>
-    <nz-header>
-      <p style="font-size: 20px;font-weight: 500;padding: 0 10px;">HỆ THỐNG LIÊN VIỆT - LOGISTICS</p>
+    <nz-header style="display: flex;flex-direction: row; justify-content: space-between; align-items: center;padding: 0 10px;">
+      <div>
+        <p class="md: text-md lg:text-lg" style="margin: 0;">HỆ THỐNG LIÊN VIỆT - LOGISTICS</p>
+      </div>
+      <div class="user-group">
+        <a class="flex" nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu">
+          <nz-avatar style="width: 46px; height: 46px;" nzIcon="user" nzSrc="//zos.alipayobjects.com/rmsportal/ODTLcjxAfvqbxHnVXCYX.png" />
+          <div class="lg:flex md: hidden">
+            <span class="text-black">Hello </span>,<span class="text-blue-500">{{CurrentUser.Fullname}}</span>
+            <nz-icon nzType="down" />
+          </div>
+        </a>
+
+        <nz-dropdown-menu #menu="nzDropdownMenu">
+          <ul nz-menu>
+            <li nz-menu-item>1st menu item</li>
+            <li nz-menu-item>2nd menu item</li>
+            <li nz-menu-divider></li>
+            <li nz-menu-item nzDisabled>disabled menu item</li>
+            <li nz-submenu nzTitle="sub menu">
+              <ul>
+                <li nz-menu-item>3rd menu item</li>
+                <li nz-menu-item>4th menu item</li>
+              </ul>
+            </li>
+            <li nz-submenu nzDisabled nzTitle="disabled sub menu">
+              <ul>
+                <li nz-menu-item>3rd menu item</li>
+                <li nz-menu-item>4th menu item</li>
+              </ul>
+            </li>
+          </ul>
+        </nz-dropdown-menu>
+
+        
+      </div>
     </nz-header>
     <nz-content>
       <nz-breadcrumb>

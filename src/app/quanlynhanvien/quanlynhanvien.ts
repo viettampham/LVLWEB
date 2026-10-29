@@ -1,10 +1,10 @@
 import { Component, signal } from '@angular/core';
-import { NzTableComponent, NzTableFilterFn, NzTableFilterList, NzTableSortFn, NzTableSortOrder } from 'ng-zorro-antd/table';
+import { NzTableComponent } from 'ng-zorro-antd/table';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
 import { UserResponse } from '../../model/Responsemodel/UserResponse';
 import { Api } from '../services/api';
-import { FormBuilder, FormGroup, ReactiveFormsModule, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, FormsModule, ReactiveFormsModule, Validators } from '@angular/forms';
 import { CommonModule } from '@angular/common';
 import { NzPaginationComponent } from 'ng-zorro-antd/pagination';
 import { NzMessageService } from 'ng-zorro-antd/message';
@@ -23,6 +23,8 @@ import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { RoleResponse } from '../../model/Responsemodel/RoleResponse';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
+import { DepartmentResponse } from '../../model/Responsemodel/DepartmentResponse';
+import { NzSwitchModule } from 'ng-zorro-antd/switch';
 
 
 @Component({
@@ -39,6 +41,7 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
     NzFormControlComponent,
     NzInputWrapperComponent,
     ReactiveFormsModule,
+    FormsModule,
     NzButtonComponent,
     NzPopconfirmDirective,
     NzPopconfirmModule,
@@ -48,7 +51,8 @@ import { NzRadioModule } from 'ng-zorro-antd/radio';
     NzFormModule,
     NzDatePickerModule,
     NzSelectModule,
-    NzRadioModule
+    NzRadioModule,
+    NzSwitchModule
 ],
   selector: 'app-quanlynhanvien',
   styleUrl: './quanlynhanvien.scss',
@@ -71,6 +75,7 @@ export class Quanlynhanvien {
   totalRecords = signal(0);
   readonly isVisible = signal(false);
   lstRole: RoleResponse[] = [];
+  lstPhongBan = signal<DepartmentResponse[]>([]);
   
   ngOnInit(): void {
     this.SearchForm = this.formBuilder.group({
@@ -80,7 +85,7 @@ export class Quanlynhanvien {
       phoneNumber: [''],
       address: [''],
       gender: [''],
-      status: [''],
+      status: [true],
       phongBan: [''],
     });
 
@@ -96,9 +101,12 @@ export class Quanlynhanvien {
       gender: ['',[Validators.required]],
       cccd: ['',[Validators.required]],
       roleLevel: ['',[Validators.required]],
+      phongBan: ['',[Validators.required]],
+      trangThai: ['',[Validators.required]],
     });
     this.SearchUser();
     this.GetDSRole();
+    this.GetPhongBan();
   }
 
   GetDSRole(){
@@ -108,6 +116,18 @@ export class Quanlynhanvien {
       }else{
         this.message.create(res.status.toLowerCase(), res.message);
         this.lstRole = [];
+      }
+    })
+  }
+
+  GetPhongBan(){
+    this.api.GetPhongBan().subscribe(res=>{
+      if(res.status == "SUCCESS"){
+        this.lstPhongBan.set(res.listData);
+        console.log(this.lstPhongBan());
+      }else{
+        this.lstPhongBan.set([]);
+        this.message.create(res.status.toLowerCase(), res.message);
       }
     })
   }
@@ -162,7 +182,6 @@ export class Quanlynhanvien {
   cancelDelete() {}
 
   openModalConfigUser(data: UserResponse){
-    console.log(data);
     this.isVisible.set(true);
     this.UpdateForm.patchValue({
       id: data.id,
@@ -175,9 +194,10 @@ export class Quanlynhanvien {
       dateOfBirth: data.dateOfBirth,
       gender: data.gender,
       cccd: data.cccd,
-      roleLevel: data.roleLevel
+      roleLevel: data.roleLevel,
+      phongBan: data.phongBan,
+      trangThai: data.status
     });
-    console.log(this.UpdateForm.value);
   }
 
   handleCancel(){
@@ -185,6 +205,35 @@ export class Quanlynhanvien {
   }
 
   submitForm(){
+    console.log(this.UpdateForm.value);
+    if (this.UpdateForm.valid) {
 
+      this.UpdateForm.get('dateOfBirth')?.setValue(
+        new Date(this.UpdateForm.get('dateOfBirth')?.value)
+          .toISOString()
+          .split('T')[0]
+      );
+
+      this.api.UpdateUser(this.UpdateForm.value).subscribe(res=>{
+        if(res.status == "SUCCESS"){
+          this.message.create(res.status.toLowerCase(), res.message);
+          this.isVisible.set(false);
+          this.SearchUser();
+        }else{
+          this.message.create(res.status.toLowerCase(), res.message);
+        }
+      })
+    } else {
+      Object.values(this.UpdateForm.controls).forEach(control => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      });
+    }
+  }
+
+  changeTrangThai(checked: any): void {
+    console.log('Trạng thái:', checked);
   }
 }

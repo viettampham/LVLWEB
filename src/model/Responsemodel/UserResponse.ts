@@ -10,7 +10,7 @@ export class UserResponse {
   avatar: string;
   dateOfBirth: string;
   gender: string;
-  status: string;
+  status: boolean;
   lastLoginAt: string;
   failedLoginAttempts: number;
   lockedUntil: string;
@@ -34,7 +34,7 @@ export class UserResponse {
     avatar: string,
     dateOfBirth: string,
     gender: string,
-    status: string,
+    status: boolean,
     lastLoginAt: string,
     failedLoginAttempts: number,
     lockedUntil: string,

@@ -6,6 +6,9 @@ import { NzMenuDirective, NzMenuItemComponent, NzSubMenuComponent } from 'ng-zor
 import { RouterOutlet } from '@angular/router';
 import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
+import { NzAvatarModule } from 'ng-zorro-antd/avatar';
+import { NzDropdownModule } from 'ng-zorro-antd/dropdown';
+
 
 @Component({
   imports: [
@@ -22,6 +25,8 @@ import { CommonModule } from '@angular/common';
     NzSubMenuComponent,
     RouterOutlet,
     CommonModule,
+    NzAvatarModule,
+    NzDropdownModule
   ],
   selector: 'app-home',
   styleUrl: './home.scss',
