@@ -46,7 +46,7 @@ export class UserResponse {
     deleteAt: string,
     deleteBy: string,
     cccd: string,
-    phongBan: string,
+    phongBan: string
   ) {
     this.id = id;
     this.fullName = fullName;
@@ -69,6 +69,6 @@ export class UserResponse {
     this.deleteAt = deleteAt;
     this.deleteBy = deleteBy;
     this.cccd = cccd;
-    this.phongBan = phongBan;
+    this.phongBan = phongBan
   }
 }

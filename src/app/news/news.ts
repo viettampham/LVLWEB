@@ -1,13 +1,13 @@
 import { Component,Inject,PLATFORM_ID,signal } from '@angular/core';
 import { NzButtonModule } from 'ng-zorro-antd/button';
 import { NzModalModule } from 'ng-zorro-antd/modal';
-import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
+// import { CKEditorModule } from '@ckeditor/ckeditor5-angular';
 import { FormsModule } from '@angular/forms';
 import { isPlatformBrowser } from '@angular/common';
 
 
 @Component({
-  imports: [NzButtonModule, NzModalModule,CKEditorModule,FormsModule],
+  imports: [NzButtonModule, NzModalModule,FormsModule],
   selector: 'app-news',
   styleUrl: './news.scss',
   templateUrl: './news.html',
@@ -25,118 +25,118 @@ export class News {
   ) {}
 
   async ngOnInit() {
-    if (isPlatformBrowser(this.platformId)) {
-      const ck = await import('ckeditor5');
-      this.Editor = ck.ClassicEditor;
-      this.config = {
-        licenseKey: 'GPL',
+    // if (isPlatformBrowser(this.platformId)) {
+    //   const ck = await import('ckeditor5');
+    //   this.Editor = ck.ClassicEditor;
+    //   this.config = {
+    //     licenseKey: 'GPL',
 
-        plugins: [
-          ck.Essentials,
-          ck.Paragraph,
-          ck.Heading,
+    //     plugins: [
+    //       ck.Essentials,
+    //       ck.Paragraph,
+    //       ck.Heading,
 
-          // Font
-          ck.FontSize,
-          ck.FontFamily,
-          ck.FontColor,
-          ck.FontBackgroundColor,
+    //       // Font
+    //       ck.FontSize,
+    //       ck.FontFamily,
+    //       ck.FontColor,
+    //       ck.FontBackgroundColor,
 
-          // Text
-          ck.Bold,
-          ck.Italic,
-          ck.Underline,
-          ck.Strikethrough,
-          ck.Subscript,
-          ck.Superscript,
+    //       // Text
+    //       ck.Bold,
+    //       ck.Italic,
+    //       ck.Underline,
+    //       ck.Strikethrough,
+    //       ck.Subscript,
+    //       ck.Superscript,
 
-          // Layout
-          ck.Alignment,
-          ck.Indent,
+    //       // Layout
+    //       ck.Alignment,
+    //       ck.Indent,
 
-          // List
-          ck.List,
-          ck.ListProperties,
+    //       // List
+    //       ck.List,
+    //       ck.ListProperties,
 
-          // Link
-          ck.Link,
+    //       // Link
+    //       ck.Link,
 
-          // Table
-          ck.Table,
-          ck.TableToolbar,
-          ck.TableProperties,
-          ck.TableCellProperties,
+    //       // Table
+    //       ck.Table,
+    //       ck.TableToolbar,
+    //       ck.TableProperties,
+    //       ck.TableCellProperties,
 
-          // Image
-          ck.ImageBlock,
-          ck.ImageInline,
-          ck.ImageToolbar,
-          ck.ImageCaption,
-          ck.ImageResize,
-          ck.ImageStyle,
+    //       // Image
+    //       ck.ImageBlock,
+    //       ck.ImageInline,
+    //       ck.ImageToolbar,
+    //       ck.ImageCaption,
+    //       ck.ImageResize,
+    //       ck.ImageStyle,
 
-          // Upload
-          ck.Base64UploadAdapter,
+    //       // Upload
+    //       ck.Base64UploadAdapter,
 
-          // Other
-          ck.BlockQuote,
-          ck.HorizontalLine,
-          ck.SpecialCharacters
-        ],
+    //       // Other
+    //       ck.BlockQuote,
+    //       ck.HorizontalLine,
+    //       ck.SpecialCharacters
+    //     ],
 
-        toolbar: [
-          'undo',
-          'redo',
-          '|',
+    //     toolbar: [
+    //       'undo',
+    //       'redo',
+    //       '|',
 
-          'heading',
-          '|',
+    //       'heading',
+    //       '|',
 
-          'fontFamily',
-          'fontSize',
-          'fontColor',
-          'fontBackgroundColor',
-          '|',
+    //       'fontFamily',
+    //       'fontSize',
+    //       'fontColor',
+    //       'fontBackgroundColor',
+    //       '|',
 
-          'bold',
-          'italic',
-          'underline',
-          'strikethrough',
-          '|',
+    //       'bold',
+    //       'italic',
+    //       'underline',
+    //       'strikethrough',
+    //       '|',
 
-          'alignment',
-          '|',
+    //       'alignment',
+    //       '|',
 
-          'bulletedList',
-          'numberedList',
-          '|',
+    //       'bulletedList',
+    //       'numberedList',
+    //       '|',
 
-          'outdent',
-          'indent',
-          '|',
+    //       'outdent',
+    //       'indent',
+    //       '|',
 
-          'link',
-          'insertTable',
-          'blockQuote',
-          'horizontalLine',
-          '|',
+    //       'link',
+    //       'insertTable',
+    //       'blockQuote',
+    //       'horizontalLine',
+    //       '|',
 
-          'insertImage'
-        ],
+    //       'insertImage'
+    //     ],
 
-        image: {
-          toolbar: [
-            'imageTextAlternative',
-            '|',
-            'imageStyle:inline',
-            'imageStyle:block',
-            'imageStyle:side',
-            '|',
-            'resizeImage'
-          ]
-        }
-      };
-    }
+    //     image: {
+    //       toolbar: [
+    //         'imageTextAlternative',
+    //         '|',
+    //         'imageStyle:inline',
+    //         'imageStyle:block',
+    //         'imageStyle:side',
+    //         '|',
+    //         'resizeImage'
+    //       ]
+    //     }
+    //   };
+    // }
   }
   
   handleCancel() {
