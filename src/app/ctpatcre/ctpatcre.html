@@ -1,0 +1,12 @@
+<div>
+  <button nz-button nzType="primary" (click)="OnCollapse()">{{textbutton()}}</button>
+    <div style="height: calc(100vh - 246px); overflow: auto;margin-top: 12px;">
+      <nz-collapse>
+      <nz-collapse-panel *ngFor="let item of panels(), let i = index" [nzHeader]="(i + 1) + '. ' + item.topic" [nzActive]="active()">
+          <p *ngFor="let cre of item.criterias" style="margin:0;">
+            <nz-icon nzType="aim" nzTheme="outline" /> {{cre?.criteria}}
+          </p>
+        </nz-collapse-panel>
+    </nz-collapse>
+    </div>
+</div>

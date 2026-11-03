@@ -1,7 +1,7 @@
 
 <nz-layout>
   <nz-sider nzTheme="dark" nzCollapsible="" nzWidth="200px" nzBreakpoint="lg" [nzCollapsedWidth]="0">
-    <div class="logo" (click)="onHandleGoTo('','')">
+    <div class="logo" (click)="onHandleGoTo('home','')">
       <img style="width: 100%" src="/image/logo/logolienviet.png" alt="logo" />
     </div>
     <ul nz-menu nzTheme="dark" nzMode="inline">
@@ -13,7 +13,7 @@
         <nz-icon nzType="desktop" />
         <span>Màn hình khách</span>
       </li>
-      <li *ngIf="CurrentUser.RoleLevel == 1 || CurrentUser.RoleLevel == 2" nz-submenu nzTitle="Quản lý hệ thống" nzIcon="partition">
+      <li *ngIf="CurrentUser?.RoleLevel == 1 || CurrentUser?.RoleLevel == 2" nz-submenu nzTitle="Quản lý hệ thống" nzIcon="partition">
         <ul>
           <li nz-menu-item (click)="onHandleGoTo('/home/quanlynhanvien','Quản lý hệ thống, Quản lý nhân viên')">Quản lý nhân viên</li>
           <li nz-menu-item (click)="onHandleGoTo('/home/quanlydanhmuc','Quản lý hệ thống, Quản lý danh mục')">Quản lý danh mục</li>
@@ -21,11 +21,19 @@
           <li nz-menu-item (click)="onHandleGoTo('quanlynhanvien','Quản trị hệ thống, Cấu hình')">Cấu hình</li>
         </ul>
       </li>
+      <li nz-submenu nzTitle="Nghỉ phép" nzIcon="partition">
+        <ul>
+          <li nz-menu-item (click)="onHandleGoTo('/home/dangkinghiphep','Nghỉ phép, Đăng ký nghỉ phép')">Đăng ký nghỉ phép</li>
+          <li nz-menu-item (click)="onHandleGoTo('/home/dangkinghiphep','Nghỉ phép, Danh sách phiếu đăng ký')">Danh sách phiếu</li>
+          <li nz-menu-item (click)="onHandleGoTo('/home/dangkinghiphep','Nghỉ phép, Phê duyệt nghỉ phép')">Phê duyệt nghỉ phép</li>
+        </ul>
+      </li>
       <li nz-submenu nzTitle="Audit" nzIcon="audit">
         <ul>
           <!-- <li nz-menu-item (click)="onHandleGoTo('/home/dailycheck','Audit, Daily Check')">Audit Check</li> -->
-          <li nz-menu-item (click)="onHandleGoTo('/home/mobilecheck','Audit, Mobile check')">Mobile Check</li>
+          <li nz-menu-item (click)="onHandleGoTo('/home/mobilecheck','Audit, Mobile check')">Phát hiện vấn đề</li>
           <li nz-menu-item (click)="onHandleGoTo('/home/hisdaily','Audit, Danh sách vấn đề')">Danh sách vấn đề</li>
+          <li nz-menu-item (click)="onHandleGoTo('/home/ctpat-criteria','Audit, Bộ tiêu chí C-TPAT')">Bộ tiêu chí C-TPAT</li>
         </ul>
       </li>
       <li nz-submenu nzTitle="Báo cáo" nzIcon="team">
@@ -63,17 +71,14 @@
 
         <nz-dropdown-menu #menu="nzDropdownMenu">
           <ul nz-menu>
-            <li nz-menu-item>1st menu item</li>
-            <li nz-menu-item>2nd menu item</li>
+            <li nz-menu-item>Thông tin tài khoản</li>
             <li nz-menu-divider></li>
-            <li nz-menu-item nzDisabled>disabled menu item</li>
-            <li nz-submenu nzTitle="sub menu">
-              <ul>
-                <li nz-menu-item>3rd menu item</li>
-                <li nz-menu-item>4th menu item</li>
-              </ul>
+            <li nz-menu-item class="relative">
+              <div (click)="handleLogOut()" style="display: flex; justify-content: space-between; align-items: center;">
+                Đăng xuất <nz-icon class="absolute" style="right: 14px;" nzType="logout" nzTheme="outline" />
+              </div>
             </li>
-            <li nz-submenu nzDisabled nzTitle="disabled sub menu">
+            <li nz-submenu nzTitle="sub menu">
               <ul>
                 <li nz-menu-item>3rd menu item</li>
                 <li nz-menu-item>4th menu item</li>

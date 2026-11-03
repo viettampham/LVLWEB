@@ -1,1 +1,4 @@
-<router-outlet></router-outlet>
+<router-outlet style="z-index: 1000;"></router-outlet>
+
+
+<app-loading *ngIf="loadingService.loading()" style="z-index: 999999; display: block;position: fixed; "></app-loading>

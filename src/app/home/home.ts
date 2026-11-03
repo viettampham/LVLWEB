@@ -8,6 +8,7 @@ import { Router } from '@angular/router';
 import { CommonModule } from '@angular/common';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { NzDropdownModule } from 'ng-zorro-antd/dropdown';
+import { AuthService } from '../services/auth.service';
 
 
 @Component({
@@ -36,21 +37,47 @@ export class Home {
   protected readonly date = new Date();
   breacums: string[] = [];
   CurrentUser: any = null;
-  constructor(private router: Router) {}
+  constructor(private router: Router, private authService: AuthService) {
+
+  }
 
   ngOnInit(): void {
     const token = sessionStorage.getItem('token');
+    
     if (token) {
-      const user = JSON.parse(atob(token.split('.')[1]));
-      this.CurrentUser = user;
+      this.CurrentUser = this.parseJwt(token);
+      this.authService.setCurrentUser(this.parseJwt(token));
     } else {
       this.router.navigate(['']);
     }
-    console.log('CurrentUser', this.CurrentUser);
+    // console.log('CurrentUser', this.CurrentUser);
+  }
+
+  handleLogOut(){
+    this.router.navigate([""]);
+    sessionStorage.clear();
   }
 
   onHandleGoTo(routerlink: string, breacum: string) {
     this.router.navigate([routerlink]);
     this.breacums = breacum.split(',');
+  }
+
+  parseJwt(token: string) {
+    const base64Url = token.split('.')[1];
+    const base64 = base64Url
+      .replace(/-/g, '+')
+      .replace(/_/g, '/');
+
+    const jsonPayload = decodeURIComponent(
+      atob(base64)
+        .split('')
+        .map(c =>
+          '%' + ('00' + c.charCodeAt(0).toString(16)).slice(-2)
+        )
+        .join('')
+    );
+
+    return JSON.parse(jsonPayload);
   }
 }

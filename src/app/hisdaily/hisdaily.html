@@ -31,7 +31,7 @@
                                 </div>
                             </div>
                             
-                            <div class="hidden md:block lg:block">
+                            <div class="hidden">
                                 <div nz-col class="gutter-row" [nzXs]="2" [nzSm]="2" [nzMd]="2">
                                 <div class="inner-box" style="width: 100%;">
                                     <button nz-button nzType="primary" [disabled]="!searchForm.valid">
@@ -110,7 +110,7 @@
                                     </nz-form-item>
                                 </div>
                             </div> -->
-                            <div class="hidden md:block" >
+                            <div class="hidden" >
                                 <div nz-col [nzXs]="2" [nzSm]="2" [nzMd]="2">
                                 <div class="inner-box" style="width: 100%;">
                                     <button nz-button nzType="primary" [disabled]="!searchForm.valid">
@@ -179,8 +179,8 @@
     [nzFooter]="modalFooter">
     <ng-template #modalFooter>
         <button nz-button nzDanger (click)="handleCancel()">Hủy</button>
-        <button *ngIf="selectedItem.status == 'Phát hành'" nz-button nzType="primary" (click)="submitForm()">
-        <span nz-icon></span>Xác nhận
+        <button [nzLoading]="loadings()[1]" *ngIf="selectedItem.status == 'Phát hành'" nz-button nzType="primary" (click)="submitForm(1)">
+            <span nz-icon></span>Xác nhận
         </button>
     </ng-template>
     <ng-container *nzModalContent>
@@ -281,32 +281,40 @@
 
                 <div class="info-item">
                     <div>
-                        <div class="label">Ảnh Before</div>
+                        <div class="label">Ảnh hiện trường</div>
                         <div>
                             <img [src]="selectedItem?.imageBefore" />
                         </div>
                     </div>
                 </div>
 
-                <nz-form-item>
-                    <nz-form-label style="text-align: left;" [nzSpan]="24">
-                    Xử lý
-                    </nz-form-label>
-                    <nz-form-control [nzSpan]="24">
-                    <textarea
+                <div class="section">
+                    <div class="label">Hướng giải quyết</div>
+                    <div class="content-box">
+                        <textarea
                         nz-input
                         rows="4"
                         placeholder="Kế hoạch hành động"
                         [(ngModel)]="ActionPlan"
                     ></textarea>
+                    </div>
+                </div>
+
+
+                <!-- <nz-form-item>
+                    <nz-form-label style="text-align: left;" [nzSpan]="24">
+                    Xử lý
+                    </nz-form-label>
+                    <nz-form-control [nzSpan]="24">
+                    
                     </nz-form-control>
-                </nz-form-item>
+                </nz-form-item> -->
 
 
                 <div class="info-item">
                     <div style="width: 100%;">
                         <div class="label" style="width: 100%;;display: flex; justify-content: space-between; align-items: center;">
-                            <span>Ảnh After</span>
+                            <span>Ảnh sau xử lý</span>
                             <div *ngIf="selectedItem.status == 'Phát hành'">    
                                 <button (click)="openCamera()" nz-button nzType="primary"><nz-icon nzType="camera" nzTheme="outline" /></button>
                             </div>
@@ -357,7 +365,7 @@
     [nzFooter]="modalFooter1">
     <ng-template #modalFooter1>
         <button nz-button nzDanger (click)="handleCancel()">Thoát</button>
-        <button nz-button nzType="primary" (click)="handlePhanCong()">
+        <button nz-button [nzLoading]="loadings()[0]" nzType="primary" (click)="handlePhanCong(0)">
             <span nz-icon></span>Xác nhận phân công
         </button>
     </ng-template>
@@ -468,3 +476,5 @@
     </ng-container>
 
 </nz-modal>
+
+<!-- <app-loading *ngIf="isLoading()" style="position: fixed; top: 0; left: 0; right: 0; bottom: 0;z-index: 2000;"></app-loading> -->

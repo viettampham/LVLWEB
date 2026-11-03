@@ -1,0 +1,132 @@
+<div>
+    <div class="leave-page">
+
+    <!-- Thông tin nhân viên -->
+    <div class="card">
+        <div class="card-header">
+            <span>Thông tin nhân viên</span>
+        </div>
+
+        <div class="employee-info">
+
+            <div class="info-item">
+                <label>Mã nhân viên</label>
+                <span>{{CurrentUser.CodeUser}}</span>
+            </div>
+
+            <div class="info-item">
+                <label>Họ tên</label>
+                <span>{{CurrentUser.Fullname}}</span>
+            </div>
+
+            <div class="info-item">
+                <label>Phòng ban</label>
+                <span>{{CurrentUser.PhongBan}}</span>
+            </div>
+
+            <div class="info-item">
+                <label>Chức vụ</label>
+                <span>{{CurrentUser.ChucVu}}</span>
+            </div>
+
+            <div class="info-item">
+                <label>Liên hệ</label>
+                <span>{{CurrentUser.PhoneNumber}}</span>
+            </div>
+
+        </div>
+    </div>
+
+    <div class="content">
+
+        <!-- Form nghỉ phép -->
+        <div class="card form-section">
+
+            <div class="card-header">
+                <span>Thông tin nghỉ phép</span>
+            </div>
+
+            <div class="form-body">
+
+                <div class="row">
+                    <div class="form-group">
+                        <label>Loại nghỉ phép</label>
+                        <nz-select></nz-select>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Người bàn giao</label>
+                        <nz-select></nz-select>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="form-group">
+                        <label>Từ ngày</label>
+                        <nz-date-picker></nz-date-picker>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Đến ngày</label>
+                        <nz-date-picker></nz-date-picker>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Số ngày nghỉ</label>
+                        <input nz-input readonly value="2">
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label>Lý do nghỉ</label>
+                    <textarea nz-input rows="4"></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label>Ghi chú</label>
+                    <textarea nz-input rows="3"></textarea>
+                </div>
+                <div class="footer-action">
+                    <button nz-button>Làm mới</button>
+                    <button nz-button nzType="default">Lưu nháp</button>
+                    <button nz-button nzType="primary">Gửi phê duyệt</button>
+                </div>
+            </div>
+
+            
+        </div>
+
+        <!-- Sidebar -->
+        <div class="sidebar">
+
+            <div class="card">
+                <div class="card-header">
+                    Thông tin phép
+                </div>
+
+                <div class="leave-balance">
+                    <div>
+                        <span>Tổng số phép</span>
+                        <b>12</b>
+                    </div>
+
+                    <div>
+                        <span>Đã sử dụng</span>
+                        <b>4</b>
+                    </div>
+
+                    <div>
+                        <span>Còn lại</span>
+                        <b class="green">8</b>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+
+    </div>
+
+    
+
+</div>
+</div>

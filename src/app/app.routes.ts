@@ -9,6 +9,8 @@ import { News } from './news/news';
 import { Dailycheck } from './dailycheck/dailycheck';
 import { Mobilecheck } from './mobilecheck/mobilecheck';
 import { Hisdaily } from './hisdaily/hisdaily';
+import { Ctpatcre } from './ctpatcre/ctpatcre';
+import { Dangkynghiphep } from './dangkynghiphep/dangkynghiphep';
 export const routes: Routes = [
   {
     path: 'home',
@@ -44,6 +46,14 @@ export const routes: Routes = [
       {
         path: 'hisdaily',
         component: Hisdaily,
+      },
+      {
+        path: 'ctpat-criteria',
+        component: Ctpatcre,
+      },
+      {
+        path: 'dangkinghiphep',
+        component: Dangkynghiphep,
       },
     ],
   },

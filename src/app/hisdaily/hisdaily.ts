@@ -20,7 +20,8 @@ import { NzCheckboxModule } from 'ng-zorro-antd/checkbox';
 import { NzUploadComponent } from 'ng-zorro-antd/upload';
 import { FormsModule } from '@angular/forms';
 import { NzDropdownModule } from 'ng-zorro-antd/dropdown';
-
+import { AuthService } from '../services/auth.service';
+import { finalize } from 'rxjs';
 
 
 @Component({
@@ -28,7 +29,7 @@ import { NzDropdownModule } from 'ng-zorro-antd/dropdown';
     NzPaginationComponent, NzIconModule, NzFormModule, NzInputModule, ReactiveFormsModule, NzDatePickerModule, NzSelectModule, NzModalModule, NzTabsModule, NzUploadComponent, NzDropdownModule],
   selector: 'app-hisdaily',
   styleUrl: './hisdaily.scss',
-  templateUrl: './hisdaily.html',
+  templateUrl: './hisdaily.html', 
 })
 export class Hisdaily {
   listOfData = signal<AuditDetailResponse[]>([]);
@@ -54,8 +55,14 @@ export class Hisdaily {
   idAuditDetail = 0;
   ActionPlan = '';
   lstAssignee = signal<any[]>([]);
+
+  readonly loadings = signal<boolean[]>([false, false]);
   
-  constructor(private fb: FormBuilder, private router: Router, private api: Api, private message: NzMessageService){
+  constructor(private fb: FormBuilder, 
+    private router: Router, 
+    private api: Api, 
+    private authService: AuthService,
+    private message: NzMessageService){
     const today = new Date();
     const firstDayOfMonth = new Date(
       today.getFullYear(),
@@ -80,6 +87,15 @@ export class Hisdaily {
 
   }
 
+  enterLoading(index: number): void {
+    const update = (index: number, loading: boolean): void => {
+      this.loadings.update(loadings => loadings.map((item, i) => (i === index ? loading : item)));
+    };
+
+    update(index, true);
+    setTimeout(() => update(index, false), 3000);
+  }
+
   onStatusChange(checked: boolean) {
     this.searchForm.patchValue({
       status: checked ? "Đã hoàn thành" : "Phát hành"
@@ -88,10 +104,10 @@ export class Hisdaily {
   }
 
   ngOnInit(): void {
-    const token = sessionStorage.getItem('token');
-    if (token) {
-      const user = JSON.parse(atob(token.split('.')[1]));
-      this.CurrentUser = user;
+    const user = this.authService.getCurrentUser();
+
+    if (user) {
+      this.CurrentUser = this.authService.getCurrentUser();
       this.searchForm.patchValue({
         assignee: this.CurrentUser.Fullname,
         status: "Phát hành"
@@ -99,7 +115,6 @@ export class Hisdaily {
     } else {
       this.router.navigate(['']);
     }
-    console.log('CurrentUser', this.CurrentUser);
     this.SearchAuditDetail();
   }
 
@@ -308,7 +323,7 @@ export class Hisdaily {
     return new Blob([u8arr], { type: mime });
   }
 
-  submitForm(){
+  submitForm(index: number){
     if(this.CurrentUser.Fullname != this.selectedItem.assignee){
       this.message.create('error', "Bạn không phải người chịu trách nhiệm");
       return;
@@ -319,7 +334,7 @@ export class Hisdaily {
       return;
     }
 
-    if(this.capturedImageAfter == null || this.capturedImageAfter == ""){
+    if(this.capturedImageAfter == null || this.capturedImageAfter == ""){ 
       this.message.create('error', "Vui lòng chụp ảnh sau khi khắc phục");
       return;
     }
@@ -332,18 +347,39 @@ export class Hisdaily {
     formData.append('ImageAfter', imageBlob);
     formData.append('ActionPlan', this.ActionPlan);
 
-    this.api.AddImageAfterToAuditDetail(formData).subscribe(res=>{
-      if(res.status = "SUCCESS"){
-        this.isVisible.set(false);
-        this.message.create(res.status.toLowerCase(), res.message);
-        this.SearchAuditDetail();
-      }else{
-        this.message.create(res.status.toLowerCase(), res.message);
-      }
-    });
+    this.loadings.update(loadings =>
+      loadings.map((item, i) => i === index)
+    );
+
+    this.api.AddImageAfterToAuditDetail(formData)
+      .pipe(
+        finalize(() => {
+          this.loadings.update(loadings =>
+            loadings.map((item, i) => i === index ? false : item)
+          );
+        })
+      )
+      .subscribe({
+        next: (res) => {
+
+          this.message.create(
+            res.status.toLowerCase(),
+            res.message
+          );
+
+          if (res.status === 'SUCCESS') {
+            this.isVisible.set(false);
+            this.SearchAuditDetail();
+          }
+        },
+        error: (err) => {
+          this.message.error('Có lỗi xảy ra');
+          console.error(err);
+        }
+      });
   }
 
-  handlePhanCong(){
+  handlePhanCong(index : number){
     if(!this.FormPhanCong.valid){
       this.message.create("error", "Vui lòng nhập đầy đủ thông tin");
       return;
@@ -353,30 +389,52 @@ export class Hisdaily {
       asignee: this.FormPhanCong.controls["assignee"].value,
       dueDate: this.FormPhanCong.controls["duedate"].value
     }
-    this.api.PhanCong(req).subscribe({
-      next: (res) => {
-        if (res.status === 'SUCCESS') {
-          this.message.create(res.status.toLowerCase(), res.message);
-          this.handleCancel();
-          this.GetAuditDetailOwner();
-        } else {
-          this.message.create(res.status.toLowerCase(), res.message);
-        }
-      },
-      error: (err) => {
-        console.error(err);
-        if (err.status === 0) {
-          this.message.error('Không thể kết nối tới server');
-        } else if (err.status === 401) {
-          this.message.error('Phiên đăng nhập đã hết hạn');
-        } else if (err.status === 500) {
-          this.message.error('Lỗi hệ thống');
-        } else {
-          this.message.error(err?.error?.message || 'Gọi API thất bại');
-        }
-      }
-    });
 
+    this.loadings.update(loadings =>
+      loadings.map((item, i) => (i === index ? true : item))
+    );
+
+    this.api.PhanCong(req)
+      .pipe(
+        finalize(() => {
+          this.loadings.update(loadings =>
+            loadings.map((item, i) => (i === index ? false : item))
+          );
+        })
+      )
+      .subscribe({
+        next: (res) => {
+          if (res.status === 'SUCCESS') {
+            this.message.create(
+              res.status.toLowerCase(),
+              res.message
+            );
+
+            this.handleCancel();
+            this.GetAuditDetailOwner();
+          } else {
+            this.message.create(
+              res.status.toLowerCase(),
+              res.message
+            );
+          }
+        },
+        error: (err) => {
+          console.error(err);
+
+          if (err.status === 0) {
+            this.message.error('Không thể kết nối tới server');
+          } else if (err.status === 401) {
+            this.message.error('Phiên đăng nhập đã hết hạn');
+          } else if (err.status === 500) {
+            this.message.error('Lỗi hệ thống');
+          } else {
+            this.message.error(
+              err?.error?.message || 'Gọi API thất bại'
+            );
+          }
+        }
+      });
   }
 
   async openCamera(): Promise<void> {

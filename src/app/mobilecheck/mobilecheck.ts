@@ -16,6 +16,8 @@ import { DetechIssueResponse } from '../../model/Responsemodel/DetechIssueRespon
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzUploadChangeParam, NzUploadComponent } from 'ng-zorro-antd/upload';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
+import { AuthService } from '../services/auth.service';
+import { LoadingService } from '../services/loading.service';
 
 @Component({
   imports: [
@@ -30,7 +32,7 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
     NzDatePickerModule,
     NzIconModule,
     NzUploadComponent,
-    NzSwitchModule
+    NzSwitchModule,
 ],
   selector: 'app-mobilecheck',
   styleUrl: './mobilecheck.scss',
@@ -54,15 +56,17 @@ export class Mobilecheck implements OnInit, AfterViewInit, OnDestroy {
     private router: Router, 
     private fb: FormBuilder,
     private api :Api,
-    private message: NzMessageService
+    private message: NzMessageService,
+    public loadingService: LoadingService,
+    private authService: AuthService
   ){
     console.log('constructor', this.id);
     const today = new Date();
     this.formAssignee = this.fb.group({
-      note: [''],
+      note: ['',Validators.required],
       isPrivate: [false, Validators.required],
-      duedate: [today],
-      assignee: [''],
+      duedate: [today, Validators.required],
+      assignee: ['', Validators.required],
       operationstandard: ['',[Validators.required]],
       detechissue: ['',[Validators.required]],
       location: ['',[Validators.required]],
@@ -93,11 +97,9 @@ export class Mobilecheck implements OnInit, AfterViewInit, OnDestroy {
   }
 
   async ngOnInit(): Promise<void> {
-    const token = sessionStorage.getItem('token');
-    if (token) {
-      const user = JSON.parse(atob(token.split('.')[1]));
+    const user = this.authService.getCurrentUser();
+    if (user) {
       this.CurrentUser = user;
-      console.log('oninit');
       await this.GetAssignee();
       await this.GetOperationStandard();
       await this.GetLocation();
@@ -266,6 +268,22 @@ export class Mobilecheck implements OnInit, AfterViewInit, OnDestroy {
   }
 
   SubmitFormAssigee(status: string){
+    if (status === 'Mới phát hiện') {
+      this.formAssignee.get('assignee')?.clearValidators();
+      this.formAssignee.get('duedate')?.clearValidators();
+
+      this.formAssignee.get('assignee')?.updateValueAndValidity();
+      this.formAssignee.get('duedate')?.updateValueAndValidity();
+
+    } else {
+
+      this.formAssignee.get('assignee')?.setValidators([Validators.required]);
+      this.formAssignee.get('duedate')?.setValidators([Validators.required]);
+
+      this.formAssignee.get('assignee')?.updateValueAndValidity();
+      this.formAssignee.get('duedate')?.updateValueAndValidity();
+    }
+
     if (this.formAssignee.valid) {
       var formData = new FormData();
       formData.append('IdAudit', '0');
@@ -288,12 +306,15 @@ export class Mobilecheck implements OnInit, AfterViewInit, OnDestroy {
       const imageBlob = this.base64ToBlob(this.capturedImage);
 
       formData.append('ImageBefore', imageBlob);
+      this.loadingService.setLoading(true);
       this.api.CreateAuditDetail(formData).subscribe(res=>{
         if(res.status == "SUCCESS"){
           this.message.create(res.status.toLowerCase(), res.message);
+          this.loadingService.setLoading(false);
           this.next();
         }else{
           this.message.create(res.status.toLowerCase(), res.message);
+          this.loadingService.setLoading(false);
         }
       });
       

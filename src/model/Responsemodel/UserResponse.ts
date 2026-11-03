@@ -2,6 +2,7 @@ import { SearchUserModel } from '../RequestModel/SearchUserModel';
 
 export class UserResponse {
   id: number;
+  codeUser: string;
   fullName: string;
   userName: string;
   email: string;
@@ -26,6 +27,7 @@ export class UserResponse {
 
   constructor(
     id: number,
+    codeUser: string,
     fullName: string,
     userName: string,
     email: string,
@@ -49,6 +51,7 @@ export class UserResponse {
     phongBan: string
   ) {
     this.id = id;
+    this.codeUser = codeUser;
     this.fullName = fullName;
     this.email = email;
     this.phoneNumber = phoneNumber;

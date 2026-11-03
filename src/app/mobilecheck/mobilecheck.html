@@ -53,7 +53,7 @@
                     </nz-form-label>
                     <nz-form-control
                         [nzSpan]="24"
-                        nzErrorTip="Vui lòng chọn location"
+                        nzErrorTip="Chọn địa điểm"
                         >
                         <nz-select formControlName="location">
                           <nz-option *ngFor="let item of lstLocation()" [nzValue]="item" [nzLabel]="item" />
@@ -66,7 +66,7 @@
                     </nz-form-label>
                     <nz-form-control
                     [nzSpan]="24"
-                    nzErrorTip="Vui lòng chọn tiêu chuẩn"
+                    nzErrorTip="Chọn tiêu chuẩn"
                     >
                     <nz-select formControlName="operationstandard" nzShowSearch nzAllowClear >
                         <nz-option *ngFor="let item of lstOperationStandard()" [nzValue]="item.id" [nzLabel]="item.operationStandard1" />
@@ -80,7 +80,7 @@
                     </nz-form-label>
                     <nz-form-control
                     [nzSpan]="24"
-                    nzErrorTip="Vui lòng chọn tiêu chuẩn"
+                    nzErrorTip="Chọn hạng mục"
                     >
                     <nz-select formControlName="detechissue" nzShowSearch nzAllowClear >
                         <nz-option *ngFor="let item of lstDetechIssue()" [nzValue]="item.id" [nzLabel]="item.detechIssue1" />
@@ -89,10 +89,10 @@
                 </nz-form-item>
 
                 <nz-form-item>
-                    <nz-form-label [nzSpan]="24">
+                    <nz-form-label [nzSpan]="24" nzRequired>
                     Nội dung phát hiện
                     </nz-form-label>
-                    <nz-form-control [nzSpan]="24">
+                    <nz-form-control [nzSpan]="24" nzErrorTip="Nhập thông tin nội dung phát hiện">
                     <textarea
                         nz-input
                         rows="4"
@@ -107,18 +107,18 @@
                     </nz-form-label>
                     <nz-form-control
                     [nzSpan]="24"
-                    nzErrorTip="Vui lòng nhập người phụ trách"
+                    nzErrorTip="Chọn người phụ trách"
                     >
                     <nz-select formControlName="assignee" nzShowSearch nzAllowClear >
-                            <nz-option *ngFor="let item of lstAssignee()" [nzValue]="item" [nzLabel]="item" />
-                        </nz-select>
+                        <nz-option *ngFor="let item of lstAssignee()" [nzValue]="item" [nzLabel]="item" />
+                    </nz-select>
                     </nz-form-control>
                 </nz-form-item>
                 <nz-form-item>
                     <nz-form-label [nzSpan]="24" nzRequired>
                     Ngày hết hạn
                     </nz-form-label>
-                    <nz-form-control [nzSpan]="24">
+                    <nz-form-control [nzSpan]="24" nzErrorTip="Chọn ngày hết hạn">
                         <nz-date-picker style="width: 100%;" nzFormat="dd/MM/yyyy" formControlName="duedate" />
                     </nz-form-control>
                 </nz-form-item>

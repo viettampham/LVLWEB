@@ -69,6 +69,7 @@
   <thead>
   <tr>
     <th style="background-color: rgb(223 223 223);" nzLeft="0px" nzWidth="50px">STT</th>
+    <th style="background-color: rgb(223 223 223);" nzLeft="50px" nzWidth="80px">MÃ NV</th>
     <th style="background-color: rgb(223 223 223);" nzLeft="50px" nzWidth="80px">Họ Tên</th>
     <th nzWidth="80px">UserName</th>
     <th nzWidth="100px">Email</th>
@@ -87,6 +88,7 @@
     @for (data of basicTable.data; track data; let i = $index) {
       <tr>
         <td nzLeft="0px">{{ (pageIndex() - 1) * pageSize() + i + 1 }}</td>
+        <td nzLeft="50px">{{ data.codeUser }}</td>
         <td nzLeft="50px">{{ data.fullName }}</td>
         <td>{{ data.userName }}</td>
         <td>{{ data.email }}</td>
@@ -124,9 +126,11 @@
   [nzPageSizeOptions]="[10, 20, 30, 50]"
   (nzPageIndexChange)="ChangePageIndex($event)"
   (nzPageSizeChange)="ChangePageSize($event)"
+  [nzShowTotal]="totalTemplate"
    />
-
-
+   <ng-template #totalTemplate let-total>
+    Tổng số: {{ total }} bản ghi
+  </ng-template>
 <nz-modal
   [(nzVisible)]="isVisible"
   nzWidth="650px"

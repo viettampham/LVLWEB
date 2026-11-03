@@ -137,4 +137,8 @@ export class Api {
     return this.httpClient.post<any>(`${environment.api_domain}/api/Audit/phancong`, req); 
   }
 
+  GetCtpatCriteria=()=>{
+    return this.httpClient.get<any>(`${environment.api_domain}/api/Audit/get-ctpat-criteria`);
+  }
+
 }
