@@ -46,52 +46,79 @@
                 <span>Thông tin nghỉ phép</span>
             </div>
 
-            <div class="form-body">
+            <form nz-form nzLayout="inline" [formGroup]="FormRegisLeave" (ngSubmit)="handleRegisleave()">
+                <div class="form-body w-full">
+                    <div class="row">
+                        <div class="form-group">
+                            <label>Loại nghỉ phép</label>
+                            <nz-form-item>
+                            <nz-form-control nzErrorTip="Chọn loại nghỉ phép!">
+                                <nz-select formControlName="leaveType">
+                                    <nz-option nzValue="" nzLabel="-- Chọn loại nghỉ phép --" />
+                                    <nz-option *ngFor="let item of DsTypeLeave()" nzValue="{{item.leaveType1}}" nzLabel="{{item.leaveType1}}" />
+                                </nz-select>
+                            </nz-form-control>
+                        </nz-form-item>
+                        </div>
 
-                <div class="row">
-                    <div class="form-group">
-                        <label>Loại nghỉ phép</label>
-                        <nz-select></nz-select>
+                        <div class="form-group">
+                            <label>Hình thức nghỉ</label>
+                            <nz-form-item>
+                                <nz-form-control nzErrorTip="Chọn ca nghỉ!">
+                                    <nz-select formControlName="typeShift">
+                                        <nz-option nzValue="" nzLabel="-- Chọn thời hạn nghỉ phép --" />
+                                        <nz-option nzValue="Nghỉ buổi sáng" nzLabel="Nghỉ buổi sáng" />
+                                        <nz-option nzValue="Nghỉ buổi chiều" nzLabel="Nghỉ buổi chiều" />
+                                        <nz-option nzValue="Nghỉ cả ngày" nzLabel="Nghỉ cả ngày" />
+                                        <nz-option nzValue="Nghỉ dài ngày" nzLabel="Nghỉ dài ngày" />
+                                    </nz-select>
+                                </nz-form-control>
+                            </nz-form-item>
+                            
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="form-group">
+                            <label>Từ ngày</label>
+                            <nz-form-item>
+                                <nz-form-control nzErrorTip="Chọn từ ngày!">
+                                    <nz-date-picker [nzDisabledDate]="disabledFromDate" formControlName="fromDate" nzFormat="dd/MM/yyyy"></nz-date-picker>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+
+                        <div class="form-group" *ngIf="leaveShift()">
+                            <label>Đến ngày</label>
+                            <nz-form-item>
+                                <nz-form-control nzErrorTip="Chọn đến ngày!">
+                                    <nz-date-picker formControlName="toDate" [nzDisabledDate]="disabledToDate" nzFormat="dd/MM/yyyy"></nz-date-picker>
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Số ngày nghỉ</label>
+                            <nz-form-item>
+                                <nz-form-control nzErrorTip="Tổng số ngày nghỉ!">
+                                    <input class="text-center" nz-input readonly formControlName="totalDay">
+                                </nz-form-control>
+                            </nz-form-item>
+                        </div>
                     </div>
 
                     <div class="form-group">
-                        <label>Người bàn giao</label>
-                        <nz-select></nz-select>
-                    </div>
-                </div>
-
-                <div class="row">
-                    <div class="form-group">
-                        <label>Từ ngày</label>
-                        <nz-date-picker></nz-date-picker>
+                        <label>Lý do nghỉ</label>
+                        <textarea nz-input formControlName="reason" rows="4"></textarea>
                     </div>
 
-                    <div class="form-group">
-                        <label>Đến ngày</label>
-                        <nz-date-picker></nz-date-picker>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Số ngày nghỉ</label>
-                        <input nz-input readonly value="2">
+                    <div class="footer-action">
+                        <button nz-button (click)="resetForm()">Làm mới</button>
+                        <button nz-button nzType="default">Lưu nháp</button>
+                        <button nz-button nzType="primary" (click)="handleRegisleave()">Gửi phê duyệt</button>
                     </div>
                 </div>
-
-                <div class="form-group">
-                    <label>Lý do nghỉ</label>
-                    <textarea nz-input rows="4"></textarea>
-                </div>
-
-                <div class="form-group">
-                    <label>Ghi chú</label>
-                    <textarea nz-input rows="3"></textarea>
-                </div>
-                <div class="footer-action">
-                    <button nz-button>Làm mới</button>
-                    <button nz-button nzType="default">Lưu nháp</button>
-                    <button nz-button nzType="primary">Gửi phê duyệt</button>
-                </div>
-            </div>
+            </form>
 
             
         </div>

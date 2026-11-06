@@ -141,4 +141,8 @@ export class Api {
     return this.httpClient.get<any>(`${environment.api_domain}/api/Audit/get-ctpat-criteria`);
   }
 
+  GetleaveType=()=>{
+    return this.httpClient.get<any>(`${environment.api_domain}/api/LeaveRequest/get-leavetype`);
+  }
+
 }
