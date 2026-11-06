@@ -87,15 +87,6 @@ export class Hisdaily {
 
   }
 
-  enterLoading(index: number): void {
-    const update = (index: number, loading: boolean): void => {
-      this.loadings.update(loadings => loadings.map((item, i) => (i === index ? loading : item)));
-    };
-
-    update(index, true);
-    setTimeout(() => update(index, false), 3000);
-  }
-
   onStatusChange(checked: boolean) {
     this.searchForm.patchValue({
       status: checked ? "Đã hoàn thành" : "Phát hành"

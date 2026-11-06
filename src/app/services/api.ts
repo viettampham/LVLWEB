@@ -145,4 +145,8 @@ export class Api {
     return this.httpClient.get<any>(`${environment.api_domain}/api/LeaveRequest/get-leavetype`);
   }
 
+  RegisLeave=(req: any)=>{
+    return this.httpClient.post<any>(`${environment.api_domain}/api/LeaveRequest/create`, req);
+  }
+
 }

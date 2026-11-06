@@ -13,10 +13,10 @@ import { NzMessageService } from 'ng-zorro-antd/message';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators,ReactiveFormsModule } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
-
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @Component({
-  imports: [NzTabsModule, NzSelectModule, NzDatePickerModule, NzCardModule, NzInputModule, NzButtonModule, CommonModule, ReactiveFormsModule, NzFormModule],
+  imports: [NzTabsModule,NzIconModule, NzSelectModule, NzDatePickerModule, NzCardModule, NzInputModule, NzButtonModule, CommonModule, ReactiveFormsModule, NzFormModule],
   selector: 'app-dangkynghiphep',
   styleUrl: './dangkynghiphep.scss',
   templateUrl: './dangkynghiphep.html',
@@ -26,6 +26,8 @@ export class Dangkynghiphep {
   DsTypeLeave = signal<any[]>([]);
   FormRegisLeave: FormGroup;
   leaveShift = signal(false);
+  readonly loadings = signal<boolean[]>([false, false]);
+
   constructor(private authService: AuthService, 
     private router: Router,
     private api: Api,
@@ -85,6 +87,7 @@ export class Dangkynghiphep {
       this.leaveShift.set(false);
       this.FormRegisLeave.patchValue({
         totalDay: 0.5,
+        toDate: this.FormRegisLeave.get('fromDate')?.value
       });
       console.log(this.FormRegisLeave.get('totalDay')?.value);
 
@@ -92,12 +95,11 @@ export class Dangkynghiphep {
       this.leaveShift.set(false);
       this.FormRegisLeave.patchValue({
         totalDay: 1,
+        toDate: this.FormRegisLeave.get('fromDate')?.value
       });
     }else if (value === 'Nghỉ dài ngày') {
       this.leaveShift.set(true);
-      this.FormRegisLeave.patchValue({
-        totalDay: 1,
-      });
+      this.calculateDays();
     }
   }
 
@@ -121,7 +123,7 @@ export class Dangkynghiphep {
     ) {
       this.FormRegisLeave.patchValue(
         {
-          totalDay: 0.5
+          totalDay: 0.5,
         },
         {
           emitEvent: false
@@ -182,11 +184,31 @@ export class Dangkynghiphep {
     return current.getTime() <
       new Date(fromDate).setHours(0, 0, 0, 0);
   };
-  
 
-  handleRegisleave(){
+
+  handleRegisleave(index: number){
     if (this.FormRegisLeave.valid) {
-      console.log('submit', this.FormRegisLeave.value);
+      this.loadings.update(loadings =>
+        loadings.map((item, i) => i === index)
+      );
+
+      var request = {
+        codeUser: this.CurrentUser.codeUser,
+        userName: this.CurrentUser.userName,
+        leaveType: this.FormRegisLeave.get('leaveType')?.value,
+        typeShift: this.FormRegisLeave.get('typeShift')?.value,
+        fromDate: this.FormRegisLeave.get('fromDate')?.value,
+        toDate: this.FormRegisLeave.get('toDate')?.value,
+        totalDay: this.FormRegisLeave.get('totalDay')?.value,
+        reason: this.FormRegisLeave.get('reason')?.value,
+        status: index === 0 ? "Đăng ký số" : "Phát hành"
+      }
+
+      this.api.RegisLeave
+
+      // this.loadings.update(loadings =>
+      //   loadings.map((item, i) => i === index ? false : item)
+      // );
     } else {
       Object.values(this.FormRegisLeave.controls).forEach(control => {
         if (control.invalid) {
@@ -196,9 +218,6 @@ export class Dangkynghiphep {
       });
     }
   }
-  
-
-  
 
   GetLeaveType(){
     this.api.GetleaveType().subscribe({

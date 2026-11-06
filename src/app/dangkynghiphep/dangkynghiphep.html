@@ -46,7 +46,7 @@
                 <span>Thông tin nghỉ phép</span>
             </div>
 
-            <form nz-form nzLayout="inline" [formGroup]="FormRegisLeave" (ngSubmit)="handleRegisleave()">
+            <form nz-form nzLayout="inline" [formGroup]="FormRegisLeave" (ngSubmit)="handleRegisleave(0)">
                 <div class="form-body w-full">
                     <div class="row">
                         <div class="form-group">
@@ -109,13 +109,17 @@
 
                     <div class="form-group">
                         <label>Lý do nghỉ</label>
-                        <textarea nz-input formControlName="reason" rows="4"></textarea>
+                        <nz-form-item>
+                            <nz-form-control nzErrorTip="Nhập lý do nghỉ!!">
+                                <textarea nz-input formControlName="reason" rows="4"></textarea>
+                            </nz-form-control>
+                        </nz-form-item>
                     </div>
 
                     <div class="footer-action">
-                        <button nz-button (click)="resetForm()">Làm mới</button>
-                        <button nz-button nzType="default">Lưu nháp</button>
-                        <button nz-button nzType="primary" (click)="handleRegisleave()">Gửi phê duyệt</button>
+                        <button nz-button (click)="resetForm()"><nz-icon nzType="clear" nzTheme="outline" />Làm mới</button>
+                        <button nz-button [nzLoading]="loadings()[0]"  nzType="default" (click)="handleRegisleave(0)"><nz-icon nzType="save" nzTheme="outline" />Lưu nháp</button>
+                        <button  nz-button [nzLoading]="loadings()[1]" nzType="primary" (click)="handleRegisleave(1)"><nz-icon nzType="send" nzTheme="outline" />Gửi phê duyệt</button>
                     </div>
                 </div>
             </form>
