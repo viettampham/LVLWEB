@@ -1,4 +1,4 @@
-<div>
+<div *ngIf="!isPhatHanh()">
     <div class="leave-page">
 
     <!-- Thông tin nhân viên -->
@@ -38,15 +38,11 @@
     </div>
 
     <div class="content">
-
-        <!-- Form nghỉ phép -->
         <div class="card form-section">
-
             <div class="card-header">
                 <span>Thông tin nghỉ phép</span>
             </div>
-
-            <form nz-form nzLayout="inline" [formGroup]="FormRegisLeave" (ngSubmit)="handleRegisleave(0)">
+            <form nz-form nzLayout="inline" [formGroup]="FormRegisLeave">
                 <div class="form-body w-full">
                     <div class="row">
                         <div class="form-group">
@@ -118,7 +114,7 @@
 
                     <div class="footer-action">
                         <button nz-button (click)="resetForm()"><nz-icon nzType="clear" nzTheme="outline" />Làm mới</button>
-                        <button nz-button [nzLoading]="loadings()[0]"  nzType="default" (click)="handleRegisleave(0)"><nz-icon nzType="save" nzTheme="outline" />Lưu nháp</button>
+                        <button nz-button [nzLoading]="loadings()[0]"  nzType="default" (click)="handleRegisleave(0)"><nz-icon nzType="save" nzTheme="outline" />Lưu</button>
                         <button  nz-button [nzLoading]="loadings()[1]" nzType="primary" (click)="handleRegisleave(1)"><nz-icon nzType="send" nzTheme="outline" />Gửi phê duyệt</button>
                     </div>
                 </div>
@@ -156,8 +152,212 @@
         </div>
 
     </div>
-
-    
-
+    </div>
 </div>
-</div>
+
+<nz-result *ngIf="isPhatHanh()"
+  nzStatus="success"
+>
+  <div nz-result-content style="background-color: white;">
+    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
+        <p style="font-size: 22px;font-weight: 500;">ĐĂNG KÝ ĐƠN NGHỈ PHÉP THÀNH CÔNG</p>
+        <p class="sub-title" style="font-size: 18px;">
+            Mã đơn:
+            <span class="leave-code" style="color: #0087ff;font-weight: 600;">{{ codeLeave() }}</span>.
+            Đơn nghỉ phép đã được gửi đến cấp phê duyệt.
+        </p>
+    </div>
+    <div class="status-wrapper" style="background-color: #f9f9f9;">
+        <div class="status-title">
+            Trạng thái hiện tại
+        </div>
+
+        <nz-tag style="font-size: 24px;padding: 10px 12px;" nzColor="orange">
+        <span nz-icon nzType="clock-circle"></span>
+            Chờ phê duyệt
+        </nz-tag>
+    </div>
+    </div>
+
+  <div nz-result-extra>
+    <button (click)="OnViewDetail()" nz-button nzType="primary">
+      <nz-icon nzType="info-circle" nzTheme="outline" /> Xem chi tiết đơn
+    </button>
+
+    <button nz-button>
+      <nz-icon nzType="unordered-list" nzTheme="outline" /> Danh sách đơn
+    </button>
+
+    <button (click)="onContinue()" nz-button>
+      <nz-icon nzType="arrow-right" nzTheme="outline" /> Tiếp tục đăng ký
+    </button>
+  </div>
+</nz-result>
+
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzWidth="1000px"
+  nzTitle="CHI TIẾT ĐƠN XIN NGHỈ PHÉP"
+  (nzOnCancel)="handleCancel()"
+  [nzMaskClosable]="false"
+  [nzFooter]="modalFooter"
+>
+  <ng-template #modalFooter>
+    <button nz-button (click)="handleCancel()">
+      <nz-icon nzType="close"></nz-icon>
+      Đóng
+    </button>
+
+    <button nz-button nzType="default">
+      <nz-icon nzType="edit"></nz-icon>
+      Sửa đơn
+    </button>
+
+    <button nz-button nzType="primary">
+      <nz-icon nzType="send"></nz-icon>
+      Phát hành
+    </button>
+  </ng-template>
+
+  <ng-container *nzModalContent>
+
+    <!-- Header -->
+    <div class="leave-header">
+
+      <div>
+        <h2>{{ leave.code }}</h2>
+        <div class="leave-date">
+          Ngày tạo: {{ leave.createdDate | date:'dd/MM/yyyy HH:mm' }}
+        </div>
+      </div>
+
+      <nz-tag nzColor="orange">
+        <nz-icon nzType="clock-circle"></nz-icon>
+        Chờ phê duyệt
+      </nz-tag>
+
+    </div>
+
+    <!-- Thông tin nhân viên -->
+    <nz-card nzTitle="Thông tin nhân viên" class="mt-16">
+      <div class="detail-grid">
+
+        <div>
+          <label>Mã nhân viên</label>
+          <p>{{ leave.codeUser }}</p>
+        </div>
+
+        <div>
+          <label>Họ tên</label>
+          <p>{{ leave.userName }}</p>
+        </div>
+
+        <div>
+          <label>Phòng ban</label>
+          <p>{{ leave.department }}</p>
+        </div>
+
+        <div>
+          <label>Chức vụ</label>
+          <p>{{ leave.position }}</p>
+        </div>
+
+      </div>
+    </nz-card>
+
+    <!-- Thông tin nghỉ phép -->
+    <nz-card nzTitle="Thông tin nghỉ phép" class="mt-16">
+
+      <div class="detail-grid">
+
+        <div>
+          <label>Loại nghỉ</label>
+          <p>{{ leave.leaveType }}</p>
+        </div>
+
+        <div>
+          <label>Hình thức nghỉ</label>
+          <p>{{ leave.typeShift }}</p>
+        </div>
+
+        <div>
+          <label>Từ ngày</label>
+          <p>{{ leave.fromDate | date:'dd/MM/yyyy' }}</p>
+        </div>
+
+        <div>
+          <label>Đến ngày</label>
+          <p>{{ leave.toDate | date:'dd/MM/yyyy' }}</p>
+        </div>
+
+        <div>
+          <label>Tổng số ngày</label>
+          <p class="total-day">
+            {{ leave.totalDay }} ngày
+          </p>
+        </div>
+
+      </div>
+
+    </nz-card>
+
+    <!-- Lý do -->
+    <nz-card nzTitle="Lý do nghỉ phép" class="mt-16">
+
+      <div class="reason-box">
+        {{ leave.reason }}
+      </div>
+
+    </nz-card>
+
+    <!-- Luồng phê duyệt -->
+    <nz-card nzTitle="Luồng phê duyệt" class="mt-16">
+
+      <nz-steps nzDirection="horizontal" [nzCurrent]="1">
+
+        <nz-step
+          nzTitle="Người tạo đơn"
+          nzDescription="Hoàn thành">
+        </nz-step>
+
+        <nz-step
+          nzTitle="Trưởng bộ phận"
+          nzDescription="Đang xử lý">
+        </nz-step>
+
+        <nz-step
+          nzTitle="Phòng nhân sự">
+        </nz-step>
+
+        <nz-step
+          nzTitle="Hoàn tất">
+        </nz-step>
+
+      </nz-steps>
+
+    </nz-card>
+
+    <!-- Nhật ký -->
+    <nz-card nzTitle="Lịch sử xử lý" class="mt-16">
+
+      <nz-timeline>
+
+        <nz-timeline-item color="green">
+          <strong>Tạo đơn nghỉ phép</strong>
+          <br>
+          {{ leave.createdDate | date:'dd/MM/yyyy HH:mm' }}
+        </nz-timeline-item>
+
+        <nz-timeline-item color="blue">
+          <strong>Gửi phê duyệt</strong>
+          <br>
+          {{ leave.createdDate | date:'dd/MM/yyyy HH:mm' }}
+        </nz-timeline-item>
+
+      </nz-timeline>
+
+    </nz-card>
+
+  </ng-container>
+
+</nz-modal>

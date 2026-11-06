@@ -14,9 +14,19 @@ import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators,ReactiveFormsModule } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzResultModule } from 'ng-zorro-antd/result';
+import { NzTagModule } from 'ng-zorro-antd/tag';
+import { sign } from 'crypto';
+import { NzModalModule } from 'ng-zorro-antd/modal';
+import { NzStepsModule } from 'ng-zorro-antd/steps';
+import { NzTimelineItemComponent, NzTimelineComponent } from 'ng-zorro-antd/timeline';
+
 
 @Component({
-  imports: [NzTabsModule,NzIconModule, NzSelectModule, NzDatePickerModule, NzCardModule, NzInputModule, NzButtonModule, CommonModule, ReactiveFormsModule, NzFormModule],
+  imports: [NzTabsModule, NzIconModule, NzSelectModule,
+    NzDatePickerModule, NzCardModule, NzInputModule,
+    NzButtonModule, CommonModule, ReactiveFormsModule,
+    NzFormModule, NzResultModule, NzTagModule, NzModalModule, NzStepsModule, NzTimelineItemComponent, NzTimelineComponent],
   selector: 'app-dangkynghiphep',
   styleUrl: './dangkynghiphep.scss',
   templateUrl: './dangkynghiphep.html',
@@ -25,8 +35,13 @@ export class Dangkynghiphep {
   CurrentUser: any = null;
   DsTypeLeave = signal<any[]>([]);
   FormRegisLeave: FormGroup;
+  FormLeave: FormGroup;
   leaveShift = signal(false);
+  isPhatHanh = signal(false);
+  codeLeave = signal("");
   readonly loadings = signal<boolean[]>([false, false]);
+  readonly isVisible = signal(true);
+  leave: any;
 
   constructor(private authService: AuthService, 
     private router: Router,
@@ -35,6 +50,14 @@ export class Dangkynghiphep {
     private fb: FormBuilder ){
       var today = new Date();
       this.FormRegisLeave = this.fb.group({
+        leaveType: ['',Validators.required],
+        typeShift: ['',Validators.required],
+        fromDate: [today,Validators.required],
+        toDate: [today,Validators.required],
+        totalDay: [0 ,Validators.required],
+        reason: ['',Validators.required],
+      })
+      this.FormLeave = this.fb.group({
         leaveType: ['',Validators.required],
         typeShift: ['',Validators.required],
         fromDate: [today,Validators.required],
@@ -191,10 +214,9 @@ export class Dangkynghiphep {
       this.loadings.update(loadings =>
         loadings.map((item, i) => i === index)
       );
-
       var request = {
-        codeUser: this.CurrentUser.codeUser,
-        userName: this.CurrentUser.userName,
+        codeUser: this.CurrentUser.CodeUser,
+        userName: this.CurrentUser.UserName,
         leaveType: this.FormRegisLeave.get('leaveType')?.value,
         typeShift: this.FormRegisLeave.get('typeShift')?.value,
         fromDate: this.FormRegisLeave.get('fromDate')?.value,
@@ -203,12 +225,25 @@ export class Dangkynghiphep {
         reason: this.FormRegisLeave.get('reason')?.value,
         status: index === 0 ? "Đăng ký số" : "Phát hành"
       }
+      this.api.RegisLeave(request).pipe(finalize(()=>{
+        this.loadings.update(loadings =>
+          loadings.map((item, i) => i === index ? false : item)
+        );
+      })).subscribe({
+        next:(res)=>{
+          this.message.create(res.status.toLowerCase(),res.message);
+          if(index == 1){
+            this.isPhatHanh.set(true);
+            this.codeLeave.set(res.data);
+            console.log(this.codeLeave());
+          }else{
 
-      this.api.RegisLeave
-
-      // this.loadings.update(loadings =>
-      //   loadings.map((item, i) => i === index ? false : item)
-      // );
+          }
+          this.resetForm();
+        },error:(err)=>{
+          this.message.create("error",err.message);
+        }
+      })
     } else {
       Object.values(this.FormRegisLeave.controls).forEach(control => {
         if (control.invalid) {
@@ -228,4 +263,22 @@ export class Dangkynghiphep {
       }
     })
   }
+
+
+  onContinue(){
+    this.isPhatHanh.set(false);
+  }
+
+  OnViewDetail(){
+
+
+  }
+  handleCancel(){
+    this.isVisible.set(false);
+  }
+
+  handleSubmit(index: number){
+
+  }
+
 }

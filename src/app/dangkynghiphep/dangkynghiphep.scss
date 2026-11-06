@@ -1,3 +1,92 @@
+.leave-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fafafa;
+  padding: 20px;
+  border-radius: 12px;
+}
+
+.leave-header h2 {
+  margin: 0;
+  color: #1677ff;
+  font-weight: 600;
+}
+
+.leave-date {
+  color: #8c8c8c;
+  margin-top: 4px;
+}
+
+.detail-grid {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 20px;
+}
+
+.detail-grid label {
+  display: block;
+  margin-bottom: 6px;
+  color: #8c8c8c;
+  font-size: 13px;
+}
+
+.detail-grid p {
+  margin: 0;
+  font-size: 15px;
+  font-weight: 500;
+}
+
+.total-day {
+  color: #1677ff;
+  font-size: 18px !important;
+  font-weight: 600 !important;
+}
+
+.reason-box {
+  min-height: 80px;
+  padding: 16px;
+  border-radius: 8px;
+  background: #fafafa;
+}
+
+.mt-16 {
+  margin-top: 16px;
+}
+
+:host ::ng-deep .ant-modal-body {
+  max-height: calc(100vh - 180px);
+  overflow-y: auto;
+}
+
+@media (max-width: 768px) {
+  .detail-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .leave-header {
+    flex-direction: column;
+    gap: 12px;
+    align-items: flex-start;
+  }
+}
+
+
+
+
+
+
+.status-wrapper {
+  text-align: center;
+  padding: 12px 0;
+}
+
+.status-label {
+  display: block;
+  margin-bottom: 10px;
+  color: #8c8c8c;
+  font-size: 14px;
+}
 .leave-page {
     padding: 10px;
 }
