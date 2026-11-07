@@ -196,10 +196,11 @@
 
 <nz-modal
   [(nzVisible)]="isVisible"
-  nzWidth="1000px"
+  nzWidth=""
   nzTitle="CHI TIẾT ĐƠN XIN NGHỈ PHÉP"
   (nzOnCancel)="handleCancel()"
   [nzMaskClosable]="false"
+  [nzStyle]="{ top: '0px' }"
   [nzFooter]="modalFooter"
 >
   <ng-template #modalFooter>
@@ -220,14 +221,11 @@
   </ng-template>
 
   <ng-container *nzModalContent>
-
-    <!-- Header -->
     <div class="leave-header">
-
       <div>
-        <h2>{{ leave.code }}</h2>
+        <h2>{{ leaveItem.code }}</h2>
         <div class="leave-date">
-          Ngày tạo: {{ leave.createdDate | date:'dd/MM/yyyy HH:mm' }}
+          Ngày tạo: {{ leaveItem.createdDate | date:'dd/MM/yyyy HH:mm' }}
         </div>
       </div>
 
@@ -244,22 +242,22 @@
 
         <div>
           <label>Mã nhân viên</label>
-          <p>{{ leave.codeUser }}</p>
+          <p>{{ leaveItem.codeUser }}</p>
         </div>
 
         <div>
           <label>Họ tên</label>
-          <p>{{ leave.userName }}</p>
+          <p>{{ leaveItem.userName }}</p>
         </div>
 
         <div>
           <label>Phòng ban</label>
-          <p>{{ leave.department }}</p>
+          <p>{{ leaveItem.department }}</p>
         </div>
 
         <div>
           <label>Chức vụ</label>
-          <p>{{ leave.position }}</p>
+          <p>{{ leaveItem.position }}</p>
         </div>
 
       </div>
@@ -272,28 +270,28 @@
 
         <div>
           <label>Loại nghỉ</label>
-          <p>{{ leave.leaveType }}</p>
+          <p>{{ leaveItem.leaveType }}</p>
         </div>
 
         <div>
           <label>Hình thức nghỉ</label>
-          <p>{{ leave.typeShift }}</p>
+          <p>{{ leaveItem.typeShift }}</p>
         </div>
 
         <div>
           <label>Từ ngày</label>
-          <p>{{ leave.fromDate | date:'dd/MM/yyyy' }}</p>
+          <p>{{ leaveItem.fromDate | date:'dd/MM/yyyy' }}</p>
         </div>
 
         <div>
           <label>Đến ngày</label>
-          <p>{{ leave.toDate | date:'dd/MM/yyyy' }}</p>
+          <p>{{ leaveItem.toDate | date:'dd/MM/yyyy' }}</p>
         </div>
 
         <div>
           <label>Tổng số ngày</label>
           <p class="total-day">
-            {{ leave.totalDay }} ngày
+            {{ leaveItem.totalDay }} ngày
           </p>
         </div>
 
@@ -305,7 +303,7 @@
     <nz-card nzTitle="Lý do nghỉ phép" class="mt-16">
 
       <div class="reason-box">
-        {{ leave.reason }}
+        {{ leaveItem.reason }}
       </div>
 
     </nz-card>
@@ -345,13 +343,13 @@
         <nz-timeline-item color="green">
           <strong>Tạo đơn nghỉ phép</strong>
           <br>
-          {{ leave.createdDate | date:'dd/MM/yyyy HH:mm' }}
+          {{ leaveItem.createdDate | date:'dd/MM/yyyy HH:mm' }}
         </nz-timeline-item>
 
         <nz-timeline-item color="blue">
           <strong>Gửi phê duyệt</strong>
           <br>
-          {{ leave.createdDate | date:'dd/MM/yyyy HH:mm' }}
+          {{ leaveItem.createdDate | date:'dd/MM/yyyy HH:mm' }}
         </nz-timeline-item>
 
       </nz-timeline>

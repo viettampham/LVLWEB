@@ -8,7 +8,7 @@ import { NzButtonModule } from 'ng-zorro-antd/button';
 import { AuthService } from '../services/auth.service';
 import { Router } from '@angular/router';
 import { Api } from '../services/api';
-import { finalize, single } from 'rxjs';
+import { finalize } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { CommonModule } from '@angular/common';
 import { FormBuilder, FormGroup, Validators,ReactiveFormsModule } from '@angular/forms';
@@ -16,7 +16,6 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzResultModule } from 'ng-zorro-antd/result';
 import { NzTagModule } from 'ng-zorro-antd/tag';
-import { sign } from 'crypto';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzStepsModule } from 'ng-zorro-antd/steps';
 import { NzTimelineItemComponent, NzTimelineComponent } from 'ng-zorro-antd/timeline';
@@ -41,7 +40,7 @@ export class Dangkynghiphep {
   codeLeave = signal("");
   readonly loadings = signal<boolean[]>([false, false]);
   readonly isVisible = signal(true);
-  leave: any;
+  leaveItem: any;
 
   constructor(private authService: AuthService, 
     private router: Router,
