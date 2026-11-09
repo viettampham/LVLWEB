@@ -19,12 +19,12 @@ import { NzTagModule } from 'ng-zorro-antd/tag';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzStepsModule } from 'ng-zorro-antd/steps';
 import { NzTimelineItemComponent, NzTimelineComponent } from 'ng-zorro-antd/timeline';
-
+import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
 
 @Component({
   imports: [NzTabsModule, NzIconModule, NzSelectModule,
     NzDatePickerModule, NzCardModule, NzInputModule,
-    NzButtonModule, CommonModule, ReactiveFormsModule,
+    NzButtonModule, CommonModule, ReactiveFormsModule,NzSkeletonModule,
     NzFormModule, NzResultModule, NzTagModule, NzModalModule, NzStepsModule, NzTimelineItemComponent, NzTimelineComponent],
   selector: 'app-dangkynghiphep',
   styleUrl: './dangkynghiphep.scss',
@@ -37,10 +37,10 @@ export class Dangkynghiphep {
   FormLeave: FormGroup;
   leaveShift = signal(false);
   isPhatHanh = signal(false);
-  codeLeave = signal("");
   readonly loadings = signal<boolean[]>([false, false]);
-  readonly isVisible = signal(true);
-  leaveItem: any;
+  readonly isVisible = signal(false);
+  leaveItem = signal<any>(null);
+  isLoading = signal(true);
 
   constructor(private authService: AuthService, 
     private router: Router,
@@ -103,15 +103,24 @@ export class Dangkynghiphep {
     });
   }
 
+  handleGetLeaveItem(code: string){
+    this.isLoading.set(true);
+    this.api.GetLeaveItem(code).pipe(finalize(() => this.isLoading.set(false))).subscribe({
+      next:(res)=>{
+        this.leaveItem.set(res.data);
+      }, error:(err)=>{
+        this.message.create("error","Lỗi " + err.message);
+      }
+    })
+  }
+
   onShiftChange(value: string) {
     if (value === 'Nghỉ buổi sáng' || value === 'Nghỉ buổi chiều') {
-      console.log(value);
       this.leaveShift.set(false);
       this.FormRegisLeave.patchValue({
         totalDay: 0.5,
         toDate: this.FormRegisLeave.get('fromDate')?.value
       });
-      console.log(this.FormRegisLeave.get('totalDay')?.value);
 
     } else if (value === 'Nghỉ cả ngày') {
       this.leaveShift.set(false);
@@ -216,6 +225,7 @@ export class Dangkynghiphep {
       var request = {
         codeUser: this.CurrentUser.CodeUser,
         userName: this.CurrentUser.UserName,
+        fullName: this.CurrentUser.Fullname,
         leaveType: this.FormRegisLeave.get('leaveType')?.value,
         typeShift: this.FormRegisLeave.get('typeShift')?.value,
         fromDate: this.FormRegisLeave.get('fromDate')?.value,
@@ -231,12 +241,10 @@ export class Dangkynghiphep {
       })).subscribe({
         next:(res)=>{
           this.message.create(res.status.toLowerCase(),res.message);
-          if(index == 1){
+          if(index == 0){
             this.isPhatHanh.set(true);
-            this.codeLeave.set(res.data);
-            console.log(this.codeLeave());
-          }else{
-
+            this.leaveItem.set(res.data);
+            console.log("LeaveItem: ",this.leaveItem());
           }
           this.resetForm();
         },error:(err)=>{
@@ -269,8 +277,8 @@ export class Dangkynghiphep {
   }
 
   OnViewDetail(){
-
-
+    this.isVisible.set(true);
+    this.handleGetLeaveItem(this.leaveItem().code);
   }
   handleCancel(){
     this.isVisible.set(false);
@@ -278,6 +286,18 @@ export class Dangkynghiphep {
 
   handleSubmit(index: number){
 
+  }
+
+  PhatHanhDon(code: string){
+    this.api.PhatHanhDon(code).subscribe({
+      next:(res)=>{
+        this.message.create(res.status.toLowerCase(),res.message);
+        this.leaveItem.set(res.data);
+      },
+      error:(err)=>{
+        this.message.create("error",err.message);
+      }
+    })
   }
 
 }

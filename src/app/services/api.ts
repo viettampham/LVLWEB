@@ -149,4 +149,15 @@ export class Api {
     return this.httpClient.post<any>(`${environment.api_domain}/api/LeaveRequest/create`, req);
   }
 
+  GetLeaveItem=(code: string)=>{
+    return this.httpClient.get<any>(`${environment.api_domain}/api/LeaveRequest/get-leave-by-code?code=${code}`);
+  }
+
+  PhatHanhDon = (code: string) => {
+    return this.httpClient.post<any>(
+      `${environment.api_domain}/api/LeaveRequest/phat-hanh-don?code=${code}`,
+      {}
+    );
+  }
+
 }

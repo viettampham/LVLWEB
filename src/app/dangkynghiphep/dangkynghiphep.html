@@ -1,10 +1,9 @@
 <div *ngIf="!isPhatHanh()">
     <div class="leave-page">
 
-    <!-- Thông tin nhân viên -->
     <div class="card">
         <div class="card-header">
-            <span>Thông tin nhân viên</span>
+            <span >Thông tin nhân viên</span>
         </div>
 
         <div class="employee-info">
@@ -114,8 +113,7 @@
 
                     <div class="footer-action">
                         <button nz-button (click)="resetForm()"><nz-icon nzType="clear" nzTheme="outline" />Làm mới</button>
-                        <button nz-button [nzLoading]="loadings()[0]"  nzType="default" (click)="handleRegisleave(0)"><nz-icon nzType="save" nzTheme="outline" />Lưu</button>
-                        <button  nz-button [nzLoading]="loadings()[1]" nzType="primary" (click)="handleRegisleave(1)"><nz-icon nzType="send" nzTheme="outline" />Gửi phê duyệt</button>
+                        <button  nz-button [nzLoading]="loadings()[0]" nzType="primary" (click)="handleRegisleave(0)"><nz-icon nzType="send" nzTheme="outline" />Đăng ký số</button>
                     </div>
                 </div>
             </form>
@@ -163,8 +161,8 @@
         <p style="font-size: 22px;font-weight: 500;">ĐĂNG KÝ ĐƠN NGHỈ PHÉP THÀNH CÔNG</p>
         <p class="sub-title" style="font-size: 18px;">
             Mã đơn:
-            <span class="leave-code" style="color: #0087ff;font-weight: 600;">{{ codeLeave() }}</span>.
-            Đơn nghỉ phép đã được gửi đến cấp phê duyệt.
+            <span class="leave-code" style="color: #0087ff;font-weight: 600;">{{ leaveItem().code }}</span>.
+            Phát hành đơn để cấp trên phê duyệt.
         </p>
     </div>
     <div class="status-wrapper" style="background-color: #f9f9f9;">
@@ -174,7 +172,7 @@
 
         <nz-tag style="font-size: 24px;padding: 10px 12px;" nzColor="orange">
         <span nz-icon nzType="clock-circle"></span>
-            Chờ phê duyệt
+          {{ leaveItem().status }}
         </nz-tag>
     </div>
     </div>
@@ -182,6 +180,10 @@
   <div nz-result-extra>
     <button (click)="OnViewDetail()" nz-button nzType="primary">
       <nz-icon nzType="info-circle" nzTheme="outline" /> Xem chi tiết đơn
+    </button>
+
+    <button (click)="PhatHanhDon(leaveItem().code)" nz-button nzType="primary">
+      <nz-icon nzType="send" nzTheme="outline" /> Phát hành đơn
     </button>
 
     <button nz-button>
@@ -221,141 +223,141 @@
   </ng-template>
 
   <ng-container *nzModalContent>
-    <div class="leave-header">
-      <div>
-        <h2>{{ leaveItem.code }}</h2>
-        <div class="leave-date">
-          Ngày tạo: {{ leaveItem.createdDate | date:'dd/MM/yyyy HH:mm' }}
-        </div>
-      </div>
-
-      <nz-tag nzColor="orange">
-        <nz-icon nzType="clock-circle"></nz-icon>
-        Chờ phê duyệt
-      </nz-tag>
-
-    </div>
-
-    <!-- Thông tin nhân viên -->
-    <nz-card nzTitle="Thông tin nhân viên" class="mt-16">
-      <div class="detail-grid">
-
+    <nz-skeleton [nzLoading]="isLoading()" [nzActive]="true" [nzParagraph]="{ rows: 12 }">
+      <div class="leave-header">
         <div>
-          <label>Mã nhân viên</label>
-          <p>{{ leaveItem.codeUser }}</p>
+          <h2 style="font-size: 22px;">{{leaveItem().code}}</h2>
+          <div class="leave-date">
+            Ngày tạo: <span style="color: #1677ff;">{{ leaveItem().createDate | date:'dd/MM/yyyy HH:mm' }}</span>
+          </div>
         </div>
 
-        <div>
-          <label>Họ tên</label>
-          <p>{{ leaveItem.userName }}</p>
-        </div>
-
-        <div>
-          <label>Phòng ban</label>
-          <p>{{ leaveItem.department }}</p>
-        </div>
-
-        <div>
-          <label>Chức vụ</label>
-          <p>{{ leaveItem.position }}</p>
-        </div>
-
-      </div>
-    </nz-card>
-
-    <!-- Thông tin nghỉ phép -->
-    <nz-card nzTitle="Thông tin nghỉ phép" class="mt-16">
-
-      <div class="detail-grid">
-
-        <div>
-          <label>Loại nghỉ</label>
-          <p>{{ leaveItem.leaveType }}</p>
-        </div>
-
-        <div>
-          <label>Hình thức nghỉ</label>
-          <p>{{ leaveItem.typeShift }}</p>
-        </div>
-
-        <div>
-          <label>Từ ngày</label>
-          <p>{{ leaveItem.fromDate | date:'dd/MM/yyyy' }}</p>
-        </div>
-
-        <div>
-          <label>Đến ngày</label>
-          <p>{{ leaveItem.toDate | date:'dd/MM/yyyy' }}</p>
-        </div>
-
-        <div>
-          <label>Tổng số ngày</label>
-          <p class="total-day">
-            {{ leaveItem.totalDay }} ngày
-          </p>
-        </div>
+        <nz-tag nzColor="orange">
+          <nz-icon nzType="clock-circle"></nz-icon>
+          {{ leaveItem().status }}
+        </nz-tag>
 
       </div>
 
-    </nz-card>
+      <!-- Thông tin nhân viên -->
+      <nz-card nzTitle="Thông tin nhân viên" class="mt-16">
+        <div class="detail-grid">
+          <div>
+            <label>Mã nhân viên</label>
+            <p>{{ leaveItem().userCode }}</p>
+          </div>
 
-    <!-- Lý do -->
-    <nz-card nzTitle="Lý do nghỉ phép" class="mt-16">
+          <div>
+            <label>Họ tên</label>
+            <p>{{ leaveItem().fullname }}</p>
+          </div>
 
-      <div class="reason-box">
-        {{ leaveItem.reason }}
-      </div>
+          <div>
+            <label>Phòng ban</label>
+            <p>{{leaveItem().phongBan}}</p>
+          </div>
 
-    </nz-card>
+          <div>
+            <label>Chức vụ</label>
+            <p>{{leaveItem().chucVu}}</p>
+          </div>
 
-    <!-- Luồng phê duyệt -->
-    <nz-card nzTitle="Luồng phê duyệt" class="mt-16">
+        </div>
+      </nz-card>
 
-      <nz-steps nzDirection="horizontal" [nzCurrent]="1">
+      <!-- Thông tin nghỉ phép -->
+      <nz-card nzTitle="Thông tin nghỉ phép" class="mt-16">
 
-        <nz-step
-          nzTitle="Người tạo đơn"
-          nzDescription="Hoàn thành">
-        </nz-step>
+        <div class="detail-grid">
 
-        <nz-step
-          nzTitle="Trưởng bộ phận"
-          nzDescription="Đang xử lý">
-        </nz-step>
+          <div>
+            <label>Loại nghỉ</label>
+            <p>{{ leaveItem().leaveType }}</p>
+          </div>
 
-        <nz-step
-          nzTitle="Phòng nhân sự">
-        </nz-step>
+          <div>
+            <label>Hình thức nghỉ</label>
+            <p>{{ leaveItem().typeShift }}</p>
+          </div>
 
-        <nz-step
-          nzTitle="Hoàn tất">
-        </nz-step>
+          <div>
+            <label>Từ ngày</label>
+            <p>{{ leaveItem().fromDate | date:'dd/MM/yyyy' }}</p>
+          </div>
 
-      </nz-steps>
+          <div>
+            <label>Đến ngày</label>
+            <p>{{ leaveItem().toDate | date:'dd/MM/yyyy' }}</p>
+          </div>
 
-    </nz-card>
+          <div>
+            <label>Tổng số ngày</label>
+            <p class="total-day">
+              {{ leaveItem().totalDay }} ngày
+            </p>
+          </div>
 
-    <!-- Nhật ký -->
-    <nz-card nzTitle="Lịch sử xử lý" class="mt-16">
+        </div>
 
-      <nz-timeline>
+      </nz-card>
 
-        <nz-timeline-item color="green">
-          <strong>Tạo đơn nghỉ phép</strong>
-          <br>
-          {{ leaveItem.createdDate | date:'dd/MM/yyyy HH:mm' }}
-        </nz-timeline-item>
+      <!-- Lý do -->
+      <nz-card nzTitle="Lý do nghỉ phép" class="mt-16">
 
-        <nz-timeline-item color="blue">
-          <strong>Gửi phê duyệt</strong>
-          <br>
-          {{ leaveItem.createdDate | date:'dd/MM/yyyy HH:mm' }}
-        </nz-timeline-item>
+        <div class="reason-box">
+          {{ leaveItem().reason }}
+        </div>
 
-      </nz-timeline>
+      </nz-card>
 
-    </nz-card>
+      <!-- Luồng phê duyệt -->
+      <nz-card nzTitle="Luồng phê duyệt" class="mt-16">
+        <nz-steps nzDirection="horizontal" [nzCurrent]="leaveItem().curentStep">
+          <nz-step
+            nzTitle="Tạo đơn"
+            nzDescription="Hoàn thành">
+          </nz-step>
 
+          <nz-step
+            nzTitle="Phát hành"
+            nzDescription="Đang xử lý">
+          </nz-step>
+
+          <nz-step
+            nzTitle="Giám sát">
+          </nz-step>
+
+          <nz-step
+            nzTitle="Trưởng phòng">
+          </nz-step>
+
+          <nz-step
+            nzTitle="Hoàn tất">
+          </nz-step>
+
+        </nz-steps>
+
+      </nz-card>
+
+      <!-- Nhật ký -->
+      <nz-card nzTitle="Lịch sử xử lý" class="mt-16">
+
+        <nz-timeline>
+
+          <nz-timeline-item color="green">
+            <strong>Tạo đơn nghỉ phép</strong>
+            <br>
+            {{ leaveItem().createdDate | date:'dd/MM/yyyy HH:mm' }}
+          </nz-timeline-item>
+
+          <nz-timeline-item color="blue">
+            <strong>Gửi phê duyệt</strong>
+            <br>
+            {{ leaveItem().createdDate | date:'dd/MM/yyyy HH:mm' }}
+          </nz-timeline-item>
+        </nz-timeline>
+      </nz-card>
+    </nz-skeleton>
   </ng-container>
 
 </nz-modal>
