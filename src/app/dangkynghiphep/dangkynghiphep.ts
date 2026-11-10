@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { NzTabsModule } from 'ng-zorro-antd/tabs';
 import { NzSelectModule } from 'ng-zorro-antd/select';
 import { NzDatePickerModule } from 'ng-zorro-antd/date-picker';
@@ -11,7 +11,7 @@ import { Api } from '../services/api';
 import { finalize } from 'rxjs';
 import { NzMessageService } from 'ng-zorro-antd/message';
 import { CommonModule } from '@angular/common';
-import { FormBuilder, FormGroup, Validators,ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { NzResultModule } from 'ng-zorro-antd/result';
@@ -20,17 +20,18 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzStepsModule } from 'ng-zorro-antd/steps';
 import { NzTimelineItemComponent, NzTimelineComponent } from 'ng-zorro-antd/timeline';
 import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
+import { sign } from 'node:crypto';
 
 @Component({
   imports: [NzTabsModule, NzIconModule, NzSelectModule,
     NzDatePickerModule, NzCardModule, NzInputModule,
-    NzButtonModule, CommonModule, ReactiveFormsModule,NzSkeletonModule,
+    NzButtonModule, CommonModule, ReactiveFormsModule, NzSkeletonModule,
     NzFormModule, NzResultModule, NzTagModule, NzModalModule, NzStepsModule, NzTimelineItemComponent, NzTimelineComponent],
   selector: 'app-dangkynghiphep',
   styleUrl: './dangkynghiphep.scss',
   templateUrl: './dangkynghiphep.html',
 })
-export class Dangkynghiphep {
+export class Dangkynghiphep implements OnInit {
   CurrentUser: any = null;
   DsTypeLeave = signal<any[]>([]);
   FormRegisLeave: FormGroup;
@@ -40,30 +41,33 @@ export class Dangkynghiphep {
   readonly loadings = signal<boolean[]>([false, false]);
   readonly isVisible = signal(false);
   leaveItem = signal<any>(null);
+  currentStep = signal(0);
   isLoading = signal(true);
+  ListPendingAsignee = signal<any[]>([]);
 
-  constructor(private authService: AuthService, 
+  constructor(private authService: AuthService,
     private router: Router,
     private api: Api,
     private message: NzMessageService,
-    private fb: FormBuilder ){
-      var today = new Date();
-      this.FormRegisLeave = this.fb.group({
-        leaveType: ['',Validators.required],
-        typeShift: ['',Validators.required],
-        fromDate: [today,Validators.required],
-        toDate: [today,Validators.required],
-        totalDay: [0 ,Validators.required],
-        reason: ['',Validators.required],
-      })
-      this.FormLeave = this.fb.group({
-        leaveType: ['',Validators.required],
-        typeShift: ['',Validators.required],
-        fromDate: [today,Validators.required],
-        toDate: [today,Validators.required],
-        totalDay: [0 ,Validators.required],
-        reason: ['',Validators.required],
-      })
+    private fb: FormBuilder) {
+    var today = new Date();
+    this.FormRegisLeave = this.fb.group({
+      leaveType: ['', Validators.required],
+      typeShift: ['', Validators.required],
+      fromDate: [today, Validators.required],
+      toDate: [today, Validators.required],
+      totalDay: [0, Validators.required],
+      reason: ['', Validators.required],
+      pendingAsignee: ['', Validators.required],
+    })
+    this.FormLeave = this.fb.group({
+      leaveType: ['', Validators.required],
+      typeShift: ['', Validators.required],
+      fromDate: [today, Validators.required],
+      toDate: [today, Validators.required],
+      totalDay: [0, Validators.required],
+      reason: ['', Validators.required],
+    })
   }
 
   async ngOnInit(): Promise<void> {
@@ -76,7 +80,7 @@ export class Dangkynghiphep {
     }
 
     this.calculateDays();
-    
+
     this.FormRegisLeave.get('fromDate')?.valueChanges.subscribe((fromDate) => {
       const toDate = this.FormRegisLeave.get('toDate')?.value;
       if (fromDate && toDate) {
@@ -101,15 +105,16 @@ export class Dangkynghiphep {
     this.FormRegisLeave.get('typeShift')?.valueChanges.subscribe(value => {
       this.onShiftChange(value);
     });
+    this.GetpendingAsignee();
   }
 
-  handleGetLeaveItem(code: string){
+  handleGetLeaveItem(code: string) {
     this.isLoading.set(true);
     this.api.GetLeaveItem(code).pipe(finalize(() => this.isLoading.set(false))).subscribe({
-      next:(res)=>{
+      next: (res) => {
         this.leaveItem.set(res.data);
-      }, error:(err)=>{
-        this.message.create("error","Lỗi " + err.message);
+      }, error: (err) => {
+        this.message.create("error", "Lỗi " + err.message);
       }
     })
   }
@@ -128,13 +133,13 @@ export class Dangkynghiphep {
         totalDay: 1,
         toDate: this.FormRegisLeave.get('fromDate')?.value
       });
-    }else if (value === 'Nghỉ dài ngày') {
+    } else if (value === 'Nghỉ dài ngày') {
       this.leaveShift.set(true);
       this.calculateDays();
     }
   }
 
-  resetForm(){
+  resetForm() {
     var today = new Date;
     this.FormRegisLeave.patchValue({
       leaveType: "",
@@ -217,7 +222,7 @@ export class Dangkynghiphep {
   };
 
 
-  handleRegisleave(index: number){
+  handleRegisleave(index: number) {
     if (this.FormRegisLeave.valid) {
       this.loadings.update(loadings =>
         loadings.map((item, i) => i === index)
@@ -232,23 +237,24 @@ export class Dangkynghiphep {
         toDate: this.FormRegisLeave.get('toDate')?.value,
         totalDay: this.FormRegisLeave.get('totalDay')?.value,
         reason: this.FormRegisLeave.get('reason')?.value,
-        status: index === 0 ? "Đăng ký số" : "Phát hành"
+        status: index === 0 ? "Đăng ký số" : "Phát hành",
+        pendingAsigneeCode: this.FormRegisLeave.get('pendingAsignee')?.value
       }
-      this.api.RegisLeave(request).pipe(finalize(()=>{
+      this.api.RegisLeave(request).pipe(finalize(() => {
         this.loadings.update(loadings =>
           loadings.map((item, i) => i === index ? false : item)
         );
       })).subscribe({
-        next:(res)=>{
-          this.message.create(res.status.toLowerCase(),res.message);
-          if(index == 0){
+        next: (res) => {
+          this.message.create(res.status.toLowerCase(), res.message);
+          if (index == 0) {
             this.isPhatHanh.set(true);
             this.leaveItem.set(res.data);
-            console.log("LeaveItem: ",this.leaveItem());
+            console.log("LeaveItem: ", this.leaveItem());
           }
           this.resetForm();
-        },error:(err)=>{
-          this.message.create("error",err.message);
+        }, error: (err) => {
+          this.message.create("error", err.message);
         }
       })
     } else {
@@ -261,41 +267,57 @@ export class Dangkynghiphep {
     }
   }
 
-  GetLeaveType(){
+  GetLeaveType() {
     this.api.GetleaveType().subscribe({
-      next:(res)=>{
+      next: (res) => {
         this.DsTypeLeave.set(res.listData);
-      }, error:(err)=>{
-        this.message.create("error","Lỗi " + err.message);
+      }, error: (err) => {
+        this.message.create("error", "Lỗi " + err.message);
       }
     })
   }
 
 
-  onContinue(){
+  onContinue() {
     this.isPhatHanh.set(false);
   }
 
-  OnViewDetail(){
+  OnViewDetail() {
     this.isVisible.set(true);
     this.handleGetLeaveItem(this.leaveItem().code);
   }
-  handleCancel(){
+  handleCancel() {
     this.isVisible.set(false);
   }
 
-  handleSubmit(index: number){
+  handleSubmit(index: number) {
 
   }
 
-  PhatHanhDon(code: string){
+  PhatHanhDon(code: string) {
     this.api.PhatHanhDon(code).subscribe({
-      next:(res)=>{
-        this.message.create(res.status.toLowerCase(),res.message);
+      next: (res) => {
+        this.message.create(res.status.toLowerCase(), res.message);
         this.leaveItem.set(res.data);
       },
-      error:(err)=>{
-        this.message.create("error",err.message);
+      error: (err) => {
+        this.message.create("error", err.message);
+      }
+    })
+  }
+
+  GetpendingAsignee(){
+    if(this.leaveItem() == null){
+      this.currentStep.set(0); 
+    }else{
+      this.currentStep.set(this.leaveItem().currentStep);
+    }
+    this.api.GetpendingAsignee(this.currentStep()).subscribe({
+      next:(res)=>{
+        this.ListPendingAsignee.set(res.listData);
+        console.log(this.ListPendingAsignee());
+      }, error: (err)=>{
+        this.message.create("error", err.message);
       }
     })
   }

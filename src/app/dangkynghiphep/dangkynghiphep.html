@@ -1,188 +1,203 @@
 <div *ngIf="!isPhatHanh()">
-    <div class="leave-page">
+  <div class="leave-page">
 
     <div class="card">
-        <div class="card-header">
-            <span >Thông tin nhân viên</span>
+      <div class="card-header">
+        <span>Thông tin nhân viên</span>
+      </div>
+
+      <div class="employee-info">
+
+        <div class="info-item">
+          <label>Mã nhân viên</label>
+          <span>{{CurrentUser.CodeUser}}</span>
         </div>
 
-        <div class="employee-info">
-
-            <div class="info-item">
-                <label>Mã nhân viên</label>
-                <span>{{CurrentUser.CodeUser}}</span>
-            </div>
-
-            <div class="info-item">
-                <label>Họ tên</label>
-                <span>{{CurrentUser.Fullname}}</span>
-            </div>
-
-            <div class="info-item">
-                <label>Phòng ban</label>
-                <span>{{CurrentUser.PhongBan}}</span>
-            </div>
-
-            <div class="info-item">
-                <label>Chức vụ</label>
-                <span>{{CurrentUser.ChucVu}}</span>
-            </div>
-
-            <div class="info-item">
-                <label>Liên hệ</label>
-                <span>{{CurrentUser.PhoneNumber}}</span>
-            </div>
-
+        <div class="info-item">
+          <label>Họ tên</label>
+          <span>{{CurrentUser.Fullname}}</span>
         </div>
+
+        <div class="info-item">
+          <label>Phòng ban</label>
+          <span>{{CurrentUser.PhongBan}}</span>
+        </div>
+
+        <div class="info-item">
+          <label>Chức vụ</label>
+          <span>{{CurrentUser.ChucVu}}</span>
+        </div>
+
+        <div class="info-item">
+          <label>Liên hệ</label>
+          <span>{{CurrentUser.PhoneNumber}}</span>
+        </div>
+
+      </div>
     </div>
 
     <div class="content">
-        <div class="card form-section">
-            <div class="card-header">
-                <span>Thông tin nghỉ phép</span>
-            </div>
-            <form nz-form nzLayout="inline" [formGroup]="FormRegisLeave">
-                <div class="form-body w-full">
-                    <div class="row">
-                        <div class="form-group">
-                            <label>Loại nghỉ phép</label>
-                            <nz-form-item>
-                            <nz-form-control nzErrorTip="Chọn loại nghỉ phép!">
-                                <nz-select formControlName="leaveType">
-                                    <nz-option nzValue="" nzLabel="-- Chọn loại nghỉ phép --" />
-                                    <nz-option *ngFor="let item of DsTypeLeave()" nzValue="{{item.leaveType1}}" nzLabel="{{item.leaveType1}}" />
-                                </nz-select>
-                            </nz-form-control>
-                        </nz-form-item>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Hình thức nghỉ</label>
-                            <nz-form-item>
-                                <nz-form-control nzErrorTip="Chọn ca nghỉ!">
-                                    <nz-select formControlName="typeShift">
-                                        <nz-option nzValue="" nzLabel="-- Chọn thời hạn nghỉ phép --" />
-                                        <nz-option nzValue="Nghỉ buổi sáng" nzLabel="Nghỉ buổi sáng" />
-                                        <nz-option nzValue="Nghỉ buổi chiều" nzLabel="Nghỉ buổi chiều" />
-                                        <nz-option nzValue="Nghỉ cả ngày" nzLabel="Nghỉ cả ngày" />
-                                        <nz-option nzValue="Nghỉ dài ngày" nzLabel="Nghỉ dài ngày" />
-                                    </nz-select>
-                                </nz-form-control>
-                            </nz-form-item>
-                            
-                        </div>
-                    </div>
-
-                    <div class="row">
-                        <div class="form-group">
-                            <label>Từ ngày</label>
-                            <nz-form-item>
-                                <nz-form-control nzErrorTip="Chọn từ ngày!">
-                                    <nz-date-picker [nzDisabledDate]="disabledFromDate" formControlName="fromDate" nzFormat="dd/MM/yyyy"></nz-date-picker>
-                                </nz-form-control>
-                            </nz-form-item>
-                        </div>
-
-                        <div class="form-group" *ngIf="leaveShift()">
-                            <label>Đến ngày</label>
-                            <nz-form-item>
-                                <nz-form-control nzErrorTip="Chọn đến ngày!">
-                                    <nz-date-picker formControlName="toDate" [nzDisabledDate]="disabledToDate" nzFormat="dd/MM/yyyy"></nz-date-picker>
-                                </nz-form-control>
-                            </nz-form-item>
-                        </div>
-
-                        <div class="form-group">
-                            <label>Số ngày nghỉ</label>
-                            <nz-form-item>
-                                <nz-form-control nzErrorTip="Tổng số ngày nghỉ!">
-                                    <input class="text-center" nz-input readonly formControlName="totalDay">
-                                </nz-form-control>
-                            </nz-form-item>
-                        </div>
-                    </div>
-
-                    <div class="form-group">
-                        <label>Lý do nghỉ</label>
-                        <nz-form-item>
-                            <nz-form-control nzErrorTip="Nhập lý do nghỉ!!">
-                                <textarea nz-input formControlName="reason" rows="4"></textarea>
-                            </nz-form-control>
-                        </nz-form-item>
-                    </div>
-
-                    <div class="footer-action">
-                        <button nz-button (click)="resetForm()"><nz-icon nzType="clear" nzTheme="outline" />Làm mới</button>
-                        <button  nz-button [nzLoading]="loadings()[0]" nzType="primary" (click)="handleRegisleave(0)"><nz-icon nzType="send" nzTheme="outline" />Đăng ký số</button>
-                    </div>
-                </div>
-            </form>
-
-            
+      <div class="card form-section">
+        <div class="card-header">
+          <span>Thông tin nghỉ phép</span>
         </div>
+        <form nz-form nzLayout="inline" [formGroup]="FormRegisLeave">
+          <div class="form-body w-full">
+            <div class="row">
+              <div class="form-group">
+                <label>Loại nghỉ phép</label>
+                <nz-form-item>
+                  <nz-form-control nzErrorTip="Chọn loại nghỉ phép!">
+                    <nz-select formControlName="leaveType">
+                      <nz-option nzValue="" nzLabel="-- Chọn loại nghỉ phép --" />
+                      <nz-option *ngFor="let item of DsTypeLeave()" nzValue="{{item.leaveType1}}"
+                        nzLabel="{{item.leaveType1}}" />
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
 
-        <!-- Sidebar -->
-        <div class="sidebar">
+              <div class="form-group">
+                <label>Hình thức nghỉ</label>
+                <nz-form-item>
+                  <nz-form-control nzErrorTip="Chọn ca nghỉ!">
+                    <nz-select formControlName="typeShift">
+                      <nz-option nzValue="" nzLabel="-- Chọn thời hạn nghỉ phép --" />
+                      <nz-option nzValue="Nghỉ buổi sáng" nzLabel="Nghỉ buổi sáng" />
+                      <nz-option nzValue="Nghỉ buổi chiều" nzLabel="Nghỉ buổi chiều" />
+                      <nz-option nzValue="Nghỉ cả ngày" nzLabel="Nghỉ cả ngày" />
+                      <nz-option nzValue="Nghỉ dài ngày" nzLabel="Nghỉ dài ngày" />
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
 
-            <div class="card">
-                <div class="card-header">
-                    Thông tin phép
-                </div>
-
-                <div class="leave-balance">
-                    <div>
-                        <span>Tổng số phép</span>
-                        <b>12</b>
-                    </div>
-
-                    <div>
-                        <span>Đã sử dụng</span>
-                        <b>4</b>
-                    </div>
-
-                    <div>
-                        <span>Còn lại</span>
-                        <b class="green">8</b>
-                    </div>
-                </div>
+              <div class="form-group">
+                <label>Người tiếp nhận</label>
+                <nz-form-item>
+                  <nz-form-control nzErrorTip="Chọn giám sát xác nhận!">
+                    <nz-select formControlName="pendingAsignee">
+                      <nz-option nzValue="" nzLabel="-- Chọn giám sát xác nhận --" />
+                      <nz-option *ngFor="let item of ListPendingAsignee()" nzValue="{{item.code}}"
+                        nzLabel="{{item.name}}" />
+                    </nz-select>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
             </div>
 
+            <div class="row">
+              <div class="form-group">
+                <label>Từ ngày</label>
+                <nz-form-item>
+                  <nz-form-control nzErrorTip="Chọn từ ngày!">
+                    <nz-date-picker [nzDisabledDate]="disabledFromDate" formControlName="fromDate"
+                      nzFormat="dd/MM/yyyy"></nz-date-picker>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+
+              <div class="form-group" *ngIf="leaveShift()">
+                <label>Đến ngày</label>
+                <nz-form-item>
+                  <nz-form-control nzErrorTip="Chọn đến ngày!">
+                    <nz-date-picker formControlName="toDate" [nzDisabledDate]="disabledToDate"
+                      nzFormat="dd/MM/yyyy"></nz-date-picker>
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+
+              <div class="form-group">
+                <label>Số ngày nghỉ</label>
+                <nz-form-item>
+                  <nz-form-control nzErrorTip="Tổng số ngày nghỉ!">
+                    <input class="text-center" nz-input readonly formControlName="totalDay">
+                  </nz-form-control>
+                </nz-form-item>
+              </div>
+            </div>
+
+            <div class="form-group">
+              <label>Lý do nghỉ</label>
+              <nz-form-item>
+                <nz-form-control nzErrorTip="Nhập lý do nghỉ!!">
+                  <textarea nz-input formControlName="reason" rows="4"></textarea>
+                </nz-form-control>
+              </nz-form-item>
+            </div>
+
+            <div class="footer-action">
+              <button nz-button (click)="resetForm()"><nz-icon nzType="clear" nzTheme="outline" />Làm mới</button>
+              <button nz-button [nzLoading]="loadings()[0]" nzType="primary" (click)="handleRegisleave(0)"><nz-icon
+                  nzType="send" nzTheme="outline" />Đăng ký số</button>
+            </div>
+          </div>
+        </form>
+
+
+      </div>
+
+      <!-- Sidebar -->
+      <div class="sidebar">
+
+        <div class="card">
+          <div class="card-header">
+            Thông tin phép
+          </div>
+
+          <div class="leave-balance">
+            <div>
+              <span>Tổng số phép</span>
+              <b>12</b>
+            </div>
+
+            <div>
+              <span>Đã sử dụng</span>
+              <b>4</b>
+            </div>
+
+            <div>
+              <span>Còn lại</span>
+              <b class="green">8</b>
+            </div>
+          </div>
         </div>
 
+      </div>
+
     </div>
-    </div>
+  </div>
 </div>
 
-<nz-result *ngIf="isPhatHanh()"
-  nzStatus="success"
->
+<nz-result *ngIf="isPhatHanh()" nzStatus="success">
   <div nz-result-content style="background-color: white;">
     <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-        <p style="font-size: 22px;font-weight: 500;">ĐĂNG KÝ ĐƠN NGHỈ PHÉP THÀNH CÔNG</p>
-        <p class="sub-title" style="font-size: 18px;">
-            Mã đơn:
-            <span class="leave-code" style="color: #0087ff;font-weight: 600;">{{ leaveItem().code }}</span>.
-            Phát hành đơn để cấp trên phê duyệt.
-        </p>
+      <p style="font-size: 22px;font-weight: 500;">{{leaveItem().messageNotice}}</p>
+      <p class="sub-title" style="font-size: 18px;">
+        Mã đơn:
+        <span class="leave-code" style="color: #0087ff;font-weight: 600;">{{ leaveItem().code }}</span>.
+        {{leaveItem().message}}
+      </p>
     </div>
     <div class="status-wrapper" style="background-color: #f9f9f9;">
-        <div class="status-title">
-            Trạng thái hiện tại
-        </div>
+      <div class="status-title">
+        Trạng thái hiện tại
+      </div>
 
-        <nz-tag style="font-size: 24px;padding: 10px 12px;" nzColor="orange">
+      <nz-tag style="font-size: 24px;padding: 10px 12px;" nzColor="orange">
         <span nz-icon nzType="clock-circle"></span>
-          {{ leaveItem().status }}
-        </nz-tag>
+        {{ leaveItem().status }}
+      </nz-tag>
     </div>
-    </div>
+  </div>
 
   <div nz-result-extra>
     <button (click)="OnViewDetail()" nz-button nzType="primary">
       <nz-icon nzType="info-circle" nzTheme="outline" /> Xem chi tiết đơn
     </button>
 
-    <button (click)="PhatHanhDon(leaveItem().code)" nz-button nzType="primary">
+    <button (click)="PhatHanhDon(leaveItem().code)" *ngIf="leaveItem().status == 'Đăng ký số'" nz-button
+      nzType="primary">
       <nz-icon nzType="send" nzTheme="outline" /> Phát hành đơn
     </button>
 
@@ -196,27 +211,21 @@
   </div>
 </nz-result>
 
-<nz-modal
-  [(nzVisible)]="isVisible"
-  nzWidth=""
-  nzTitle="CHI TIẾT ĐƠN XIN NGHỈ PHÉP"
-  (nzOnCancel)="handleCancel()"
-  [nzMaskClosable]="false"
-  [nzStyle]="{ top: '0px' }"
-  [nzFooter]="modalFooter"
->
+<nz-modal [(nzVisible)]="isVisible" nzWidth="" nzTitle="CHI TIẾT ĐƠN XIN NGHỈ PHÉP" (nzOnCancel)="handleCancel()"
+  [nzMaskClosable]="false" [nzStyle]="{ top: '0px' }" [nzFooter]="modalFooter">
   <ng-template #modalFooter>
     <button nz-button (click)="handleCancel()">
       <nz-icon nzType="close"></nz-icon>
       Đóng
     </button>
 
-    <button nz-button nzType="default">
+    <button *ngIf="leaveItem().status == 'Đăng ký số'" nz-button nzType="default">
       <nz-icon nzType="edit"></nz-icon>
       Sửa đơn
     </button>
 
-    <button nz-button nzType="primary">
+    <button *ngIf="leaveItem().status == 'Đăng ký số'" (click)="PhatHanhDon(leaveItem().code)" nz-button
+      nzType="primary">
       <nz-icon nzType="send"></nz-icon>
       Phát hành
     </button>
@@ -293,7 +302,7 @@
           <div>
             <label>Tổng số ngày</label>
             <p class="total-day">
-              {{ leaveItem().totalDay }} ngày
+              {{ leaveItem().totalDays }} ngày
             </p>
           </div>
 
@@ -312,27 +321,20 @@
 
       <!-- Luồng phê duyệt -->
       <nz-card nzTitle="Luồng phê duyệt" class="mt-16">
-        <nz-steps nzDirection="horizontal" [nzCurrent]="leaveItem().curentStep">
-          <nz-step
-            nzTitle="Tạo đơn"
-            nzDescription="Hoàn thành">
+        <nz-steps nzDirection="horizontal" [nzCurrent]="leaveItem().currentStep">
+          <nz-step nzTitle="Tạo đơn">
           </nz-step>
 
-          <nz-step
-            nzTitle="Phát hành"
-            nzDescription="Đang xử lý">
+          <nz-step nzTitle="Phát hành">
           </nz-step>
 
-          <nz-step
-            nzTitle="Giám sát">
+          <nz-step nzTitle="Xác nhận">
           </nz-step>
 
-          <nz-step
-            nzTitle="Trưởng phòng">
+          <nz-step nzTitle="Phê duyệt">
           </nz-step>
 
-          <nz-step
-            nzTitle="Hoàn tất">
+          <nz-step nzTitle="Hoàn tất">
           </nz-step>
 
         </nz-steps>
@@ -341,23 +343,14 @@
 
       <!-- Nhật ký -->
       <nz-card nzTitle="Lịch sử xử lý" class="mt-16">
-
         <nz-timeline>
+          <nz-timeline-item *ngFor="let item of leaveItem().lstLog" color="green">
+            <strong>{{item.action}}</strong> - <strong>{{item.approverName}}</strong>
 
-          <nz-timeline-item color="green">
-            <strong>Tạo đơn nghỉ phép</strong>
-            <br>
-            {{ leaveItem().createdDate | date:'dd/MM/yyyy HH:mm' }}
-          </nz-timeline-item>
-
-          <nz-timeline-item color="blue">
-            <strong>Gửi phê duyệt</strong>
-            <br>
-            {{ leaveItem().createdDate | date:'dd/MM/yyyy HH:mm' }}
+            <p>{{ item.actionTime | date:'dd/MM/yyyy HH:mm' }}</p>
           </nz-timeline-item>
         </nz-timeline>
       </nz-card>
     </nz-skeleton>
   </ng-container>
-
 </nz-modal>

@@ -11,6 +11,7 @@ import { Mobilecheck } from './mobilecheck/mobilecheck';
 import { Hisdaily } from './hisdaily/hisdaily';
 import { Ctpatcre } from './ctpatcre/ctpatcre';
 import { Dangkynghiphep } from './dangkynghiphep/dangkynghiphep';
+import { Listleave } from './listleave/listleave';
 export const routes: Routes = [
   {
     path: 'home',
@@ -54,6 +55,10 @@ export const routes: Routes = [
       {
         path: 'dangkinghiphep',
         component: Dangkynghiphep,
+      },
+      {
+        path: 'danhsachphieu',
+        component: Listleave,
       },
     ],
   },
