@@ -12,6 +12,7 @@ import { Hisdaily } from './hisdaily/hisdaily';
 import { Ctpatcre } from './ctpatcre/ctpatcre';
 import { Dangkynghiphep } from './dangkynghiphep/dangkynghiphep';
 import { Listleave } from './listleave/listleave';
+import { Approveleave } from './approveleave/approveleave';
 export const routes: Routes = [
   {
     path: 'home',
@@ -59,6 +60,10 @@ export const routes: Routes = [
       {
         path: 'danhsachphieu',
         component: Listleave,
+      },
+      {
+        path: 'pheduyetnghiphep',
+        component: Approveleave,
       },
     ],
   },

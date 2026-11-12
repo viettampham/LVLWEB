@@ -168,4 +168,8 @@ export class Api {
     return this.httpClient.post<any>(`${environment.api_domain}/api/LeaveRequest/get-ds-leaves`, req);
   }
 
+  GetPendingCurrentStep=(req: any)=>{
+    return this.httpClient.post<any>(`${environment.api_domain}/api/LeaveRequest/get-pending-currentstep`, req); 
+  }
+
 }

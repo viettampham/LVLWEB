@@ -89,8 +89,7 @@ export class Dangkynghiphep implements OnInit {
         // Nếu từ ngày mới > đến ngày cũ thì clear đến ngày
         if (from > to) {
           this.FormRegisLeave.patchValue({
-            toDate: null,
-            totalDay: 0
+            toDate: from,
           });
         }
       }
@@ -250,7 +249,6 @@ export class Dangkynghiphep implements OnInit {
           if (index == 0) {
             this.isPhatHanh.set(true);
             this.leaveItem.set(res.data);
-            console.log("LeaveItem: ", this.leaveItem());
           }
           this.resetForm();
         }, error: (err) => {
@@ -315,7 +313,6 @@ export class Dangkynghiphep implements OnInit {
     this.api.GetpendingAsignee(this.currentStep()).subscribe({
       next:(res)=>{
         this.ListPendingAsignee.set(res.listData);
-        console.log(this.ListPendingAsignee());
       }, error: (err)=>{
         this.message.create("error", err.message);
       }
