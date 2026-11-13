@@ -98,7 +98,20 @@ export class Approveleave implements OnInit {
   }
 
   confirmApprove(code: string): void {
+    var req = {
+      codeLeave: code,
+      codeApprover: this.CurentUser.CodeUser
+    }
 
+    this.api.XacNhanDon(req).subscribe({
+      next: (res)=>{
+        this.message.create("success", "Xác nhận phê duyệt thành công");
+        this.itemLeave.set(res.data);
+        this.GetListPendingData();
+      }, error: (err)=>{
+        this.message.create("error", "Lỗi " + err.message);
+      }
+    })
   }
 
 

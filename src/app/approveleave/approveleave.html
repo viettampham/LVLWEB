@@ -61,14 +61,14 @@
         </div>
 
         <div class="card-footer">
-            <button nz-button nzDanger nzType="dashed" (click)="reject(item.code); $event.stopPropagation()">
-                Từ chối
-            </button>
             <button nz-button nzDanger nzType="default" (click)="ViewDetail(item.code); $event.stopPropagation()">
                 Xem
             </button>
-            <button nz-button nz-popconfirm nzPopconfirmTitle="Xác nhận phê duyệt ?"
-                (nzOnConfirm)="confirmApprove(itemLeave().code)" (nzOnCancel)="cancelApprove(itemLeave().code)"
+            <button *ngIf="item.status == 'Phát hành'" nz-button nzDanger nzType="dashed" (click)="reject(item.code); $event.stopPropagation()">
+                Từ chối
+            </button>
+            <button *ngIf="item.status == 'Phát hành'" nz-button nz-popconfirm nzPopconfirmTitle="Xác nhận phê duyệt ?"
+                (nzOnConfirm)="confirmApprove(item.code)" (nzOnCancel)="cancelApprove(item.code)"
                 nzType="primary" (click)="approve(item.code); $event.stopPropagation()">
                 Duyệt
             </button>

@@ -172,4 +172,8 @@ export class Api {
     return this.httpClient.post<any>(`${environment.api_domain}/api/LeaveRequest/get-pending-currentstep`, req); 
   }
 
+  XacNhanDon=(req: any)=>{
+    return this.httpClient.post<any>(`${environment.api_domain}/api/LeaveRequest/xac-nhan-don`, req); 
+  }
+
 }
