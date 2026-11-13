@@ -107,10 +107,16 @@
                     </div>
                 </div>
 
-                <nz-tag nzColor="orange" style="font-size: 16px;padding: 6px 12px;border-radius: 4px;">
-                    <nz-icon nzType="clock-circle"></nz-icon>
-                    {{ itemLeave().status }}
-                </nz-tag>
+                <div>
+                    <nz-tag nzColor="green" style="font-size: 12px;padding: 4px 8px;border-radius: 4px;">
+                        <nz-icon nzType="info-circle" nzTheme="outline" />
+                        {{ itemLeave().status }}
+                    </nz-tag>
+                    <nz-tag nzColor="orange" style="font-size: 12px;padding: 4px 8px;border-radius: 4px;">
+                        <nz-icon nzType="clock-circle"></nz-icon>
+                        {{ itemLeave().message }}
+                    </nz-tag>
+                </div>
 
             </div>
 
@@ -187,7 +193,7 @@
 
             <!-- Luồng phê duyệt -->
             <nz-card nzTitle="Luồng phê duyệt" class="mt-16">
-                <nz-steps nzDirection="horizontal" [nzCurrent]="itemLeave().currentStep">
+                <nz-steps nzSize="small" [nzDirection]="isMobile ? 'vertical' : 'horizontal'" [nzCurrent]="itemLeave().currentStep">
                     <nz-step nzTitle="Tạo đơn">
                     </nz-step>
 
@@ -207,13 +213,13 @@
 
             </nz-card>
 
-            <!-- Nhật ký -->
             <nz-card nzTitle="Lịch sử xử lý" class="mt-16">
                 <nz-timeline>
                     <nz-timeline-item *ngFor="let item of itemLeave().lstLog" color="green">
                         <strong>{{item.action}}</strong> - <strong>{{item.approverName}}</strong>
-
-                        <p>{{ item.actionTime | date:'dd/MM/yyyy HH:mm' }}</p>
+                        <p>{{ item.actionTime | date:'dd/MM/yyyy HH:mm:ss' }}</p> <span
+                            *ngIf="item.comment != ''"><nz-icon nzType="comment" nzTheme="outline" />:
+                            {{item.comment}}</span>
                     </nz-timeline-item>
                 </nz-timeline>
             </nz-card>

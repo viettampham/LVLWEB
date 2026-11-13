@@ -18,10 +18,10 @@ import { NzStepsModule } from 'ng-zorro-antd/steps';
 import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
 import { NzModalModule } from 'ng-zorro-antd/modal';
 import { finalize } from 'rxjs';
-
+import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @Component({
-  imports: [CommonModule, NzTagModule, NzPaginationModule, NzFormModule, NzDatePickerModule, ReactiveFormsModule, NzButtonModule, NzBadgeModule, NzEmptyModule, NzCardModule, NzTimelineComponent, NzTimelineItemComponent, NzStepsModule, NzSkeletonModule, NzModalModule],
+  imports: [CommonModule, NzTagModule, NzPaginationModule, NzIconModule, NzFormModule, NzDatePickerModule, ReactiveFormsModule, NzButtonModule, NzBadgeModule, NzEmptyModule, NzCardModule, NzTimelineComponent, NzTimelineItemComponent, NzStepsModule, NzSkeletonModule, NzModalModule],
   selector: 'app-listleave',
   styleUrl: './listleave.scss',
   templateUrl: './listleave.html',
@@ -37,7 +37,7 @@ export class Listleave implements OnInit {
   itemLeave = signal<any>(null);
   isVisible = signal(false);
   isLoading = signal(true);
-
+  isMobile = window.innerWidth < 576;
   constructor(private api: Api, private message: NzMessageService,
     private fb: FormBuilder,
     private authService: AuthService,

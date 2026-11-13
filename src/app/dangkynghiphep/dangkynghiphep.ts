@@ -20,7 +20,6 @@ import { NzModalModule } from 'ng-zorro-antd/modal';
 import { NzStepsModule } from 'ng-zorro-antd/steps';
 import { NzTimelineItemComponent, NzTimelineComponent } from 'ng-zorro-antd/timeline';
 import { NzSkeletonModule } from 'ng-zorro-antd/skeleton';
-import { sign } from 'node:crypto';
 
 @Component({
   imports: [NzTabsModule, NzIconModule, NzSelectModule,
@@ -44,6 +43,7 @@ export class Dangkynghiphep implements OnInit {
   currentStep = signal(0);
   isLoading = signal(true);
   ListPendingAsignee = signal<any[]>([]);
+  isMobile = window.innerWidth < 576;
 
   constructor(private authService: AuthService,
     private router: Router,
@@ -317,6 +317,12 @@ export class Dangkynghiphep implements OnInit {
         this.message.create("error", err.message);
       }
     })
+  }
+
+  onHandleGoTo(routerlink: string, breacum: string) {
+    console.log(routerlink);
+    this.router.navigate([routerlink]);
+    // this.breacums = breacum.split(',');
   }
 
 }

@@ -14,12 +14,15 @@ import { NzTimelineComponent, NzTimelineItemComponent } from 'ng-zorro-antd/time
 import { finalize } from 'rxjs';
 import { NzPopconfirmModule } from 'ng-zorro-antd/popconfirm';
 import { NzPaginationModule } from 'ng-zorro-antd/pagination';
-
+import { NzIconModule } from 'ng-zorro-antd/icon';
+import { NzFormModule } from 'ng-zorro-antd/form';
+import { NzInputModule } from 'ng-zorro-antd/input';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 
 @Component({
   imports: [CommonModule, NzButtonModule, NzModalModule, NzSkeletonModule,
     NzTagModule, NzCardModule, NzStepsModule, NzTimelineComponent,
-    NzTimelineItemComponent, NzPopconfirmModule, NzPaginationModule],
+    NzTimelineItemComponent, NzPopconfirmModule, NzPaginationModule, NzIconModule, NzFormModule, NzInputModule,ReactiveFormsModule],
   selector: 'app-approveleave',
   styleUrl: './approveleave.scss',
   templateUrl: './approveleave.html',
@@ -31,13 +34,21 @@ export class Approveleave implements OnInit {
   totalRecords = signal(0);
   CurentUser: any;
   isVisible = signal(false);
+  isShowModalReject = signal(false);
+  codeLeave = "";
   itemLeave = signal<any>(null);
   isLoading = signal(true);
   selectedStatus = signal("PENDING");
-  constructor(private api: Api, private authService: AuthService, private router: Router,
-    private message: NzMessageService
-  ) {
+  formReject: FormGroup;
+  isMobile = window.innerWidth < 576;
 
+  constructor(private api: Api, private authService: AuthService, private router: Router,
+    private message: NzMessageService,
+    private fb: FormBuilder
+  ) {
+    this.formReject = this.fb.group({
+      reasonReject: ["",[Validators.required]] 
+    })
   }
   async ngOnInit(): Promise<void> {
     const user = this.authService.getCurrentUser();
@@ -70,8 +81,10 @@ export class Approveleave implements OnInit {
 
   }
 
-  reject(item: any) {
-
+  handleReject(code: string) {
+    this.isShowModalReject.set(true);
+    this.codeLeave = code;
+    this.formReject.reset();
   }
 
   approve(item: any) {
@@ -79,11 +92,11 @@ export class Approveleave implements OnInit {
   }
 
   ViewDetail(code: string) {
-    this.isVisible.set(true);
     this.isLoading.set(true)
     this.api.GetLeaveItem(code).pipe(finalize(() => this.isLoading.set(false))).subscribe({
       next: (res) => {
         this.itemLeave.set(res.data);
+        this.isVisible.set(true);
       }, error: (err) => {
         this.message.create("error", "Lỗi " + err.message);
       }
@@ -91,6 +104,37 @@ export class Approveleave implements OnInit {
   }
   handleCancel() {
     this.isVisible.set(false);
+  }
+
+  handleCancelReject() {
+    this.isShowModalReject.set(false);
+  }
+
+  rejectLeave(){
+    if(this.formReject.valid){
+      var req = {
+        codeLeave: this.codeLeave,
+        codeReject: this.CurentUser.CodeUser,
+        reasonReject: this.formReject.controls["reasonReject"].value
+      }
+      this.api.RejectLeave(req).subscribe({
+        next:(res)=>{
+          this.itemLeave.set(res.data);
+          this.GetListPendingData();
+          this.message.create(res.status, res.message);
+          this.isShowModalReject.set(false);
+        },error: (err)=>{
+          this.message.create("error", err.message);
+        }
+      })
+    }else{
+      Object.values(this.formReject.controls).forEach(control => {
+        if (control.invalid) {
+          control.markAsDirty();
+          control.updateValueAndValidity({ onlySelf: true });
+        }
+      });
+    }
   }
 
   cancelApprove(code: string): void {

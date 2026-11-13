@@ -201,7 +201,7 @@
       <nz-icon nzType="send" nzTheme="outline" /> Phát hành đơn
     </button>
 
-    <button nz-button>
+    <button (click)="onHandleGoTo('danhsachphieu', 'Danh sách phiếu đăng ký')" nz-button>
       <nz-icon nzType="unordered-list" nzTheme="outline" /> Danh sách đơn
     </button>
 
@@ -241,10 +241,16 @@
           </div>
         </div>
 
-        <nz-tag nzColor="orange">
-          <nz-icon nzType="clock-circle"></nz-icon>
-          {{ leaveItem().status }}
-        </nz-tag>
+        <div>
+          <nz-tag nzColor="green" style="font-size: 12px;padding: 4px 8px;border-radius: 4px;">
+            <nz-icon nzType="info-circle" nzTheme="outline" />
+            {{ leaveItem().status }}
+          </nz-tag>
+          <nz-tag nzColor="orange" style="font-size: 12px;padding: 4px 8px;border-radius: 4px;">
+            <nz-icon nzType="clock-circle"></nz-icon>
+            {{ leaveItem().message }}
+          </nz-tag>
+        </div>
 
       </div>
 
@@ -321,7 +327,7 @@
 
       <!-- Luồng phê duyệt -->
       <nz-card nzTitle="Luồng phê duyệt" class="mt-16">
-        <nz-steps nzDirection="horizontal" [nzCurrent]="leaveItem().currentStep">
+        <nz-steps nzSize="small" [nzDirection]="isMobile ? 'vertical' : 'horizontal'" [nzCurrent]="leaveItem().currentStep">
           <nz-step nzTitle="Tạo đơn">
           </nz-step>
 
@@ -347,7 +353,7 @@
           <nz-timeline-item *ngFor="let item of leaveItem().lstLog" color="green">
             <strong>{{item.action}}</strong> - <strong>{{item.approverName}}</strong>
 
-            <p>{{ item.actionTime | date:'dd/MM/yyyy HH:mm' }}</p>
+            <p>{{ item.actionTime | date:'dd/MM/yyyy HH:mm:ss' }}</p>
           </nz-timeline-item>
         </nz-timeline>
       </nz-card>

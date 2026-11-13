@@ -40,7 +40,7 @@ export class Api {
     );
   }
 
-  Authentication = ((request: AuthenticationRequest) =>{
+  Authentication = ((request: AuthenticationRequest) => {
     return this.httpClient.post<any>(
       `${environment.api_domain}/api/User/authentication`,
       request,
@@ -51,105 +51,105 @@ export class Api {
     return this.httpClient.delete<any>(`${environment.api_domain}/api/User/delete-user${id}`);
   }
 
-  DownloadImage=(id: number)=>{
+  DownloadImage = (id: number) => {
     return this.httpClient.get<any>(`${environment.api_domain}/api/DeclareCont/download-folder/${id}`, { responseType: 'blob' as 'json' });
   }
 
-  AddImagetoCont=(request: FormData)=>{
+  AddImagetoCont = (request: FormData) => {
     return this.httpClient.post<any>(
-      `${environment.api_domain}/api/DeclareCont/add-image-to-cont`,request
+      `${environment.api_domain}/api/DeclareCont/add-image-to-cont`, request
     );
   }
 
-  CreateAudit=(request: CreateAuditRequest)=>{
+  CreateAudit = (request: CreateAuditRequest) => {
     return this.httpClient.post<any>(
-      `${environment.api_domain}/api/Audit/create-audit`,request
+      `${environment.api_domain}/api/Audit/create-audit`, request
     );
   }
 
-  GetAudit=(request: any)=>{
+  GetAudit = (request: any) => {
     return this.httpClient.post<any>(
-      `${environment.api_domain}/api/Audit/get-audit`,request
+      `${environment.api_domain}/api/Audit/get-audit`, request
     );
   }
 
-  DeleteAudit=(id: number)=>{
+  DeleteAudit = (id: number) => {
     return this.httpClient.delete<any>(`${environment.api_domain}/api/Audit/delete-audit/${id}`);
   }
 
-  GetOperationStandard=()=>{
+  GetOperationStandard = () => {
     return this.httpClient.get<any>(`${environment.api_domain}/api/Audit/get-all-operationstandard`);
   }
 
-  GetDetechIssue=(id: number)=>{
+  GetDetechIssue = (id: number) => {
     return this.httpClient.get<any>(`${environment.api_domain}/api/Audit/get-detechissue?id=${id}`);
   }
 
-  GetAssignee=()=>{
+  GetAssignee = () => {
     return this.httpClient.get<any>(`${environment.api_domain}/api/Audit/get-assignee`);
   }
 
-  CreateAuditDetail=(request: FormData)=>{
+  CreateAuditDetail = (request: FormData) => {
     return this.httpClient.post<any>(
-      `${environment.api_domain}/api/Audit/create-audit-detail-daily`,request
+      `${environment.api_domain}/api/Audit/create-audit-detail-daily`, request
     );
   }
 
-  GetAuditDetail=(request: any)=>{
+  GetAuditDetail = (request: any) => {
     return this.httpClient.post<any>(
-      `${environment.api_domain}/api/Audit/get-audit-detail`,request
+      `${environment.api_domain}/api/Audit/get-audit-detail`, request
     );
   }
 
-  GetLocation=()=>{
+  GetLocation = () => {
     return this.httpClient.get<any>(`${environment.api_domain}/api/Audit/get-location`);
   }
 
-  GetAuditDetailById=(id: number)=>{
+  GetAuditDetailById = (id: number) => {
     return this.httpClient.get<any>(`${environment.api_domain}/api/Audit/get-auditdetail-by-id?id=${id}`);
   }
 
-  AddImageAfterToAuditDetail=(request: FormData)=>{
+  AddImageAfterToAuditDetail = (request: FormData) => {
     return this.httpClient.post<any>(
-      `${environment.api_domain}/api/Audit/add-image-after`,request
+      `${environment.api_domain}/api/Audit/add-image-after`, request
     );
   }
 
-  GetRole=()=>{
+  GetRole = () => {
     return this.httpClient.get<any>(`${environment.api_domain}/api/User/get-role`);
   }
 
-  GetPhongBan=()=>{
+  GetPhongBan = () => {
     return this.httpClient.get<any>(`${environment.api_domain}/api/User/get-phongban`);
   }
 
-  UpdateUser=(req: UpdateUserRequest)=>{
+  UpdateUser = (req: UpdateUserRequest) => {
     return this.httpClient.post<any>(
-      `${environment.api_domain}/api/User/update-user`,req
+      `${environment.api_domain}/api/User/update-user`, req
     );
   }
 
-  GetAuditDetailOwner=(req: any)=>{
-    return this.httpClient.post<any>(`${environment.api_domain}/api/Audit/get-audit-owner`, req); 
+  GetAuditDetailOwner = (req: any) => {
+    return this.httpClient.post<any>(`${environment.api_domain}/api/Audit/get-audit-owner`, req);
   }
 
-  PhanCong=(req: any)=>{
-    return this.httpClient.post<any>(`${environment.api_domain}/api/Audit/phancong`, req); 
+  PhanCong = (req: any) => {
+    return this.httpClient.post<any>(`${environment.api_domain}/api/Audit/phancong`, req);
   }
 
-  GetCtpatCriteria=()=>{
+  GetCtpatCriteria = () => {
     return this.httpClient.get<any>(`${environment.api_domain}/api/Audit/get-ctpat-criteria`);
   }
 
-  GetleaveType=()=>{
+  GetleaveType = () => {
     return this.httpClient.get<any>(`${environment.api_domain}/api/LeaveRequest/get-leavetype`);
   }
 
-  RegisLeave=(req: any)=>{
+  RegisLeave = (req: any) => {
     return this.httpClient.post<any>(`${environment.api_domain}/api/LeaveRequest/create`, req);
   }
 
-  GetLeaveItem=(code: string)=>{
+  GetLeaveItem = (code: string) => {
     return this.httpClient.get<any>(`${environment.api_domain}/api/LeaveRequest/get-leave-by-code?code=${code}`);
   }
 
@@ -160,20 +160,24 @@ export class Api {
     );
   }
 
-  GetpendingAsignee=(curstp: number)=>{
+  GetpendingAsignee = (curstp: number) => {
     return this.httpClient.get<any>(`${environment.api_domain}/api/LeaveRequest/get-assigne-pending?currstp=${curstp}`);
   }
 
-  GetDsLeavePaging=(req : any)=>{
+  GetDsLeavePaging = (req: any) => {
     return this.httpClient.post<any>(`${environment.api_domain}/api/LeaveRequest/get-ds-leaves`, req);
   }
 
-  GetPendingCurrentStep=(req: any)=>{
-    return this.httpClient.post<any>(`${environment.api_domain}/api/LeaveRequest/get-pending-currentstep`, req); 
+  GetPendingCurrentStep = (req: any) => {
+    return this.httpClient.post<any>(`${environment.api_domain}/api/LeaveRequest/get-pending-currentstep`, req);
   }
 
-  XacNhanDon=(req: any)=>{
-    return this.httpClient.post<any>(`${environment.api_domain}/api/LeaveRequest/xac-nhan-don`, req); 
+  XacNhanDon = (req: any) => {
+    return this.httpClient.post<any>(`${environment.api_domain}/api/LeaveRequest/xac-nhan-don`, req);
+  }
+
+  RejectLeave = (req: any) => {
+    return this.httpClient.post<any>(`${environment.api_domain}/api/LeaveRequest/reject-leave`, req);
   }
 
 }

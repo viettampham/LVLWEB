@@ -64,12 +64,13 @@
             <button nz-button nzDanger nzType="default" (click)="ViewDetail(item.code); $event.stopPropagation()">
                 Xem
             </button>
-            <button *ngIf="item.status == 'Phát hành'" nz-button nzDanger nzType="dashed" (click)="reject(item.code); $event.stopPropagation()">
+            <button *ngIf="item.status == 'Phát hành'" nz-button nzDanger nzType="dashed"
+                (click)="handleReject(item.code); $event.stopPropagation()">
                 Từ chối
             </button>
             <button *ngIf="item.status == 'Phát hành'" nz-button nz-popconfirm nzPopconfirmTitle="Xác nhận phê duyệt ?"
-                (nzOnConfirm)="confirmApprove(item.code)" (nzOnCancel)="cancelApprove(item.code)"
-                nzType="primary" (click)="approve(item.code); $event.stopPropagation()">
+                (nzOnConfirm)="confirmApprove(item.code)" (nzOnCancel)="cancelApprove(item.code)" nzType="primary"
+                (click)="approve(item.code); $event.stopPropagation()">
                 Duyệt
             </button>
         </div>
@@ -93,7 +94,8 @@
             Đóng
         </button>
 
-        <button nzDanger *ngIf="itemLeave().status == 'Phát hành'" nz-button nzType="default">
+        <button nzDanger *ngIf="itemLeave().status == 'Phát hành'" (click)="handleReject(itemLeave().code)" nz-button
+            nzType="default">
             <nz-icon nzType="edit"></nz-icon>
             Từ chối
         </button>
@@ -117,10 +119,16 @@
                     </div>
                 </div>
 
-                <nz-tag nzColor="orange" style="font-size: 16px;padding: 6px 12px;border-radius: 4px;">
-                    <nz-icon nzType="clock-circle"></nz-icon>
-                    {{ itemLeave().status }}
-                </nz-tag>
+                <div>
+                    <nz-tag nzColor="green" style="font-size: 12px;padding: 4px 8px;border-radius: 4px;">
+                        <nz-icon nzType="info-circle" nzTheme="outline" />
+                        {{ itemLeave().status }}
+                    </nz-tag>
+                    <nz-tag nzColor="orange" style="font-size: 12px;padding: 4px 8px;border-radius: 4px;">
+                        <nz-icon nzType="clock-circle"></nz-icon>
+                        {{ itemLeave().message }}
+                    </nz-tag>
+                </div>
 
             </div>
 
@@ -197,7 +205,7 @@
 
             <!-- Luồng phê duyệt -->
             <nz-card nzTitle="Luồng phê duyệt" class="mt-16">
-                <nz-steps nzDirection="horizontal" [nzCurrent]="itemLeave().currentStep">
+                <nz-steps nzSize="small" [nzDirection]="isMobile ? 'vertical' : 'horizontal'" [nzCurrent]="itemLeave().currentStep">
                     <nz-step nzTitle="Tạo đơn">
                     </nz-step>
 
@@ -223,10 +231,26 @@
                     <nz-timeline-item *ngFor="let item of itemLeave().lstLog" color="green">
                         <strong>{{item.action}}</strong> - <strong>{{item.approverName}}</strong>
 
-                        <p>{{ item.actionTime | date:'dd/MM/yyyy HH:mm:ss' }}</p>
+                        <p>{{ item.actionTime | date:'dd/MM/yyyy HH:mm:ss' }}</p> <span *ngIf="item.comment != ''"><nz-icon nzType="comment" nzTheme="outline" />: {{item.comment}}</span>
                     </nz-timeline-item>
                 </nz-timeline>
             </nz-card>
         </nz-skeleton>
+    </ng-container>
+</nz-modal>
+
+<nz-modal [(nzVisible)]="isShowModalReject" nzTitle="Từ chối đơn xin nghỉ phép" (nzOnCancel)="handleCancelReject()"
+    (nzOnOk)="rejectLeave()">
+    <ng-container *nzModalContent>
+        <form nz-form [formGroup]="formReject" nzLayout="vertical">
+            <label>Lý do từ chối</label>
+            <nz-form-item>
+                <nz-form-control nzErrorTip="Nhập lý do từ chối !!!">
+                    <nz-textarea-count [nzMaxCharacterCount]="100">
+                        <textarea rows="4" formControlName="reasonReject" nz-input></textarea>
+                    </nz-textarea-count>
+                </nz-form-control>
+            </nz-form-item>
+        </form>
     </ng-container>
 </nz-modal>
