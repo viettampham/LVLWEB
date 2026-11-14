@@ -180,4 +180,8 @@ export class Api {
     return this.httpClient.post<any>(`${environment.api_domain}/api/LeaveRequest/reject-leave`, req);
   }
 
+  ApproveLeave = (req:any)=>{
+    return this.httpClient.post<any>(`${environment.api_domain}/api/LeaveRequest/approve-leave`, req);
+  }
+
 }

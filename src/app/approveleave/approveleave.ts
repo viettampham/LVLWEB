@@ -149,7 +149,7 @@ export class Approveleave implements OnInit {
 
     this.api.XacNhanDon(req).subscribe({
       next: (res)=>{
-        this.message.create("success", "Xác nhận phê duyệt thành công");
+        this.message.create("success", res.message);
         this.itemLeave.set(res.data);
         this.GetListPendingData();
       }, error: (err)=>{
@@ -172,6 +172,23 @@ export class Approveleave implements OnInit {
   ChangePageSize(pageSize: number) {
     this.pageSize.set(pageSize);
     this.GetListPendingData();
+  }
+
+  handleApprove(code: string){
+    var req = {
+      codeLeave: code,
+      codeApprover: this.CurentUser.CodeUser
+    }
+
+    this.api.ApproveLeave(req).subscribe({
+      next: (res)=>{
+        this.message.create("success", res.message);
+        this.itemLeave.set(res.data);
+        this.GetListPendingData();
+      },error: (err)=>{
+        this.message.create("error", "Lỗi " + err.message);
+      }
+    })
   }
 
 
