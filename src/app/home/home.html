@@ -25,7 +25,7 @@
         <ul>
           <li nz-menu-item (click)="onHandleGoTo('/home/dangkinghiphep','Nghỉ phép, Đăng ký nghỉ phép')">Đăng ký nghỉ phép</li>
           <li nz-menu-item (click)="onHandleGoTo('/home/danhsachphieu','Nghỉ phép, Danh sách phiếu đăng ký')">Danh sách phiếu</li>
-          <li nz-menu-item (click)="onHandleGoTo('/home/pheduyetnghiphep','Nghỉ phép, Phê duyệt nghỉ phép')">Phê duyệt nghỉ phép</li>
+          <li nz-menu-item *ngIf="CurrentUser?.RoleLevel <= 4" (click)="onHandleGoTo('/home/pheduyetnghiphep','Nghỉ phép, Phê duyệt nghỉ phép')">Phê duyệt nghỉ phép</li>
         </ul>
       </li>
       <li nz-submenu nzTitle="Audit" nzIcon="audit">
@@ -36,10 +36,9 @@
           <li nz-menu-item (click)="onHandleGoTo('/home/ctpat-criteria','Audit, Bộ tiêu chí C-TPAT')">Bộ tiêu chí C-TPAT</li>
         </ul>
       </li>
-      <li nz-submenu nzTitle="Báo cáo" nzIcon="team">
+      <li *ngIf="CurrentUser?.RoleLevel <= 3" nz-submenu nzTitle="Báo cáo" nzIcon="team">
         <ul>
-          <li nz-menu-item>Báo cáo tuần</li>
-          <li nz-menu-item>Báo cáo tháng</li>
+          <li nz-menu-item (click)="onHandleGoTo('/home/baocaonghiphep','Báo cáo, Báo cáo nghỉ phép')">Báo cáo nghỉ phép</li>
         </ul>
       </li>
       <li nz-submenu nzTitle="Công cụ" nzIcon="tool">

@@ -310,7 +310,7 @@ export class Dangkynghiphep implements OnInit {
     }else{
       this.currentStep.set(this.leaveItem().currentStep);
     }
-    this.api.GetpendingAsignee(this.currentStep()).subscribe({
+    this.api.GetpendingAsignee(this.CurrentUser.PhongBan).subscribe({
       next:(res)=>{
         this.ListPendingAsignee.set(res.listData);
       }, error: (err)=>{

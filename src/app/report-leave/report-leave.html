@@ -1,0 +1,132 @@
+<div class="hr-report-page">
+  <div class="page-header">
+    <div>
+      <div class="page-title">Báo cáo nghỉ phép nhân sự</div>
+      <div class="page-desc">Thống kê tình hình nghỉ phép theo khoảng thời gian</div>
+    </div>
+
+    <div class="filter-section">
+      <nz-date-picker nzFormat="dd/MM/yyyy" formControlName="fromDate" nzPlaceHolder="Từ ngày">
+      </nz-date-picker>
+
+      <nz-date-picker nzFormat="dd/MM/yyyy" formControlName="toDate" nzPlaceHolder="Đến ngày">
+      </nz-date-picker>
+
+      <button nz-button nzType="primary">
+        <span nz-icon nzType="search"></span>
+        Xem báo cáo
+      </button>
+
+      <button nz-button>
+        <span nz-icon nzType="download"></span>
+        Xuất Excel
+      </button>
+    </div>
+  </div>
+
+  <!-- KPI -->
+
+  <div class="dashboard-cards">
+    <div class="dashboard-card blue">
+      <div class="icon">
+        <span nz-icon nzType="file-text"></span>
+      </div>
+      <div>
+        <div class="number">156</div>
+        <div class="label">Tổng đơn nghỉ phép</div>
+      </div>
+    </div>
+
+    <div class="dashboard-card green">
+      <div class="icon">
+        <span nz-icon nzType="check-circle"></span>
+      </div>
+      <div>
+        <div class="number">129</div>
+        <div class="label">Đã phê duyệt</div>
+      </div>
+    </div>
+
+    <div class="dashboard-card orange">
+      <div class="icon">
+        <span nz-icon nzType="clock-circle"></span>
+      </div>
+      <div>
+        <div class="number">18</div>
+        <div class="label">Chờ phê duyệt</div>
+      </div>
+    </div>
+
+    <div class="dashboard-card red">
+      <div class="icon">
+        <span nz-icon nzType="close-circle"></span>
+      </div>
+      <div>
+        <div class="number">9</div>
+        <div class="label">Từ chối</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Thống kê -->
+
+  <div class="section-card">
+    <div class="section-title">Thống kê nghỉ phép theo phòng ban</div>
+
+    <nz-table [nzBordered]="true" [nzData]="reportData()">
+      <thead>
+        <tr>
+          <th>Phòng ban</th>
+          <th>Số nhân viên</th>
+          <th>Số đơn</th>
+          <th>Tổng ngày nghỉ</th>
+          <th>Nghỉ phép năm</th>
+          <th>Không lương</th>
+          <th>Tỷ lệ nghỉ</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of reportData()">
+          <td>{{ item.department }}</td>
+          <td>{{ item.employeeCount }}</td>
+          <td>{{ item.requestCount }}</td>
+          <td>{{ item.totalDays }}</td>
+          <td>{{ item.annualLeave }}</td>
+          <td>{{ item.unpaidLeave }}</td>
+          <td>{{ item.rate }}%</td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+
+  <!-- Top nhân viên nghỉ nhiều -->
+
+  <div class="section-card">
+    <div class="section-title">Top nhân viên nghỉ nhiều nhất</div>
+
+    <nz-table [nzData]="topEmployees()" [nzBordered]="true">
+      <thead>
+        <tr>
+          <th>Mã NV</th>
+          <th>Họ tên</th>
+          <th>Phòng ban</th>
+          <th>Số đơn</th>
+          <th>Tổng ngày nghỉ</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of topEmployees()">
+          <td>{{ item.code }}</td>
+          <td>{{ item.name }}</td>
+          <td>{{ item.department }}</td>
+          <td>{{ item.requestCount }}</td>
+          <td>
+            <nz-tag nzColor="red"> {{ item.totalDays }} ngày </nz-tag>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</div>

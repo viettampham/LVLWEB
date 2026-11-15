@@ -160,8 +160,8 @@ export class Api {
     );
   }
 
-  GetpendingAsignee = (curstp: number) => {
-    return this.httpClient.get<any>(`${environment.api_domain}/api/LeaveRequest/get-assigne-pending?currstp=${curstp}`);
+  GetpendingAsignee = (curstp: string) => {
+    return this.httpClient.get<any>(`${environment.api_domain}/api/LeaveRequest/get-assigne-pending?PhongBan=${curstp}`);
   }
 
   GetDsLeavePaging = (req: any) => {

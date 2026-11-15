@@ -1,38 +1,35 @@
 <div *ngIf="!isPhatHanh()">
   <div class="leave-page">
-
     <div class="card">
       <div class="card-header">
         <span>Thông tin nhân viên</span>
       </div>
 
       <div class="employee-info">
-
         <div class="info-item">
           <label>Mã nhân viên</label>
-          <span>{{CurrentUser.CodeUser}}</span>
+          <span>{{ CurrentUser.CodeUser }}</span>
         </div>
 
         <div class="info-item">
           <label>Họ tên</label>
-          <span>{{CurrentUser.Fullname}}</span>
+          <span>{{ CurrentUser.Fullname }}</span>
         </div>
 
         <div class="info-item">
           <label>Phòng ban</label>
-          <span>{{CurrentUser.PhongBan}}</span>
+          <span>{{ CurrentUser.PhongBan }}</span>
         </div>
 
         <div class="info-item">
           <label>Chức vụ</label>
-          <span>{{CurrentUser.ChucVu}}</span>
+          <span>{{ CurrentUser.ChucVu }}</span>
         </div>
 
         <div class="info-item">
           <label>Liên hệ</label>
-          <span>{{CurrentUser.PhoneNumber}}</span>
+          <span>{{ CurrentUser.PhoneNumber }}</span>
         </div>
-
       </div>
     </div>
 
@@ -50,8 +47,11 @@
                   <nz-form-control nzErrorTip="Chọn loại nghỉ phép!">
                     <nz-select formControlName="leaveType">
                       <nz-option nzValue="" nzLabel="-- Chọn loại nghỉ phép --" />
-                      <nz-option *ngFor="let item of DsTypeLeave()" nzValue="{{item.leaveType1}}"
-                        nzLabel="{{item.leaveType1}}" />
+                      <nz-option
+                        *ngFor="let item of DsTypeLeave()"
+                        nzValue="{{ item.leaveType1 }}"
+                        nzLabel="{{ item.leaveType1 }}"
+                      />
                     </nz-select>
                   </nz-form-control>
                 </nz-form-item>
@@ -78,8 +78,11 @@
                   <nz-form-control nzErrorTip="Chọn giám sát xác nhận!">
                     <nz-select formControlName="pendingAsignee">
                       <nz-option nzValue="" nzLabel="-- Chọn giám sát xác nhận --" />
-                      <nz-option *ngFor="let item of ListPendingAsignee()" nzValue="{{item.code}}"
-                        nzLabel="{{item.name}}" />
+                      <nz-option
+                        *ngFor="let item of ListPendingAsignee()"
+                        nzValue="{{ item.code }}"
+                        nzLabel="{{ item.name }}"
+                      />
                     </nz-select>
                   </nz-form-control>
                 </nz-form-item>
@@ -91,8 +94,11 @@
                 <label>Từ ngày</label>
                 <nz-form-item>
                   <nz-form-control nzErrorTip="Chọn từ ngày!">
-                    <nz-date-picker [nzDisabledDate]="disabledFromDate" formControlName="fromDate"
-                      nzFormat="dd/MM/yyyy"></nz-date-picker>
+                    <nz-date-picker
+                      [nzDisabledDate]="disabledFromDate"
+                      formControlName="fromDate"
+                      nzFormat="dd/MM/yyyy"
+                    ></nz-date-picker>
                   </nz-form-control>
                 </nz-form-item>
               </div>
@@ -101,8 +107,11 @@
                 <label>Đến ngày</label>
                 <nz-form-item>
                   <nz-form-control nzErrorTip="Chọn đến ngày!">
-                    <nz-date-picker formControlName="toDate" [nzDisabledDate]="disabledToDate"
-                      nzFormat="dd/MM/yyyy"></nz-date-picker>
+                    <nz-date-picker
+                      formControlName="toDate"
+                      [nzDisabledDate]="disabledToDate"
+                      nzFormat="dd/MM/yyyy"
+                    ></nz-date-picker>
                   </nz-form-control>
                 </nz-form-item>
               </div>
@@ -111,7 +120,7 @@
                 <label>Số ngày nghỉ</label>
                 <nz-form-item>
                   <nz-form-control nzErrorTip="Tổng số ngày nghỉ!">
-                    <input class="text-center" nz-input readonly formControlName="totalDay">
+                    <input class="text-center" nz-input readonly formControlName="totalDay" />
                   </nz-form-control>
                 </nz-form-item>
               </div>
@@ -127,23 +136,26 @@
             </div>
 
             <div class="footer-action">
-              <button nz-button (click)="resetForm()"><nz-icon nzType="clear" nzTheme="outline" />Làm mới</button>
-              <button nz-button [nzLoading]="loadings()[0]" nzType="primary" (click)="handleRegisleave(0)"><nz-icon
-                  nzType="send" nzTheme="outline" />Đăng ký số</button>
+              <button nz-button (click)="resetForm()">
+                <nz-icon nzType="clear" nzTheme="outline" />Làm mới
+              </button>
+              <button
+                nz-button
+                [nzLoading]="loadings()[0]"
+                nzType="primary"
+                (click)="handleRegisleave(0)"
+              >
+                <nz-icon nzType="send" nzTheme="outline" />Đăng ký số
+              </button>
             </div>
           </div>
         </form>
-
-
       </div>
 
       <!-- Sidebar -->
       <div class="sidebar">
-
         <div class="card">
-          <div class="card-header">
-            Thông tin phép
-          </div>
+          <div class="card-header">Thông tin phép</div>
 
           <div class="leave-balance">
             <div>
@@ -162,29 +174,30 @@
             </div>
           </div>
         </div>
-
       </div>
-
     </div>
   </div>
 </div>
 
 <nz-result *ngIf="isPhatHanh()" nzStatus="success">
-  <div nz-result-content style="background-color: white;">
-    <div style="display: flex; flex-direction: column; justify-content: center; align-items: center;">
-      <p style="font-size: 22px;font-weight: 500;">{{leaveItem().messageNotice}}</p>
-      <p class="sub-title" style="font-size: 18px;">
+  <div nz-result-content style="background-color: white">
+    <div
+      style="display: flex; flex-direction: column; justify-content: center; align-items: center"
+    >
+      <p style="font-size: 22px; font-weight: 500">{{ leaveItem().messageNotice }}</p>
+      <p class="sub-title" style="font-size: 18px">
         Mã đơn:
-        <span class="leave-code" style="color: #0087ff;font-weight: 600;">{{ leaveItem().code }}</span>.
-        {{leaveItem().message}}
+        <span class="leave-code" style="color: #0087ff; font-weight: 600">{{
+          leaveItem().code
+        }}</span
+        >.
+        {{ leaveItem().message }}
       </p>
     </div>
-    <div class="status-wrapper" style="background-color: #f9f9f9;">
-      <div class="status-title">
-        Trạng thái hiện tại
-      </div>
+    <div class="status-wrapper" style="background-color: #f9f9f9">
+      <div class="status-title">Trạng thái hiện tại</div>
 
-      <nz-tag style="font-size: 24px;padding: 10px 12px;" nzColor="orange">
+      <nz-tag style="font-size: 24px; padding: 10px 12px" nzColor="orange">
         <span nz-icon nzType="clock-circle"></span>
         {{ leaveItem().status }}
       </nz-tag>
@@ -196,12 +209,16 @@
       <nz-icon nzType="info-circle" nzTheme="outline" /> Xem chi tiết đơn
     </button>
 
-    <button (click)="PhatHanhDon(leaveItem().code)" *ngIf="leaveItem().status == 'Đăng ký số'" nz-button
-      nzType="primary">
+    <button
+      (click)="PhatHanhDon(leaveItem().code)"
+      *ngIf="leaveItem().status == 'Đăng ký số'"
+      nz-button
+      nzType="primary"
+    >
       <nz-icon nzType="send" nzTheme="outline" /> Phát hành đơn
     </button>
 
-    <button (click)="onHandleGoTo('danhsachphieu', 'Danh sách phiếu đăng ký')" nz-button>
+    <button (click)="onHandleGoTo('/home/danhsachphieu', 'Danh sách phiếu đăng ký')" nz-button>
       <nz-icon nzType="unordered-list" nzTheme="outline" /> Danh sách đơn
     </button>
 
@@ -211,8 +228,15 @@
   </div>
 </nz-result>
 
-<nz-modal [(nzVisible)]="isVisible" nzWidth="" nzTitle="CHI TIẾT ĐƠN XIN NGHỈ PHÉP" (nzOnCancel)="handleCancel()"
-  [nzMaskClosable]="false" [nzStyle]="{ top: '0px' }" [nzFooter]="modalFooter">
+<nz-modal
+  [(nzVisible)]="isVisible"
+  nzWidth=""
+  nzTitle="CHI TIẾT ĐƠN XIN NGHỈ PHÉP"
+  (nzOnCancel)="handleCancel()"
+  [nzMaskClosable]="false"
+  [nzStyle]="{ top: '0px' }"
+  [nzFooter]="modalFooter"
+>
   <ng-template #modalFooter>
     <button nz-button (click)="handleCancel()">
       <nz-icon nzType="close"></nz-icon>
@@ -224,8 +248,12 @@
       Sửa đơn
     </button>
 
-    <button *ngIf="leaveItem().status == 'Đăng ký số'" (click)="PhatHanhDon(leaveItem().code)" nz-button
-      nzType="primary">
+    <button
+      *ngIf="leaveItem().status == 'Đăng ký số'"
+      (click)="PhatHanhDon(leaveItem().code)"
+      nz-button
+      nzType="primary"
+    >
       <nz-icon nzType="send"></nz-icon>
       Phát hành
     </button>
@@ -235,23 +263,25 @@
     <nz-skeleton [nzLoading]="isLoading()" [nzActive]="true" [nzParagraph]="{ rows: 12 }">
       <div class="leave-header">
         <div>
-          <h2 style="font-size: 22px;">{{leaveItem().code}}</h2>
+          <h2 style="font-size: 22px">{{ leaveItem().code }}</h2>
           <div class="leave-date">
-            Ngày tạo: <span style="color: #1677ff;">{{ leaveItem().createDate | date:'dd/MM/yyyy HH:mm' }}</span>
+            Ngày tạo:
+            <span style="color: #1677ff">{{
+              leaveItem().createDate | date: 'dd/MM/yyyy HH:mm'
+            }}</span>
           </div>
         </div>
 
         <div>
-          <nz-tag nzColor="green" style="font-size: 12px;padding: 4px 8px;border-radius: 4px;">
+          <nz-tag nzColor="green" style="font-size: 12px; padding: 4px 8px; border-radius: 4px">
             <nz-icon nzType="info-circle" nzTheme="outline" />
             {{ leaveItem().status }}
           </nz-tag>
-          <nz-tag nzColor="orange" style="font-size: 12px;padding: 4px 8px;border-radius: 4px;">
+          <nz-tag nzColor="orange" style="font-size: 12px; padding: 4px 8px; border-radius: 4px">
             <nz-icon nzType="clock-circle"></nz-icon>
             {{ leaveItem().message }}
           </nz-tag>
         </div>
-
       </div>
 
       <!-- Thông tin nhân viên -->
@@ -269,22 +299,19 @@
 
           <div>
             <label>Phòng ban</label>
-            <p>{{leaveItem().phongBan}}</p>
+            <p>{{ leaveItem().phongBan }}</p>
           </div>
 
           <div>
             <label>Chức vụ</label>
-            <p>{{leaveItem().chucVu}}</p>
+            <p>{{ leaveItem().chucVu }}</p>
           </div>
-
         </div>
       </nz-card>
 
       <!-- Thông tin nghỉ phép -->
       <nz-card nzTitle="Thông tin nghỉ phép" class="mt-16">
-
         <div class="detail-grid">
-
           <div>
             <label>Loại nghỉ</label>
             <p>{{ leaveItem().leaveType }}</p>
@@ -297,63 +324,56 @@
 
           <div>
             <label>Từ ngày</label>
-            <p>{{ leaveItem().fromDate | date:'dd/MM/yyyy' }}</p>
+            <p>{{ leaveItem().fromDate | date: 'dd/MM/yyyy' }}</p>
           </div>
 
           <div>
             <label>Đến ngày</label>
-            <p>{{ leaveItem().toDate | date:'dd/MM/yyyy' }}</p>
+            <p>{{ leaveItem().toDate | date: 'dd/MM/yyyy' }}</p>
           </div>
 
           <div>
             <label>Tổng số ngày</label>
-            <p class="total-day">
-              {{ leaveItem().totalDays }} ngày
-            </p>
+            <p class="total-day">{{ leaveItem().totalDays }} ngày</p>
           </div>
-
         </div>
-
       </nz-card>
 
       <!-- Lý do -->
       <nz-card nzTitle="Lý do nghỉ phép" class="mt-16">
-
         <div class="reason-box">
           {{ leaveItem().reason }}
         </div>
-
       </nz-card>
 
       <!-- Luồng phê duyệt -->
       <nz-card nzTitle="Luồng phê duyệt" class="mt-16">
-        <nz-steps nzSize="small" [nzDirection]="isMobile ? 'vertical' : 'horizontal'" [nzCurrent]="leaveItem().currentStep">
-          <nz-step nzTitle="Tạo đơn">
-          </nz-step>
+        <nz-steps
+          nzSize="small"
+          [nzDirection]="isMobile ? 'vertical' : 'horizontal'"
+          [nzCurrent]="leaveItem().currentStep"
+        >
+          <nz-step nzTitle="Tạo đơn"> </nz-step>
 
-          <nz-step nzTitle="Phát hành">
-          </nz-step>
+          <nz-step nzTitle="Phát hành"> </nz-step>
 
-          <nz-step nzTitle="Xác nhận">
-          </nz-step>
+          <nz-step nzTitle="Xác nhận"> </nz-step>
 
-          <nz-step nzTitle="Phê duyệt">
-          </nz-step>
+          <nz-step nzTitle="Phê duyệt"> </nz-step>
 
-          <nz-step nzTitle="Hoàn tất">
-          </nz-step>
-
+          <nz-step nzTitle="Hoàn tất"> </nz-step>
         </nz-steps>
-
       </nz-card>
 
       <!-- Nhật ký -->
       <nz-card nzTitle="Lịch sử xử lý" class="mt-16">
         <nz-timeline>
           <nz-timeline-item *ngFor="let item of leaveItem().lstLog" color="green">
-            <strong>{{item.action}}</strong> - <strong>{{item.approverName}}</strong>
-
-            <p>{{ item.actionTime | date:'dd/MM/yyyy HH:mm:ss' }}</p>
+            <strong>{{ item.action }}</strong> - <strong>{{ item.approverName }}</strong>
+            <p>{{ item.actionTime | date: 'dd/MM/yyyy HH:mm:ss' }}</p>
+            <span *ngIf="item.comment != ''"
+              ><nz-icon nzType="comment" nzTheme="outline" />: {{ item.comment }}</span
+            >
           </nz-timeline-item>
         </nz-timeline>
       </nz-card>

@@ -13,6 +13,7 @@ import { Ctpatcre } from './ctpatcre/ctpatcre';
 import { Dangkynghiphep } from './dangkynghiphep/dangkynghiphep';
 import { Listleave } from './listleave/listleave';
 import { Approveleave } from './approveleave/approveleave';
+import { ReportLeave } from './report-leave/report-leave';
 export const routes: Routes = [
   {
     path: 'home',
@@ -64,6 +65,10 @@ export const routes: Routes = [
       {
         path: 'pheduyetnghiphep',
         component: Approveleave,
+      },
+      {
+        path: 'baocaonghiphep',
+        component: ReportLeave,
       },
     ],
   },

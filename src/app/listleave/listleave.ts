@@ -21,7 +21,24 @@ import { finalize } from 'rxjs';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 
 @Component({
-  imports: [CommonModule, NzTagModule, NzPaginationModule, NzIconModule, NzFormModule, NzDatePickerModule, ReactiveFormsModule, NzButtonModule, NzBadgeModule, NzEmptyModule, NzCardModule, NzTimelineComponent, NzTimelineItemComponent, NzStepsModule, NzSkeletonModule, NzModalModule],
+  imports: [
+    CommonModule,
+    NzTagModule,
+    NzPaginationModule,
+    NzIconModule,
+    NzFormModule,
+    NzDatePickerModule,
+    ReactiveFormsModule,
+    NzButtonModule,
+    NzBadgeModule,
+    NzEmptyModule,
+    NzCardModule,
+    NzTimelineComponent,
+    NzTimelineItemComponent,
+    NzStepsModule,
+    NzSkeletonModule,
+    NzModalModule,
+  ],
   selector: 'app-listleave',
   styleUrl: './listleave.scss',
   templateUrl: './listleave.html',
@@ -33,26 +50,26 @@ export class Listleave implements OnInit {
   totalRecords = signal(0);
   searchForm: FormGroup;
   CurentUser: any;
-  statusDone = signal("ALL");
+  statusDone = signal('ALL');
   itemLeave = signal<any>(null);
   isVisible = signal(false);
   isLoading = signal(true);
   isMobile = window.innerWidth < 576;
-  constructor(private api: Api, private message: NzMessageService,
+  constructor(
+    private api: Api,
+    private message: NzMessageService,
     private fb: FormBuilder,
     private authService: AuthService,
-    private router: Router
+    private router: Router,
   ) {
     const today = new Date();
-    const firstDayOfMonth = new Date(
-      today.getFullYear(),
-      today.getMonth(),
-      1
-    );
+    const firstDayOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+
+    const lastDayOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0);
 
     this.searchForm = this.fb.group({
       fromDate: [firstDayOfMonth, [Validators.required]],
-      toDate: [today, [Validators.required]],
+      toDate: [lastDayOfMonth, [Validators.required]],
     });
   }
 
@@ -65,7 +82,6 @@ export class Listleave implements OnInit {
     } else {
       this.router.navigate(['']);
     }
-
   }
 
   handleGetPaging() {
@@ -75,7 +91,7 @@ export class Listleave implements OnInit {
       codeUser: this.CurentUser.CodeUser,
       fromDate: this.searchForm.controls['fromDate'].value,
       toDate: this.searchForm.controls['toDate'].value,
-      statusDone: this.statusDone()
+      statusDone: this.statusDone(),
     };
     this.api.GetDsLeavePaging(req).subscribe({
       next: (res) => {
@@ -84,9 +100,9 @@ export class Listleave implements OnInit {
         console.log(this.LstData());
       },
       error: (err) => {
-        this.message.create("error", err.message);
-      }
-    })
+        this.message.create('error', err.message);
+      },
+    });
   }
 
   onchangeStatusSearch(status: string) {
@@ -105,14 +121,18 @@ export class Listleave implements OnInit {
   }
   showDetail(code: string) {
     this.isVisible.set(true);
-    this.isLoading.set(true)
-    this.api.GetLeaveItem(code).pipe(finalize(() => this.isLoading.set(false))).subscribe({
-      next: (res) => {
-        this.itemLeave.set(res.data);
-      }, error: (err) => {
-        this.message.create("error", "Lỗi " + err.message);
-      }
-    })
+    this.isLoading.set(true);
+    this.api
+      .GetLeaveItem(code)
+      .pipe(finalize(() => this.isLoading.set(false)))
+      .subscribe({
+        next: (res) => {
+          this.itemLeave.set(res.data);
+        },
+        error: (err) => {
+          this.message.create('error', 'Lỗi ' + err.message);
+        },
+      });
   }
 
   handleCancel() {
@@ -126,10 +146,8 @@ export class Listleave implements OnInit {
         this.itemLeave.set(res.data);
       },
       error: (err) => {
-        this.message.create("error", err.message);
-      }
-    })
+        this.message.create('error', err.message);
+      },
+    });
   }
-
-
 }
