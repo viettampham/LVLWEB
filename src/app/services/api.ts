@@ -153,15 +153,15 @@ export class Api {
     return this.httpClient.get<any>(`${environment.api_domain}/api/LeaveRequest/get-leave-by-code?code=${code}`);
   }
 
-  PhatHanhDon = (code: string) => {
+  PhatHanhDon = (req: any) => {
     return this.httpClient.post<any>(
-      `${environment.api_domain}/api/LeaveRequest/phat-hanh-don?code=${code}`,
-      {}
+      `${environment.api_domain}/api/LeaveRequest/phat-hanh-don`,
+      req
     );
   }
 
-  GetpendingAsignee = (curstp: string) => {
-    return this.httpClient.get<any>(`${environment.api_domain}/api/LeaveRequest/get-assigne-pending?PhongBan=${curstp}`);
+  GetpendingAsignee = (codeuser: string) => {
+    return this.httpClient.get<any>(`${environment.api_domain}/api/LeaveRequest/get-assigne-pending?codeuser=${codeuser}`);
   }
 
   GetDsLeavePaging = (req: any) => {
@@ -190,6 +190,10 @@ export class Api {
 
   ReportLeaveDashboard=(req: any)=>{
     return this.httpClient.post<any>(`${environment.api_domain}/api/LeaveRequest/report-leave`, req);
+  }
+
+  GetInfoLeaveUser=(code: string)=>{
+    return this.httpClient.get<any>(`${environment.api_domain}/api/LeaveRequest/get-infor-leave-user?code=${code}`);
   }
 
   ExportReportLeave(req: any) {

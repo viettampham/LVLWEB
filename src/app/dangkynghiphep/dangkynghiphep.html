@@ -75,9 +75,9 @@
               <div class="form-group">
                 <label>Người tiếp nhận</label>
                 <nz-form-item>
-                  <nz-form-control nzErrorTip="Chọn giám sát xác nhận!">
+                  <nz-form-control nzErrorTip="Chọn người tiếp nhận!">
                     <nz-select formControlName="pendingAsignee">
-                      <nz-option nzValue="" nzLabel="-- Chọn giám sát xác nhận --" />
+                      <nz-option nzValue="" nzLabel="-- Chọn người tiếp nhận --" />
                       <nz-option
                         *ngFor="let item of ListPendingAsignee()"
                         nzValue="{{ item.code }}"
@@ -160,17 +160,17 @@
           <div class="leave-balance">
             <div>
               <span>Tổng số phép</span>
-              <b>12</b>
+              <b>{{ inforLeaveUser()?.anualLeave }}</b>
             </div>
 
             <div>
               <span>Đã sử dụng</span>
-              <b>4</b>
+              <b>{{ inforLeaveUser()?.leaveUsed }}</b>
             </div>
 
             <div>
               <span>Còn lại</span>
-              <b class="green">8</b>
+              <b class="green">{{ inforLeaveUser()?.leaveRemaining }}</b>
             </div>
           </div>
         </div>

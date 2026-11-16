@@ -40,6 +40,7 @@ export class Dangkynghiphep implements OnInit {
   readonly loadings = signal<boolean[]>([false, false]);
   readonly isVisible = signal(false);
   leaveItem = signal<any>(null);
+  inforLeaveUser = signal<any>(null);
   currentStep = signal(0);
   isLoading = signal(true);
   ListPendingAsignee = signal<any[]>([]);
@@ -104,7 +105,18 @@ export class Dangkynghiphep implements OnInit {
     this.FormRegisLeave.get('typeShift')?.valueChanges.subscribe(value => {
       this.onShiftChange(value);
     });
+    this.GetInforLeaveUser();
     this.GetpendingAsignee();
+  }
+
+  GetInforLeaveUser(){
+    this.api.GetInfoLeaveUser(this.CurrentUser.CodeUser).subscribe({
+      next: (res)=>{
+        this.inforLeaveUser.set(res.data);
+      },error: (err)=>{
+        this.message.create("error",err.message);
+      }
+    })
   }
 
   handleGetLeaveItem(code: string) {
@@ -293,7 +305,11 @@ export class Dangkynghiphep implements OnInit {
   }
 
   PhatHanhDon(code: string) {
-    this.api.PhatHanhDon(code).subscribe({
+    var req = {
+      codeLeave: code,
+      codeUserPhatHanh: this.CurrentUser.CodeUser,
+    }
+    this.api.PhatHanhDon(req).subscribe({
       next: (res) => {
         this.message.create(res.status.toLowerCase(), res.message);
         this.leaveItem.set(res.data);
@@ -310,7 +326,7 @@ export class Dangkynghiphep implements OnInit {
     }else{
       this.currentStep.set(this.leaveItem().currentStep);
     }
-    this.api.GetpendingAsignee(this.CurrentUser.PhongBan).subscribe({
+    this.api.GetpendingAsignee(this.CurrentUser.CodeUser).subscribe({
       next:(res)=>{
         this.ListPendingAsignee.set(res.listData);
       }, error: (err)=>{
