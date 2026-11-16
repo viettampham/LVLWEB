@@ -5,23 +5,33 @@
       <div class="page-desc">Thống kê tình hình nghỉ phép theo khoảng thời gian</div>
     </div>
 
-    <div class="filter-section">
-      <nz-date-picker nzFormat="dd/MM/yyyy" formControlName="fromDate" nzPlaceHolder="Từ ngày">
-      </nz-date-picker>
+    <form nz-form nzLayout="inline" [formGroup]="FormGetReport">
+      <div class="filter-section">
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please input your username!">
+             <nz-date-picker nzFormat="dd/MM/yyyy" formControlName="fromDate" nzPlaceHolder="Từ ngày">
+              </nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
 
-      <nz-date-picker nzFormat="dd/MM/yyyy" formControlName="toDate" nzPlaceHolder="Đến ngày">
-      </nz-date-picker>
+        <nz-form-item>
+          <nz-form-control nzErrorTip="Please input your username!">
+             <nz-date-picker nzFormat="dd/MM/yyyy" formControlName="toDate" nzPlaceHolder="Từ ngày">
+              </nz-date-picker>
+          </nz-form-control>
+        </nz-form-item>
 
-      <button nz-button nzType="primary">
-        <span nz-icon nzType="search"></span>
-        Xem báo cáo
-      </button>
+        <button (click)="GetDashboardReportLeave()" nz-button nzType="primary" style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
+          <span nz-icon nzType="search"></span>
+          Xem báo cáo
+        </button>
 
-      <button nz-button>
-        <span nz-icon nzType="download"></span>
-        Xuất Excel
-      </button>
-    </div>
+        <button nz-button (click)="HandleExportReport()" style="display: flex; flex-direction: row; justify-content: center; align-items: center;">
+          <span nz-icon nzType="download"></span>
+          Xuất Excel
+        </button>
+      </div>
+    </form>
   </div>
 
   <!-- KPI -->
@@ -32,7 +42,7 @@
         <span nz-icon nzType="file-text"></span>
       </div>
       <div>
-        <div class="number">156</div>
+        <div class="number">{{dataDashBoard().totalLeaves}}</div>
         <div class="label">Tổng đơn nghỉ phép</div>
       </div>
     </div>
@@ -42,7 +52,7 @@
         <span nz-icon nzType="check-circle"></span>
       </div>
       <div>
-        <div class="number">129</div>
+        <div class="number">{{dataDashBoard().leaveApproveds}}</div>
         <div class="label">Đã phê duyệt</div>
       </div>
     </div>
@@ -52,7 +62,7 @@
         <span nz-icon nzType="clock-circle"></span>
       </div>
       <div>
-        <div class="number">18</div>
+        <div class="number">{{dataDashBoard().leavePendings}}</div>
         <div class="label">Chờ phê duyệt</div>
       </div>
     </div>
@@ -62,7 +72,7 @@
         <span nz-icon nzType="close-circle"></span>
       </div>
       <div>
-        <div class="number">9</div>
+        <div class="number">{{dataDashBoard().leaveRefuseds}}</div>
         <div class="label">Từ chối</div>
       </div>
     </div>
@@ -73,7 +83,7 @@
   <div class="section-card">
     <div class="section-title">Thống kê nghỉ phép theo phòng ban</div>
 
-    <nz-table [nzBordered]="true" [nzData]="reportData()">
+    <nz-table [nzBordered]="true" [nzData]="dataDashBoard().reportByDeparts">
       <thead>
         <tr>
           <th>Phòng ban</th>
@@ -87,14 +97,14 @@
       </thead>
 
       <tbody>
-        <tr *ngFor="let item of reportData()">
-          <td>{{ item.department }}</td>
-          <td>{{ item.employeeCount }}</td>
-          <td>{{ item.requestCount }}</td>
-          <td>{{ item.totalDays }}</td>
+        <tr *ngFor="let item of dataDashBoard().reportByDeparts">
+          <td>{{ item.phongBan }}</td>
+          <td>{{ item.totalEmpl }}</td>
+          <td>{{ item.totalLeave }}</td>
+          <td>{{ item.totalDayLeave }}</td>
           <td>{{ item.annualLeave }}</td>
           <td>{{ item.unpaidLeave }}</td>
-          <td>{{ item.rate }}%</td>
+          <td>{{ item.percentleave }}%</td>
         </tr>
       </tbody>
     </nz-table>
@@ -105,7 +115,7 @@
   <div class="section-card">
     <div class="section-title">Top nhân viên nghỉ nhiều nhất</div>
 
-    <nz-table [nzData]="topEmployees()" [nzBordered]="true">
+    <nz-table [nzData]="dataDashBoard().topLeaveEmpls" [nzBordered]="true">
       <thead>
         <tr>
           <th>Mã NV</th>
@@ -117,13 +127,13 @@
       </thead>
 
       <tbody>
-        <tr *ngFor="let item of topEmployees()">
-          <td>{{ item.code }}</td>
-          <td>{{ item.name }}</td>
-          <td>{{ item.department }}</td>
-          <td>{{ item.requestCount }}</td>
+        <tr *ngFor="let item of dataDashBoard().topLeaveEmpls">
+          <td>{{ item.codeEmpl }}</td>
+          <td>{{ item.fullName }}</td>
+          <td>{{ item.phongBan }}</td>
+          <td>{{ item.totalLeaves }}</td>
           <td>
-            <nz-tag nzColor="red"> {{ item.totalDays }} ngày </nz-tag>
+            <nz-tag nzColor="red"> {{ item.totalLeaveDays }} ngày </nz-tag>
           </td>
         </tr>
       </tbody>

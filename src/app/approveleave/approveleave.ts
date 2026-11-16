@@ -22,7 +22,7 @@ import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angula
 @Component({
   imports: [CommonModule, NzButtonModule, NzModalModule, NzSkeletonModule,
     NzTagModule, NzCardModule, NzStepsModule, NzTimelineComponent,
-    NzTimelineItemComponent, NzPopconfirmModule, NzPaginationModule, NzIconModule, NzFormModule, NzInputModule,ReactiveFormsModule],
+    NzTimelineItemComponent, NzPopconfirmModule, NzPaginationModule, NzIconModule, NzFormModule, NzInputModule, ReactiveFormsModule],
   selector: 'app-approveleave',
   styleUrl: './approveleave.scss',
   templateUrl: './approveleave.html',
@@ -47,7 +47,7 @@ export class Approveleave implements OnInit {
     private fb: FormBuilder
   ) {
     this.formReject = this.fb.group({
-      reasonReject: ["",[Validators.required]] 
+      reasonReject: ["", [Validators.required]]
     })
   }
   async ngOnInit(): Promise<void> {
@@ -87,8 +87,13 @@ export class Approveleave implements OnInit {
     this.formReject.reset();
   }
 
+  handleRejectApprove(code: string) {
+    this.isShowModalReject.set(true);
+    this.codeLeave = code;
+    this.formReject.reset();
+  }
+  
   approve(item: any) {
-
   }
 
   ViewDetail(code: string) {
@@ -110,24 +115,40 @@ export class Approveleave implements OnInit {
     this.isShowModalReject.set(false);
   }
 
-  rejectLeave(){
-    if(this.formReject.valid){
+  rejectLeave() {
+    if (this.formReject.valid) {
       var req = {
         codeLeave: this.codeLeave,
         codeReject: this.CurentUser.CodeUser,
         reasonReject: this.formReject.controls["reasonReject"].value
       }
-      this.api.RejectLeave(req).subscribe({
-        next:(res)=>{
-          this.itemLeave.set(res.data);
-          this.GetListPendingData();
-          this.message.create(res.status, res.message);
-          this.isShowModalReject.set(false);
-        },error: (err)=>{
-          this.message.create("error", err.message);
-        }
-      })
-    }else{
+
+      if (this.CurentUser.RoleLevel == 4) {
+        this.api.RejectLeave(req).subscribe({
+          next: (res) => {
+            this.itemLeave.set(res.data);
+            this.GetListPendingData();
+            this.message.create(res.status, res.message);
+            this.isShowModalReject.set(false);
+          }, error: (err) => {
+            this.message.create("error", err.message);
+          }
+        })
+      }else if(this.CurentUser.RoleLevel <= 3){
+        this.api.ManagerRejectLeave(req).subscribe({
+          next: (res) => {
+            this.itemLeave.set(res.data);
+            this.GetListPendingData();
+            this.message.create(res.status, res.message);
+            this.isShowModalReject.set(false);
+          }, error: (err) => {
+            this.message.create("error", err.message);
+          }
+        })
+      }
+
+
+    } else {
       Object.values(this.formReject.controls).forEach(control => {
         if (control.invalid) {
           control.markAsDirty();
@@ -148,11 +169,11 @@ export class Approveleave implements OnInit {
     }
 
     this.api.XacNhanDon(req).subscribe({
-      next: (res)=>{
+      next: (res) => {
         this.message.create("success", res.message);
         this.itemLeave.set(res.data);
         this.GetListPendingData();
-      }, error: (err)=>{
+      }, error: (err) => {
         this.message.create("error", "Lỗi " + err.message);
       }
     })
@@ -174,18 +195,18 @@ export class Approveleave implements OnInit {
     this.GetListPendingData();
   }
 
-  handleApprove(code: string){
+  handleApprove(code: string) {
     var req = {
       codeLeave: code,
       codeApprover: this.CurentUser.CodeUser
     }
 
     this.api.ApproveLeave(req).subscribe({
-      next: (res)=>{
+      next: (res) => {
         this.message.create("success", res.message);
         this.itemLeave.set(res.data);
         this.GetListPendingData();
-      },error: (err)=>{
+      }, error: (err) => {
         this.message.create("error", "Lỗi " + err.message);
       }
     })

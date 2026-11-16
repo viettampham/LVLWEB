@@ -180,8 +180,27 @@ export class Api {
     return this.httpClient.post<any>(`${environment.api_domain}/api/LeaveRequest/reject-leave`, req);
   }
 
+  ManagerRejectLeave = (req: any) => {
+    return this.httpClient.post<any>(`${environment.api_domain}/api/LeaveRequest/manager-reject-leave`, req);
+  }
+
   ApproveLeave = (req:any)=>{
     return this.httpClient.post<any>(`${environment.api_domain}/api/LeaveRequest/approve-leave`, req);
   }
+
+  ReportLeaveDashboard=(req: any)=>{
+    return this.httpClient.post<any>(`${environment.api_domain}/api/LeaveRequest/report-leave`, req);
+  }
+
+  ExportReportLeave(req: any) {
+  return this.httpClient.post(
+    `${environment.api_domain}/api/LeaveRequest/export-report-leave`,
+    req,
+    {
+      responseType: 'blob'
+    }
+  );
+  
+}
 
 }
