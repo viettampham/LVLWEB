@@ -13,7 +13,7 @@
         <nz-icon nzType="desktop" />
         <span>Màn hình khách</span>
       </li>
-      <li *ngIf="CurrentUser?.RoleLevel == 1 || CurrentUser?.RoleLevel == 2" nz-submenu nzTitle="Quản lý hệ thống" nzIcon="partition">
+      <li *ngIf="CurrentUser?.RoleLevel == 1 || CurrentUser?.RoleLevel == 2 || CurrentUser.PhongBan == 'Hành chính nhân sự'" nz-submenu nzTitle="Quản lý hệ thống" nzIcon="partition">
         <ul>
           <li nz-menu-item (click)="onHandleGoTo('/home/quanlynhanvien','Quản lý hệ thống, Quản lý nhân viên')">Quản lý nhân viên</li>
           <li nz-menu-item (click)="onHandleGoTo('/home/quanlydanhmuc','Quản lý hệ thống, Quản lý danh mục')">Quản lý danh mục</li>

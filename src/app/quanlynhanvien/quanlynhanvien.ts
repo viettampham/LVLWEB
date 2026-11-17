@@ -25,7 +25,7 @@ import { RoleResponse } from '../../model/Responsemodel/RoleResponse';
 import { NzRadioModule } from 'ng-zorro-antd/radio';
 import { DepartmentResponse } from '../../model/Responsemodel/DepartmentResponse';
 import { NzSwitchModule } from 'ng-zorro-antd/switch';
-
+import { formatDate } from '@angular/common';
 
 @Component({
   imports: [
@@ -53,7 +53,7 @@ import { NzSwitchModule } from 'ng-zorro-antd/switch';
     NzSelectModule,
     NzRadioModule,
     NzSwitchModule
-],
+  ],
   selector: 'app-quanlynhanvien',
   styleUrl: './quanlynhanvien.scss',
   templateUrl: './quanlynhanvien.html',
@@ -69,6 +69,7 @@ export class Quanlynhanvien {
   }
   SearchForm!: FormGroup;
   UpdateForm!: FormGroup;
+  AddForm!: FormGroup;
   listOfData = signal<UserResponse[]>([]);
   pageIndex = signal(1);
   pageSize = signal(10);
@@ -76,7 +77,8 @@ export class Quanlynhanvien {
   readonly isVisible = signal(false);
   lstRole: RoleResponse[] = [];
   lstPhongBan = signal<DepartmentResponse[]>([]);
-  
+  isShowModalAddUser = signal(false);
+
   ngOnInit(): void {
     this.SearchForm = this.formBuilder.group({
       fullName: [''],
@@ -90,42 +92,65 @@ export class Quanlynhanvien {
     });
 
     this.UpdateForm = this.formBuilder.group({
-      id: ['',[Validators.required]],
-      fullName: ['',[Validators.required]],
-      userName: ['',[Validators.required]],
-      email: ['',[Validators.required]],
-      phoneNumber: ['',[Validators.required]],
-      address: ['',[Validators.required]],
+      id: ['', [Validators.required]],
+      fullName: ['', [Validators.required]],
+      userName: ['', [Validators.required]],
+      email: ['', [Validators.required]],
+      phoneNumber: ['', [Validators.required]],
+      address: ['', [Validators.required]],
       avatar: [''],
-      dateOfBirth: ['',[Validators.required]],
-      gender: ['',[Validators.required]],
-      cccd: ['',[Validators.required]],
-      roleLevel: ['',[Validators.required]],
-      phongBan: ['',[Validators.required]],
-      trangThai: ['',[Validators.required]],
+      dateOfBirth: ['', [Validators.required]],
+      gender: ['', [Validators.required]],
+      cccd: ['', [Validators.required]],
+      roleLevel: ['', [Validators.required]],
+      phongBan: ['', [Validators.required]],
+      trangThai: ['', [Validators.required]],
+    });
+
+    this.AddForm = this.formBuilder.group({
+      fullName: ['', [Validators.required]],
+      userName: ['', [Validators.required]],
+      email: ['', [Validators.required]],
+      phoneNumber: ['', [Validators.required]],
+      address: ['', [Validators.required]],
+      avatar: [''],
+      dateOfBirth: ['', [Validators.required]],
+      gender: ['', [Validators.required]],
+      cccd: ['', [Validators.required]],
+      roleLevel: ['', [Validators.required]],
+      phongBan: ['', [Validators.required]],
+      password: ['', [Validators.required]],
     });
     this.SearchUser();
     this.GetDSRole();
     this.GetPhongBan();
   }
 
-  GetDSRole(){
-    this.api.GetRole().subscribe(res=>{
-      if(res.status = "SUCCESS"){
+  OpenModalAddUser() {
+    this.UpdateForm.reset();
+    this.isShowModalAddUser.set(true);
+    this.UpdateForm.patchValue({
+      trangThai: true
+    })
+  }
+
+  GetDSRole() {
+    this.api.GetRole().subscribe(res => {
+      if (res.status = "SUCCESS") {
         this.lstRole = res.listData;
-      }else{
+      } else {
         this.message.create(res.status.toLowerCase(), res.message);
         this.lstRole = [];
       }
     })
   }
 
-  GetPhongBan(){
-    this.api.GetPhongBan().subscribe(res=>{
-      if(res.status == "SUCCESS"){
+  GetPhongBan() {
+    this.api.GetPhongBan().subscribe(res => {
+      if (res.status == "SUCCESS") {
         this.lstPhongBan.set(res.listData);
         console.log(this.lstPhongBan());
-      }else{
+      } else {
         this.lstPhongBan.set([]);
         this.message.create(res.status.toLowerCase(), res.message);
       }
@@ -169,19 +194,19 @@ export class Quanlynhanvien {
 
   confirmDelete(id: number) {
     console.log(id);
-    this.api.DeleteUser(id).subscribe((res:any)=>{
+    this.api.DeleteUser(id).subscribe((res: any) => {
       if (res.status === 'SUCCESS') {
         this.message.success(res.message);
         this.SearchUser();
-      }else {
+      } else {
         this.message.error(res.message);
       }
     })
   }
 
-  cancelDelete() {}
+  cancelDelete() { }
 
-  openModalConfigUser(data: UserResponse){
+  openModalConfigUser(data: UserResponse) {
     this.isVisible.set(true);
     this.UpdateForm.patchValue({
       id: data.id,
@@ -200,11 +225,11 @@ export class Quanlynhanvien {
     });
   }
 
-  handleCancel(){
+  handleCancel() {
     this.isVisible.set(false);
   }
 
-  submitForm(){
+  submitForm() {
     console.log(this.UpdateForm.value);
     if (this.UpdateForm.valid) {
 
@@ -214,12 +239,12 @@ export class Quanlynhanvien {
           .split('T')[0]
       );
 
-      this.api.UpdateUser(this.UpdateForm.value).subscribe(res=>{
-        if(res.status == "SUCCESS"){
+      this.api.UpdateUser(this.UpdateForm.value).subscribe(res => {
+        if (res.status == "SUCCESS") {
           this.message.create(res.status.toLowerCase(), res.message);
           this.isVisible.set(false);
           this.SearchUser();
-        }else{
+        } else {
           this.message.create(res.status.toLowerCase(), res.message);
         }
       })
@@ -236,4 +261,43 @@ export class Quanlynhanvien {
   changeTrangThai(checked: any): void {
     console.log('Trạng thái:', checked);
   }
+
+  handleCancelAddUser() {
+    this.isShowModalAddUser.set(false);
+
+  }
+
+  handleAddUser() {
+    var req = {
+      fullName: this.AddForm.controls["fullName"].value,
+      userName: this.AddForm.controls["userName"].value,
+      email: this.AddForm.controls["email"].value,
+      phoneNumber: this.AddForm.controls["phoneNumber"].value,
+      address: this.AddForm.controls["address"].value,
+      avatar: this.AddForm.controls["avatar"].value,
+      dateOfBirth: formatDate(
+        this.AddForm.value.dateOfBirth,
+        'yyyy-MM-dd',
+        'en-US'
+      ),
+      gender: this.AddForm.controls["gender"].value,
+      cccd: this.AddForm.controls["cccd"].value,
+      roleLevel: this.AddForm.controls["roleLevel"].value,
+      phongBan: this.AddForm.controls["phongBan"].value,
+      password: this.AddForm.controls["password"].value,
+    }
+
+    console.log(req);
+    this.api.RegisAccount(req).subscribe({
+      next: (res)=>{
+        this.message.create(res.status.toLowerCase(), res.message);
+        this.isShowModalAddUser.set(false);
+        this.SearchUser();
+      },error: (err)=>{
+        this.message.create('error', err.message);
+      }
+    })
+  }
+
+
 }

@@ -196,6 +196,10 @@ export class Api {
     return this.httpClient.get<any>(`${environment.api_domain}/api/LeaveRequest/get-infor-leave-user?code=${code}`);
   }
 
+  RegisAccount=(req:any)=>{
+    return this.httpClient.post<any>(`${environment.api_domain}/api/User/add-user`, req);
+  }
+
   ExportReportLeave(req: any) {
   return this.httpClient.post(
     `${environment.api_domain}/api/LeaveRequest/export-report-leave`,

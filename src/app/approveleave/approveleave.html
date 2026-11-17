@@ -76,7 +76,7 @@
                 </button>
             </div>
 
-            <div *ngIf="(item.status == 'Đã xác nhận'&& CurentUser.RoleLevel <= 3)"> 
+            <div *ngIf="((item.status == 'Đã xác nhận' || item.status == 'Phát hành')&& CurentUser.RoleLevel <= 3)">
                 <button style="margin-right: 8px;" nz-button nzDanger nzType="dashed"
                     (click)="handleRejectApprove(item.code); $event.stopPropagation()">
                     Từ chối duyệt
@@ -123,7 +123,7 @@
             Xác nhận
         </button>
         <button nz-popconfirm nzPopconfirmTitle="Xác nhận phê duyệt ?" (nzOnConfirm)="handleApprove(itemLeave().code)"
-            (nzOnCancel)="cancelApprove(itemLeave().code)" *ngIf="(itemLeave().status == 'Đã xác nhận'&& CurentUser.RoleLevel <= 3)" nz-button
+            (nzOnCancel)="cancelApprove(itemLeave().code)" *ngIf="((itemLeave().status == 'Đã xác nhận' || itemLeave().status == 'Phát hành')&& CurentUser.RoleLevel <= 3)" nz-button
             nzType="primary">
             <nz-icon nzType="send"></nz-icon>
             Phê duyệt
