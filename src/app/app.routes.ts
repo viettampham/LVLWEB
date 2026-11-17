@@ -14,6 +14,7 @@ import { Dangkynghiphep } from './dangkynghiphep/dangkynghiphep';
 import { Listleave } from './listleave/listleave';
 import { Approveleave } from './approveleave/approveleave';
 import { ReportLeave } from './report-leave/report-leave';
+import { TiepNhanNghiPhep } from './tiep-nhan-nghi-phep/tiep-nhan-nghi-phep';
 export const routes: Routes = [
   {
     path: 'home',
@@ -69,6 +70,10 @@ export const routes: Routes = [
       {
         path: 'baocaonghiphep',
         component: ReportLeave,
+      },
+      {
+        path: 'tiepnhannghiphep',
+        component: TiepNhanNghiPhep,
       },
     ],
   },

@@ -1,4 +1,4 @@
-import { Component, signal } from '@angular/core';
+import { Component, OnInit, signal } from '@angular/core';
 import { NzTableComponent } from 'ng-zorro-antd/table';
 import { NzTableModule } from 'ng-zorro-antd/table';
 import { NzDividerModule } from 'ng-zorro-antd/divider';
@@ -58,15 +58,8 @@ import { formatDate } from '@angular/common';
   styleUrl: './quanlynhanvien.scss',
   templateUrl: './quanlynhanvien.html',
 })
-export class Quanlynhanvien {
-  constructor(
-    private api: Api,
-    private formBuilder: FormBuilder,
-    private message: NzMessageService,
-    private iconService: NzIconService,
-  ) {
-    this.iconService.addIcon(BookOutline);
-  }
+export class Quanlynhanvien implements OnInit {
+  
   SearchForm!: FormGroup;
   UpdateForm!: FormGroup;
   AddForm!: FormGroup;
@@ -78,6 +71,22 @@ export class Quanlynhanvien {
   lstRole: RoleResponse[] = [];
   lstPhongBan = signal<DepartmentResponse[]>([]);
   isShowModalAddUser = signal(false);
+  isShowModalChangePassword = signal(false);
+  formChangePassword: FormGroup;
+
+  constructor(
+    private api: Api,
+    private formBuilder: FormBuilder,
+    private message: NzMessageService,
+    private iconService: NzIconService,
+  ) {
+    this.iconService.addIcon(BookOutline);
+    this.formChangePassword = this.formBuilder.group({
+      codeUser: ['', [Validators.required]],
+      newPass: ['', [Validators.required]]
+    })
+  }
+
 
   ngOnInit(): void {
     this.SearchForm = this.formBuilder.group({
@@ -225,6 +234,14 @@ export class Quanlynhanvien {
     });
   }
 
+  changePassword(data: UserResponse){
+    this.isShowModalChangePassword.set(true);
+    this.formChangePassword.patchValue({
+      codeUser: data.codeUser,
+      newPass: ''
+    })
+  }
+
   handleCancel() {
     this.isVisible.set(false);
   }
@@ -265,6 +282,29 @@ export class Quanlynhanvien {
   handleCancelAddUser() {
     this.isShowModalAddUser.set(false);
 
+  }
+
+  handleCancelChangePassword(){
+    this.isShowModalChangePassword.set(false);
+  }
+
+  handleOkChangePassword(){
+    var req = {
+      codeUser: this.formChangePassword.controls['codeUser'].value,
+      newPass: this.formChangePassword.controls['newPass'].value
+    }
+    this.api.ChangePasswordByAdmin(req).subscribe({
+      next: (res)=>{
+        if(res.status == "SUCCESS"){
+          this.message.create(res.status.toLowerCase(), res.message);
+          this.isShowModalChangePassword.set(false);
+        }else{
+          this.message.create(res.status.toLowerCase(), res.message);
+        }
+      },error: (err)=>{
+        this.message.create('error', err.message);
+      }
+    })
   }
 
   handleAddUser() {

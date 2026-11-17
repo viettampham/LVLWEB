@@ -1,0 +1,187 @@
+.receive-leave-page {
+  padding: 24px;
+  background: #f5f7fb;
+}
+
+.page-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 12px;
+
+  h2 {
+    margin-bottom: 4px;
+    font-size: 24px;
+    font-weight: 700;
+  }
+
+  p {
+    margin: 0;
+    color: #8c8c8c;
+  }
+}
+
+.dashboard {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 16px;
+  margin-bottom: 20px;
+}
+
+.dashboard-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  min-height: 105px;
+
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+
+  box-shadow: 0 4px 20px rgba(0,0,0,.04);
+
+  transition: all .25s ease;
+
+  &:hover {
+    transform: translateY(-3px);
+  }
+
+  .value {
+    font-size: 30px;
+    font-weight: 700;
+  }
+
+  .label {
+    margin-top: 6px;
+    color: #8c8c8c;
+  }
+
+  span {
+    font-size: 34px;
+  }
+}
+
+.pending {
+  border-left: 4px solid #faad14;
+}
+
+.received {
+  border-left: 4px solid #1677ff;
+}
+
+.approved {
+  border-left: 4px solid #52c41a;
+}
+
+.rejected {
+  border-left: 4px solid #ff4d4f;
+}
+.status-tabs {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.tab {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 6px 12px;
+
+  background: #ffffff;
+  border: 1px solid #e8e8e8;
+
+  border-radius: 999px;
+
+  cursor: pointer;
+
+  transition: all .25s ease;
+
+  .title {
+    color: #595959;
+    font-weight: 500;
+  }
+
+  .count {
+    min-width: 28px;
+    height: 28px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 14px;
+
+    background: #f5f5f5;
+
+    color: #595959;
+    font-size: 13px;
+    font-weight: 600;
+  }
+
+  &:hover {
+    border-color: #1677ff;
+    transform: translateY(-1px);
+  }
+}
+
+.tab.active {
+  background: linear-gradient(
+    135deg,
+    #1677ff,
+    #4096ff
+  );
+
+  border-color: #1677ff;
+
+  box-shadow: 0 8px 20px rgba(22, 119, 255, .25);
+
+  .title {
+    color: #fff;
+  }
+
+  .count {
+    background: rgba(255,255,255,.2);
+    color: #fff;
+  }
+}
+
+.filter-card,
+.table-card {
+  background: white;
+  border-radius: 16px;
+  padding: 20px;
+  box-shadow: 0 4px 20px rgba(0,0,0,.04);
+}
+
+.filter-card {
+  margin-bottom: 20px;
+}
+
+.filter-row {
+  display: flex;
+  gap: 12px;
+  flex-wrap: wrap;
+}
+
+.table-title {
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 16px;
+}
+
+.employee {
+  display: flex;
+  gap: 12px;
+  align-items: center;
+}
+
+.employee-name {
+  font-weight: 600;
+}
+
+.employee-info {
+  color: #8c8c8c;
+  font-size: 12px;
+}

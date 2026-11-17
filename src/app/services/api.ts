@@ -200,6 +200,23 @@ export class Api {
     return this.httpClient.post<any>(`${environment.api_domain}/api/User/add-user`, req);
   }
 
+  ChangePassword=(req: any)=>{
+     return this.httpClient.post<any>(`${environment.api_domain}/api/User/change-password`, req);
+  }
+
+  ChangePasswordByAdmin=(req: any)=>{
+     return this.httpClient.post<any>(`${environment.api_domain}/api/User/change-password-by-admin`, req);
+  }
+
+  GetCountMenuTiepNhan=()=>{
+     return this.httpClient.get<any>(`${environment.api_domain}/api/LeaveRequest/get-count-menu-tiep-nhan`);
+  }
+
+  GetListTiepNhan=(req:any)=>{
+    return this.httpClient.post<any>(`${environment.api_domain}/api/LeaveRequest/get-list-tiep-nhan`, req);
+  }
+
+
   ExportReportLeave(req: any) {
   return this.httpClient.post(
     `${environment.api_domain}/api/LeaveRequest/export-report-leave`,

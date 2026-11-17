@@ -1,0 +1,94 @@
+<div class="receive-leave-page">
+  <!-- Header -->
+  <div class="page-header">
+    <div>
+      <h2>Tiếp nhận nghỉ phép</h2>
+      <p>Quản lý và xác nhận các đơn nghỉ phép của nhân viên</p>
+    </div>
+
+    <button nz-button nzType="default">
+      <span nz-icon nzType="download"></span>
+      Xuất Excel
+    </button>
+  </div>
+
+  <!-- Dashboard -->
+  <div class="status-tabs">
+    <div
+      class="tab"
+      [class.active]="selectedStatus === 'PENDING'"
+      (click)="onChangeStatus('PENDING')"
+    >
+      <span class="title">Chờ tiếp nhận</span>
+
+      <span class="count">{{ dataCount().countPending }}</span>
+    </div>
+
+    <div
+      class="tab"
+      [class.active]="selectedStatus === 'RECEIVED'"
+      (click)="onChangeStatus('RECEIVED')"
+    >
+      <span class="title">Đã tiếp nhận</span>
+
+      <span class="count"> {{ dataCount().countReceive }} </span>
+    </div>
+  </div>
+
+  <div class="table-card">
+    <div class="table-title">Danh sách đơn nghỉ phép</div>
+    <nz-table nzBordered [nzData]="listData()">
+      <thead>
+        <tr>
+          <th>Nhân viên</th>
+          <th>Loại nghỉ</th>
+          <th>Thời gian</th>
+          <th>Hình thức</th>
+          <th>Số ngày</th>
+          <th>Trạng thái</th>
+          <th width="220">Thao tác</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let item of listData()">
+          <td>
+            <div class="employee">
+              <nz-avatar nzText="A"> </nz-avatar>
+
+              <div>
+                <div class="employee-name">
+                  {{ item.fullname }}
+                </div>
+
+                <div class="employee-info">
+                  {{ item.userCode }} •
+                  {{ item.code }}
+                </div>
+              </div>
+            </div>
+          </td>
+
+          <td>{{ item.leaveType }}</td>
+
+          <td>
+            {{ ConvertDate(item.fromDate) }}
+            <br />
+            {{ ConvertDate(item.toDate) }}
+          </td>
+          <td>{{ item.typeShift }}</td>
+
+          <td>{{ item.totalDays }}</td>
+
+          <td>
+            <nz-tag nzColor="gold"> Chờ tiếp nhận </nz-tag>
+          </td>
+          <td>
+            <button nz-button nzType="link">Chi tiết</button>
+            <button nz-button nzType="primary" nzSize="small">Tiếp nhận</button>
+          </td>
+        </tr>
+      </tbody>
+    </nz-table>
+  </div>
+</div>
