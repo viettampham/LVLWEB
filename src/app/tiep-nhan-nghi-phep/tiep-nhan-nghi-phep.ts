@@ -11,6 +11,8 @@ import { NzFormModule } from 'ng-zorro-antd/form';
 import { NzAvatarModule } from 'ng-zorro-antd/avatar';
 import { Api } from '../services/api';
 import { NzMessageService } from 'ng-zorro-antd/message';
+import { AuthService } from '../services/auth.service';
+import { Router } from '@angular/router';
 
 @Component({
   imports: [
@@ -37,13 +39,19 @@ export class TiepNhanNghiPhep implements OnInit {
   pageIndex = signal(1);
   pageSize = signal(10);
   totalRecords = signal(0);
+  CurentUser: any;
 
-  constructor(private api: Api, private message: NzMessageService) {}
+  constructor(private api: Api, private message: NzMessageService, private authService: AuthService, private router: Router) {}
   
   async ngOnInit(): Promise<void> {
-    console.log('ngOnInit called');
-    await this.LoadCountMenuTiepNhan();
-    await this.loadData();
+    const user = this.authService.getCurrentUser();
+    if (user) {
+      this.CurentUser = this.authService.getCurrentUser();
+      await this.LoadCountMenuTiepNhan();
+      await this.loadData();
+    } else {
+      this.router.navigate(['']);
+    }
   }
 
   onChangeStatus(status: string): void {
@@ -104,5 +112,25 @@ export class TiepNhanNghiPhep implements OnInit {
       ;
 
     return result;
+  }
+
+  handleTiepNhan(codeLeave: string){
+    var req = {
+      codeLeave: codeLeave,
+      codeUserTiepNhan: this.CurentUser.CodeUser
+    }
+    this.api.TiepNhanDon(req).subscribe({
+      next: (res)=>{
+        if(res.status == "SUCCESS"){
+          this.message.create('success', res.message);
+          this.LoadCountMenuTiepNhan();
+          this.loadData();
+        }else{
+          this.message.create(res.status.toLowerCase(), res.message);
+        }
+      }, error: (err)=>{
+        this.message.create('error',err.message);
+      }
+    })
   }
 }

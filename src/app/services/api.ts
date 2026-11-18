@@ -216,6 +216,10 @@ export class Api {
     return this.httpClient.post<any>(`${environment.api_domain}/api/LeaveRequest/get-list-tiep-nhan`, req);
   }
 
+  TiepNhanDon=(req:any)=>{
+    return this.httpClient.post<any>(`${environment.api_domain}/api/LeaveRequest/tiep-nhan-don`, req);
+  }
+
 
   ExportReportLeave(req: any) {
   return this.httpClient.post(

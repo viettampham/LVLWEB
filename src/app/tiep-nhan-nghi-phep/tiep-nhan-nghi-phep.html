@@ -6,10 +6,10 @@
       <p>Quản lý và xác nhận các đơn nghỉ phép của nhân viên</p>
     </div>
 
-    <button nz-button nzType="default">
+    <!-- <button nz-button nzType="default">
       <span nz-icon nzType="download"></span>
       Xuất Excel
-    </button>
+    </button> -->
   </div>
 
   <!-- Dashboard -->
@@ -81,11 +81,12 @@
           <td>{{ item.totalDays }}</td>
 
           <td>
-            <nz-tag nzColor="gold"> Chờ tiếp nhận </nz-tag>
+            <nz-tag *ngIf="item.status == 'Đã phê duyệt'" nzColor="gold"> Chờ tiếp nhận </nz-tag>
+            <nz-tag *ngIf="item.status == 'Đã tiếp nhận'" nzColor="green"> Đã tiếp nhận </nz-tag>
           </td>
           <td>
             <button nz-button nzType="link">Chi tiết</button>
-            <button nz-button nzType="primary" nzSize="small">Tiếp nhận</button>
+            <button *ngIf="item.status == 'Đã phê duyệt'" (click)="handleTiepNhan(item.code)" nz-button nzType="primary" nzSize="small">Tiếp nhận</button>
           </td>
         </tr>
       </tbody>
