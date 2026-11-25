@@ -1,7 +1,6 @@
 export const environment = {
   production: false,
   //api_domain: 'https://localhost:7066',
-  api_domain: 'https://192.168.1.77:1122',
-  //api_domain: 'https://adware-enables-serum-within.trycloudflare.com',
+  api_domain: 'https://hrm.lienvietlogistics.com.vn/api',
   domainTools: 'http://localhost:5000',
 };

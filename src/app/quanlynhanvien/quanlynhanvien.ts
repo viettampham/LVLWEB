@@ -59,7 +59,7 @@ import { formatDate } from '@angular/common';
   templateUrl: './quanlynhanvien.html',
 })
 export class Quanlynhanvien implements OnInit {
-  
+
   SearchForm!: FormGroup;
   UpdateForm!: FormGroup;
   AddForm!: FormGroup;
@@ -70,6 +70,7 @@ export class Quanlynhanvien implements OnInit {
   readonly isVisible = signal(false);
   lstRole: RoleResponse[] = [];
   lstPhongBan = signal<DepartmentResponse[]>([]);
+  lstQuanLyTT = signal<any[]>([]);
   isShowModalAddUser = signal(false);
   isShowModalChangePassword = signal(false);
   formChangePassword: FormGroup;
@@ -114,6 +115,7 @@ export class Quanlynhanvien implements OnInit {
       roleLevel: ['', [Validators.required]],
       phongBan: ['', [Validators.required]],
       trangThai: ['', [Validators.required]],
+      directManager: [''],
     });
 
     this.AddForm = this.formBuilder.group({
@@ -129,6 +131,7 @@ export class Quanlynhanvien implements OnInit {
       roleLevel: ['', [Validators.required]],
       phongBan: ['', [Validators.required]],
       password: ['', [Validators.required]],
+      directManager: [''],
     });
     this.SearchUser();
     this.GetDSRole();
@@ -141,6 +144,43 @@ export class Quanlynhanvien implements OnInit {
     this.UpdateForm.patchValue({
       trangThai: true
     })
+    this.lstQuanLyTT.set([]);
+  }
+
+  onOpenChangePhongBan(e: any) {
+    if (e == false) {
+      var req = {
+        phongBan: this.AddForm.controls["phongBan"].value,
+        userRoleLevel: this.AddForm.controls["roleLevel"].value
+      }
+      this.api.GetmanagerDirect(req).subscribe({
+        next: (res) => {
+          if (res.status == "SUCCESS") {
+            this.lstQuanLyTT.set(res.listData);
+          }
+        }, error: (err) => {
+          this.message.create('error', err.message);
+        }
+      })
+    }
+  }
+
+  onOpenChangePhongBanFormEdit(e: any) {
+    if (e == false) {
+      var req = {
+        phongBan: this.UpdateForm.controls["phongBan"].value,
+        userRoleLevel: this.UpdateForm.controls["roleLevel"].value
+      }
+      this.api.GetmanagerDirect(req).subscribe({
+        next: (res) => {
+          if (res.status == "SUCCESS") {
+            this.lstQuanLyTT.set(res.listData);
+          }
+        }, error: (err) => {
+          this.message.create('error', err.message);
+        }
+      })
+    }
   }
 
   GetDSRole() {
@@ -217,6 +257,7 @@ export class Quanlynhanvien implements OnInit {
 
   openModalConfigUser(data: UserResponse) {
     this.isVisible.set(true);
+    this.lstQuanLyTT.set([]);
     this.UpdateForm.patchValue({
       id: data.id,
       fullName: data.fullName,
@@ -232,9 +273,25 @@ export class Quanlynhanvien implements OnInit {
       phongBan: data.phongBan,
       trangThai: data.status
     });
+    var req = {
+      phongBan: this.UpdateForm.controls["phongBan"].value,
+      userRoleLevel: this.UpdateForm.controls["roleLevel"].value
+    }
+    this.api.GetmanagerDirect(req).subscribe({
+      next: (res) => {
+        if (res.status == "SUCCESS") {
+          this.lstQuanLyTT.set(res.listData);
+          this.UpdateForm.patchValue({
+            directManager: data.directManagerName
+          });
+        }
+      }, error: (err) => {
+        this.message.create('error', err.message);
+      }
+    })
   }
 
-  changePassword(data: UserResponse){
+  changePassword(data: UserResponse) {
     this.isShowModalChangePassword.set(true);
     this.formChangePassword.patchValue({
       codeUser: data.codeUser,
@@ -284,24 +341,24 @@ export class Quanlynhanvien implements OnInit {
 
   }
 
-  handleCancelChangePassword(){
+  handleCancelChangePassword() {
     this.isShowModalChangePassword.set(false);
   }
 
-  handleOkChangePassword(){
+  handleOkChangePassword() {
     var req = {
       codeUser: this.formChangePassword.controls['codeUser'].value,
       newPass: this.formChangePassword.controls['newPass'].value
     }
     this.api.ChangePasswordByAdmin(req).subscribe({
-      next: (res)=>{
-        if(res.status == "SUCCESS"){
+      next: (res) => {
+        if (res.status == "SUCCESS") {
           this.message.create(res.status.toLowerCase(), res.message);
           this.isShowModalChangePassword.set(false);
-        }else{
+        } else {
           this.message.create(res.status.toLowerCase(), res.message);
         }
-      },error: (err)=>{
+      }, error: (err) => {
         this.message.create('error', err.message);
       }
     })
@@ -329,11 +386,11 @@ export class Quanlynhanvien implements OnInit {
 
     console.log(req);
     this.api.RegisAccount(req).subscribe({
-      next: (res)=>{
+      next: (res) => {
         this.message.create(res.status.toLowerCase(), res.message);
         this.isShowModalAddUser.set(false);
         this.SearchUser();
-      },error: (err)=>{
+      }, error: (err) => {
         this.message.create('error', err.message);
       }
     })

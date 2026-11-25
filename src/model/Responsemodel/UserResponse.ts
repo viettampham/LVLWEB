@@ -24,6 +24,8 @@ export class UserResponse {
   deleteBy: string;
   cccd: string;
   phongBan: string;
+  directManagerName: string;
+  directManagerCode: string;
 
   constructor(
     id: number,
@@ -48,7 +50,9 @@ export class UserResponse {
     deleteAt: string,
     deleteBy: string,
     cccd: string,
-    phongBan: string
+    phongBan: string,
+    directManagerName: string,
+    directManagerCode: string
   ) {
     this.id = id;
     this.codeUser = codeUser;
@@ -72,6 +76,8 @@ export class UserResponse {
     this.deleteAt = deleteAt;
     this.deleteBy = deleteBy;
     this.cccd = cccd;
-    this.phongBan = phongBan
+    this.phongBan = phongBan,
+    this.directManagerName = directManagerName,
+    this.directManagerCode = directManagerCode
   }
 }

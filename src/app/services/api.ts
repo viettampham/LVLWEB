@@ -220,6 +220,10 @@ export class Api {
     return this.httpClient.post<any>(`${environment.api_domain}/api/LeaveRequest/tiep-nhan-don`, req);
   }
 
+  GetmanagerDirect=(req:any)=>{
+    return this.httpClient.post<any>(`${environment.api_domain}/api/User/get-manager-direct`, req);
+  }
+
 
   ExportReportLeave(req: any) {
   return this.httpClient.post(
