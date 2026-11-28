@@ -119,8 +119,8 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  background: #fafafa;
-  padding: 20px;
+  background: #ffffff;
+  padding: 10px;
   border-radius: 12px;
 }
 
@@ -137,7 +137,7 @@
 
 .detail-grid {
   display: grid;
-  grid-template-columns: repeat(2, 1fr);
+  grid-template-columns: repeat(5, 1fr);
   gap: 20px;
 }
 
@@ -164,7 +164,7 @@
   min-height: 80px;
   padding: 16px;
   border-radius: 8px;
-  background: #fafafa;
+  background: #dddddd;
 }
 
 .mt-16 {

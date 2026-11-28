@@ -142,13 +142,14 @@
         justify-content: space-between;
         align-items: center;
         padding: 0 10px;
+        height: 45px;
       "
     >
       <div>
-        <p class="md: text-md lg:text-lg" style="margin: 0">HỆ THỐNG LIÊN VIỆT - LOGISTICS</p>
+        <span class="md: text-md lg:text-lg" style="margin: 0">HỆ THỐNG LIÊN VIỆT - LOGISTICS</span>
       </div>
       <div class="user-group">
-        <a class="flex" nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu">
+        <a class="flex" style="display: flex; justify-content: center; align-items: center;" nz-dropdown nzTrigger="click" [nzDropdownMenu]="menu">
           <nz-avatar
             style="width: 46px; height: 46px"
             nzIcon="user"
@@ -200,7 +201,7 @@
       </nz-breadcrumb>
       <div
         class="inner-content"
-        style="overflow: auto; height: calc(85vh); padding: 18px !important"
+        style="overflow: auto; height: calc(100vh - 140px); padding: 18px !important"
       >
         <router-outlet></router-outlet>
       </div>
@@ -226,7 +227,7 @@
         <nz-form-control nzErrorTip="Nhập mật khẩu hiện tại!">
           <nz-input-wrapper>
             <nz-icon nzInputPrefix nzType="user" />
-            <input formControlName="currentPass" nz-input placeholder="Mật khẩu hiện tại" />
+            <input formControlName="currentPass" autocomplete="off" nz-input placeholder="Mật khẩu hiện tại" />
           </nz-input-wrapper>
         </nz-form-control>
       </nz-form-item>
@@ -234,7 +235,7 @@
         <nz-form-control nzErrorTip="Vui lòng nhập mật khẩu mới!">
           <nz-input-password>
             <nz-icon nzInputPrefix nzType="lock" />
-            <input formControlName="newPass" nz-input placeholder="Mật khẩu mới" />
+            <input formControlName="newPass" autocomplete="off" nz-input placeholder="Mật khẩu mới" />
           </nz-input-password>
         </nz-form-control>
       </nz-form-item>
@@ -242,7 +243,7 @@
         <nz-form-control nzErrorTip="Vui lòng xác nhận mật khẩu mới!">
           <nz-input-password>
             <nz-icon nzInputPrefix nzType="lock" />
-            <input formControlName="confirmNewPass" nz-input placeholder="Xác nhận mật khẩu mới" />
+            <input formControlName="confirmNewPass" autocomplete="off" nz-input placeholder="Xác nhận mật khẩu mới" />
           </nz-input-password>
         </nz-form-control>
       </nz-form-item>

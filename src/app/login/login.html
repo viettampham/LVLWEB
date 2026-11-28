@@ -1,9 +1,10 @@
-<div class="layout absolute top-0 bottom-0 right-0 left-0 flex justify-center items-center" style="background-color: #f9fafb;">
+<div class="layout absolute top-0 bottom-0 right-0 left-0 flex justify-center items-center"
+  style="background-color: #f9fafb;">
   <div class="innerlayout max-w-lg mx-auto my-auto">
     <div class="logo m-5">
       <img style="width: 100%" src="/image/logo/logolienviet.png" alt="logo" />
     </div>
-    <div class="loginform p-8 m-5  rounded-xl border border-gray-200 mt-5"  style="background-color: white;">
+    <div class="loginform p-8 m-5  rounded-xl border border-gray-200 mt-5" style="background-color: white;">
       <p class="text-center text-2xl font-bold text-blue-500">Sign in</p>
 
       <form nz-form [formGroup]="validateForm" class="login-form" (ngSubmit)="submitForm()">
@@ -22,7 +23,7 @@
           <nz-form-label [nzSpan]="4">Password</nz-form-label>
           <nz-form-control nzErrorTip="Please input your Password!">
             <nz-input-password>
-              <nz-icon nzType="eye" nzTheme="outline" />
+              <nz-icon nzInputPrefix nzType="lock" />
               <input nz-input type="password" formControlName="password" placeholder="**********" />
             </nz-input-password>
           </nz-form-control>

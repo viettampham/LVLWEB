@@ -1,4 +1,5 @@
 @import "tailwindcss";
+
 /* @import "ckeditor5/ckeditor5.css"; */
 @font-face {
   font-family: 'Quicksand';
@@ -30,6 +31,7 @@
 
 body {
   font-family: 'Quicksand', sans-serif;
+
   ::selection {
     background: #ff9800;
     color: white;
@@ -39,5 +41,24 @@ body {
     background: #ff9800;
     color: white;
   }
-}
 
+  .ant-card-head {
+    min-height: 36px;
+    height: 36px !important;
+    padding: 0 16px !important;
+    
+  }
+
+  .ant-card-head-title {
+    display: inline-block;
+    flex: 1;
+    padding: 5px 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+
+  .ant-card-body {
+    padding: 12px 20px;
+  }
+}

@@ -15,6 +15,8 @@ import { NzColDirective, NzRowDirective } from 'ng-zorro-antd/grid';
 import { NzIconModule } from 'ng-zorro-antd/icon';
 import { Api } from '../services/api';
 import { Router } from '@angular/router';
+import { NzInputModule } from 'ng-zorro-antd/input';
+
 
 @Component({
   imports: [
@@ -30,6 +32,7 @@ import { Router } from '@angular/router';
     NzRowDirective,
     NzColDirective,
     NzIconModule,
+    NzInputModule
   ],
   providers: [],
   selector: 'app-login',

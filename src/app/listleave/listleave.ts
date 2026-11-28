@@ -139,6 +139,10 @@ export class Listleave implements OnInit {
     this.isVisible.set(false);
   }
 
+  handlePrint(){
+    
+  }
+
   PhatHanhDon(code: string) {
     this.api.PhatHanhDon(code).subscribe({
       next: (res) => {

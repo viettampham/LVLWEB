@@ -27,10 +27,10 @@
             </nz-input-wrapper>
           </nz-form-control>
         </nz-form-item>
-        <nz-form-item>
+        <nz-form-item style="width: 180px;">
           <nz-form-control>
             <nz-select formControlName="status">
-              <nz-option [nzValue]="" nzLabel="--Chọn trạng thái hoạt động" />
+              <nz-option [nzValue]="" nzLabel="-- Chọn trạng thái --" />
               <nz-option [nzValue]="true" nzLabel="Đang hoạt động" />
               <nz-option [nzValue]="false" nzLabel="Không hoạt động" />
             </nz-select>
@@ -224,7 +224,7 @@
         <p>Phân quyền cho tài khoản</p>
         <nz-radio-group style="display: flex;" formControlName="roleLevel">
           <label *ngFor="let item of lstRole" nz-radio [nzValue]="item.roleLevel">
-            {{ item.roleName }}
+            {{ item.note }}
           </label>
         </nz-radio-group>
 
@@ -246,9 +246,9 @@
             <nz-form-item>
               <nz-form-label>Người quản lý trực tiếp</nz-form-label>
               <nz-form-control>
-                <nz-select formControlName="directManager">
+                <nz-select formControlName="directManagerCode">
                   <nz-option nzValue="" nzLabel="--Chọn quản lý trực tiếp" />
-                  <nz-option *ngFor="let item of lstQuanLyTT()" nzValue="{{item.fullName}}"
+                  <nz-option *ngFor="let item of lstQuanLyTT()" nzValue="{{item.codeUser}}"
                     nzLabel="{{item.fullName}}" />
                 </nz-select>
               </nz-form-control>
@@ -415,9 +415,9 @@
             <nz-form-item>
               <nz-form-label>Người quản lý trực tiếp</nz-form-label>
               <nz-form-control>
-                <nz-select formControlName="directManager">
+                <nz-select formControlName="directManagerCode">
                   <nz-option nzValue="" nzLabel="--Chọn quản lý trực tiếp" />
-                  <nz-option *ngFor="let item of lstQuanLyTT()" nzValue="{{item.fullName}}"
+                  <nz-option *ngFor="let item of lstQuanLyTT()" nzValue="{{item.codeUser}}"
                     nzLabel="{{item.fullName}}" />
                 </nz-select>
               </nz-form-control>

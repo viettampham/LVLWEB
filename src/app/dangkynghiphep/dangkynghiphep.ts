@@ -75,6 +75,9 @@ export class Dangkynghiphep implements OnInit {
     const user = this.authService.getCurrentUser();
     if (user) {
       this.CurrentUser = user;
+      this.FormRegisLeave.patchValue({
+        pendingAsignee: this.CurrentUser.DirectManagerCode
+      })
       this.GetLeaveType();
     } else {
       this.router.navigate(['']);

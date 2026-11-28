@@ -115,7 +115,7 @@ export class Quanlynhanvien implements OnInit {
       roleLevel: ['', [Validators.required]],
       phongBan: ['', [Validators.required]],
       trangThai: ['', [Validators.required]],
-      directManager: [''],
+      directManagerCode: [''],
     });
 
     this.AddForm = this.formBuilder.group({
@@ -131,7 +131,7 @@ export class Quanlynhanvien implements OnInit {
       roleLevel: ['', [Validators.required]],
       phongBan: ['', [Validators.required]],
       password: ['', [Validators.required]],
-      directManager: [''],
+      directManagerCode: [''],
     });
     this.SearchUser();
     this.GetDSRole();
@@ -198,7 +198,6 @@ export class Quanlynhanvien implements OnInit {
     this.api.GetPhongBan().subscribe(res => {
       if (res.status == "SUCCESS") {
         this.lstPhongBan.set(res.listData);
-        console.log(this.lstPhongBan());
       } else {
         this.lstPhongBan.set([]);
         this.message.create(res.status.toLowerCase(), res.message);
@@ -242,7 +241,6 @@ export class Quanlynhanvien implements OnInit {
   }
 
   confirmDelete(id: number) {
-    console.log(id);
     this.api.DeleteUser(id).subscribe((res: any) => {
       if (res.status === 'SUCCESS') {
         this.message.success(res.message);
@@ -256,7 +254,6 @@ export class Quanlynhanvien implements OnInit {
   cancelDelete() { }
 
   openModalConfigUser(data: UserResponse) {
-    this.isVisible.set(true);
     this.lstQuanLyTT.set([]);
     this.UpdateForm.patchValue({
       id: data.id,
@@ -282,13 +279,17 @@ export class Quanlynhanvien implements OnInit {
         if (res.status == "SUCCESS") {
           this.lstQuanLyTT.set(res.listData);
           this.UpdateForm.patchValue({
-            directManager: data.directManagerName
+            directManagerCode: data.directManagerCode
           });
+
+          console.log(data);
+          console.log(this.UpdateForm.value);
         }
       }, error: (err) => {
         this.message.create('error', err.message);
       }
     })
+    this.isVisible.set(true);
   }
 
   changePassword(data: UserResponse) {
@@ -304,7 +305,6 @@ export class Quanlynhanvien implements OnInit {
   }
 
   submitForm() {
-    console.log(this.UpdateForm.value);
     if (this.UpdateForm.valid) {
 
       this.UpdateForm.get('dateOfBirth')?.setValue(
@@ -333,7 +333,7 @@ export class Quanlynhanvien implements OnInit {
   }
 
   changeTrangThai(checked: any): void {
-    console.log('Trạng thái:', checked);
+
   }
 
   handleCancelAddUser() {
@@ -382,14 +382,20 @@ export class Quanlynhanvien implements OnInit {
       roleLevel: this.AddForm.controls["roleLevel"].value,
       phongBan: this.AddForm.controls["phongBan"].value,
       password: this.AddForm.controls["password"].value,
+      directManagerCode: this.AddForm.controls["directManagerCode"].value,
     }
 
     console.log(req);
+
     this.api.RegisAccount(req).subscribe({
       next: (res) => {
-        this.message.create(res.status.toLowerCase(), res.message);
-        this.isShowModalAddUser.set(false);
-        this.SearchUser();
+        if(res.status == "SUCCESS"){
+          this.message.create(res.status.toLowerCase(), res.message);
+          this.isShowModalAddUser.set(false);
+          this.SearchUser();  
+        }else{
+          this.message.create(res.status.toLowerCase(), res.message);
+        }
       }, error: (err) => {
         this.message.create('error', err.message);
       }
